@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "566821895818",
+    "project_id": "nerdnudgetest",
+    "storage_bucket": "nerdnudgetest.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:566821895818:android:95185338ca59dda1687773",
+        "android_client_info": {
+          "package_name": "com.example.google_sign_in_test"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFNpk2ErOPK_FFcg6dS3Of6OJIJph5PKU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:566821895818:android:daa2596a9f1720b6687773",
+        "android_client_info": {
+          "package_name": "com.neurospark.nerd_nudge"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFNpk2ErOPK_FFcg6dS3Of6OJIJph5PKU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:566821895818:android:6f7894134cd08640687773",
+        "android_client_info": {
+          "package_name": "com.neurospark.nerdnudge"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFNpk2ErOPK_FFcg6dS3Of6OJIJph5PKU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
