@@ -21,6 +21,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late Future<UserHomeStats> _futureUserHomeStats;
+
+  @override
+  void initState() {
+    super.initState();
+    _futureUserHomeStats = HomePageService().getUserHomePageStats();
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -28,21 +36,31 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         appBar: Styles.getAppBar('Nerd Home'),
         drawer: MenuOptions.getMenuDrawer(context),
-        body: _getHomePageBody(context),
+        body: FutureBuilder<UserHomeStats>(
+          future: _futureUserHomeStats,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (snapshot.hasData) {
+              return _getHomePageBody(context, snapshot.data!);
+            } else {
+              return const Center(child: Text('No data found'));
+            }
+          },
+        ),
         bottomNavigationBar: const BottomMenu(),
       ),
     );
   }
 
-  Widget _getHomePageBody(BuildContext context) {
+  Widget _getHomePageBody(BuildContext context, UserHomeStats userHomeStats) {
     String message = WelcomeMessages.messages
         .elementAt(Random().nextInt(WelcomeMessages.messages.length));
 
-    HomePageService().getUserHomePageStats();
-
-    var quoteOfTheDayObject = HomePageService().getQuoteOfTheDay();
-    String quoteOfTheDay = quoteOfTheDayObject['quote'];
-    String quoteAuthor = quoteOfTheDayObject['author'];
+    String quoteOfTheDay = userHomeStats.quoteOfTheDay;
+    String quoteAuthor = userHomeStats.quoteAuthor;
 
     return Stack(
       children: [
@@ -113,12 +131,12 @@ class _HomePageState extends State<HomePage> {
 
                     const SizedBox(height: 20),
                     _buildSectionTitle('Nerd Statistics'),
-                    _buildNerdStatsCard(),
+                    _buildNerdStatsCard(userHomeStats),
                     _getPurpleDivider(),
                     const SizedBox(height: 20),
 
                     _buildSectionTitle('Daily Nerd Quota'),
-                    _buildNerdQuotaCard(),
+                    _buildNerdQuotaCard(userHomeStats),
                     _getPurpleDivider(),
                     const SizedBox(height: 20),
 
@@ -126,7 +144,7 @@ class _HomePageState extends State<HomePage> {
                     Styles.buildQuoteCard(context, quoteOfTheDay, quoteAuthor),
                     _getPurpleDivider(),
                     const SizedBox(height: 20),
-                    _buildNumPeopleCard(),
+                    _buildNumPeopleCard(userHomeStats),
                   ],
                 ),
               ),
@@ -195,7 +213,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildNerdQuotaCard() {
+  Widget _buildNerdQuotaCard(UserHomeStats userHomeStats) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
       child: Column(
@@ -211,8 +229,8 @@ class _HomePageState extends State<HomePage> {
                   _buildStatsRow(
                       'Quizzes Remaining',
                       'Shots Remaining',
-                      UserHomeStats().getDailyQuizRemaining().toString(),
-                      UserHomeStats().getDailyShotsRemaining().toString()),
+                      userHomeStats.getDailyQuizRemaining().toString(),
+                      userHomeStats.getDailyShotsRemaining().toString()),
                 ],
               ),
             ),
@@ -224,7 +242,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildNerdStatsCard() {
+  Widget _buildNerdStatsCard(UserHomeStats userHomeStats) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
       child: Column(
@@ -240,8 +258,8 @@ class _HomePageState extends State<HomePage> {
                   _buildStatsRow(
                       'Total Quizzes',
                       'Percentage Correct',
-                      UserHomeStats().getTotalQuizzesAttempted().toString(),
-                      '${UserHomeStats().getTotalPercentageCorrect().toString()} %'),
+                      userHomeStats.getTotalQuizzesAttempted().toString(),
+                      '${userHomeStats.getTotalPercentageCorrect().toString()} %'),
                 ],
               ),
             ),
@@ -258,8 +276,8 @@ class _HomePageState extends State<HomePage> {
                   _buildStatsRow(
                       'Highest in a Day',
                       'Highest Correct in a Day',
-                      UserHomeStats().getHighestInADay().toString(),
-                      UserHomeStats().getHighestCorrectInADay().toString()),
+                      userHomeStats.getHighestInADay().toString(),
+                      userHomeStats.getHighestCorrectInADay().toString()),
                 ],
               ),
             ),
@@ -276,8 +294,8 @@ class _HomePageState extends State<HomePage> {
                   _buildStatsRow(
                       'Current Streak',
                       'Highest Streak',
-                      UserHomeStats().getCurrentStreak().toString(),
-                      UserHomeStats().getHighestStreak().toString()),
+                      userHomeStats.getCurrentStreak().toString(),
+                      userHomeStats.getHighestStreak().toString()),
                 ],
               ),
             ),
@@ -348,8 +366,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildNumPeopleCard() {
-    String message = '4423 People took Nerd Quiz today.';
+  Widget _buildNumPeopleCard(UserHomeStats userHomeStats) {
+    int numPeople = userHomeStats.numPeopleUsedNerdNudge;
+    String message = '$numPeople People took Nerd Quiz today.';
     return Card(
       color: CustomColors.purpleButtonColor,
       margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),

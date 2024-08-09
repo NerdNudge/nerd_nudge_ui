@@ -1,7 +1,7 @@
 import 'dart:convert';
 
+import 'package:nerd_nudge/home_page/dto/user_home_stats.dart';
 import 'package:nerd_nudge/utilities/api_end_points.dart';
-import 'package:nerd_nudge/utilities/constants.dart';
 
 import '../../utilities/api_service.dart';
 
@@ -21,18 +21,18 @@ class HomePageService {
     return _quoteOfTheDay;
   }
 
-  getUserHomePageStats() async {
+  Future<UserHomeStats> getUserHomePageStats() async {
     print('getting user home data now..');
     final ApiService apiService = ApiService();
-    String data = '';
     Map<String, dynamic> result = {};
     try {
       print(APIEndpoints.BASE_URL + APIEndpoints.USER_HOME_STATS);
       result = await apiService.getRequest(APIEndpoints.USER_HOME_STATS);
-      data = result.toString();
+      print('API Result: $result');
+      return UserHomeStats.fromJson(result);
     } catch (e) {
       print(e);
+      return UserHomeStats();
     }
-    print('Data: $data');
   }
 }

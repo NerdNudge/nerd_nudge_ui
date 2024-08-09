@@ -2,26 +2,20 @@ import 'package:nerd_nudge/user_profile/screens/user_account_types.dart';
 
 class UserHomeStats {
   late Map<String, dynamic> _userData;
-
-  late AccountType _accountType;
-
-  late int _totalQuizzesAttempted;
-  late double _totalPercentageCorrect;
-
-  late int _highestInADay;
-  late int _highestCorrectInADay;
-  late int _averagePerDay;
-
-  late int _currentStreak;
-  late int _highestStreak;
-
-  late int _quizCountToday;
-  late int _shotsCountToday;
-
-  late String _quoteOfTheDay;
-  late int _numPeopleUsedNerdNudge;
-
-  late double _lastFetchTime;
+  late AccountType _accountType = AccountType.FREEMIUM;
+  late int _totalQuizzesAttempted = 0;
+  late double _totalPercentageCorrect = 0.0;
+  late int _highestInADay = 0;
+  late int _highestCorrectInADay = 0;
+  late int _averagePerDay = 0;
+  late int _currentStreak = 0;
+  late int _highestStreak = 0;
+  late int _quizCountToday = 0;
+  late int _shotsCountToday = 0;
+  late String _quoteOfTheDay = '';
+  late String _quoteAuthor = '';
+  late int _numPeopleUsedNerdNudge = 0;
+  late double _lastFetchTime = 0.0;
 
   static final UserHomeStats _instance = UserHomeStats._internal();
 
@@ -29,39 +23,50 @@ class UserHomeStats {
     return _instance;
   }
 
-  UserHomeStats._internal() {
-    //TODO: Initialize the fields with actual values using the api.
-    /*_accountType = AccountType.FREEMIUM;
-    _totalQuizzesAttempted = 204;
-    _totalPercentageCorrect = 80.42;
-    _highestInADay = 21;
-    _highestCorrectInADay = 18;
-    _averagePerDay = 12;
-    _currentStreak = 5;
-    _highestStreak = 16;
-    _quizCountToday = 0;
-    _shotsCountToday = 8;*/
-  }
+  UserHomeStats._internal();
 
   factory UserHomeStats.fromJson(Map<String, dynamic> userData) {
     UserHomeStats instance = UserHomeStats._instance;
 
     instance._userData = userData;
-    instance.accountType = userData;
-    instance.totalQuizzesAttempted = userData;
-    instance.totalPercentageCorrect = userData;
-    instance.highestInADay = userData;
-    instance.highestCorrectInADay = userData;
-    instance.currentStreak = userData;
-    instance.highestStreak = userData;
+    var jsonData = userData['data'];
 
-    instance._quizCountToday = userData['quizCountToday'];
-    instance._shotsCountToday = userData['shotsCountToday'];
-    instance._quoteOfTheDay = userData['quoteOfTheDay'];
-    instance._numPeopleUsedNerdNudge = userData['numPeopleUsedNerdNudge'];
-    instance._lastFetchTime = userData['lastFetchTime'];
+    instance._accountType = jsonData.containsKey('accountType')
+        ? _getFromAccountTypeEnum(jsonData['accountType'])
+        : AccountType.FREEMIUM;
+
+    instance._totalQuizzesAttempted = jsonData['totalQuizzes'] ?? 0;
+    instance._totalPercentageCorrect = jsonData['correctPercentage']?.toDouble() ?? 0.0;
+    instance._highestInADay = jsonData['highestInADay'] ?? 0;
+    instance._highestCorrectInADay = jsonData['highestCorrectInADay'] ?? 0;
+    instance._currentStreak = jsonData['currentStreak'] ?? 0;
+    instance._highestStreak = jsonData['highestStreak'] ?? 0;
+    instance._quizCountToday = jsonData['quizflexCountToday'] ?? 0;
+    instance._shotsCountToday = jsonData['shotsCountToday'] ?? 0;
+    instance._quoteOfTheDay = jsonData['quoteOfTheDay'] ?? '';
+    instance._quoteAuthor = jsonData['quoteAuthor'] ?? '';
+    instance._numPeopleUsedNerdNudge = jsonData['numPeopleUsedNerdNudgeToday'] ?? 0;
 
     return instance;
+  }
+
+  static AccountType _getFromAccountTypeEnum(String accountType) {
+    switch (accountType.toLowerCase()) {
+      case 'freemium':
+        return AccountType.FREEMIUM;
+      case 'nerd_nudge_pro':
+        return AccountType.NERD_NUDGE_PRO;
+      case 'nerd_nudge_max':
+        return AccountType.NERD_NUDGE_MAX;
+      default:
+        return AccountType.FREEMIUM; // Default case
+    }
+  }
+
+  Map<String, dynamic> get userData => _userData;
+
+  set userData(Map<String, dynamic> value) {
+    _userData = value;
   }
 
   int getCurrentStreak() {
@@ -102,102 +107,6 @@ class UserHomeStats {
 
   double getTotalPercentageCorrect() {
     return _totalPercentageCorrect;
-  }
-
-  set accountType(Map<String, dynamic> userData) {
-    if (userData.containsKey('accountType')) {
-      _accountType = _getFromAccountTypeEnum(userData['accountType']);
-    } else {
-      _accountType = AccountType.FREEMIUM;
-    }
-  }
-
-  _getFromAccountTypeEnum(String type) {
-    switch (type) {
-      case 'Freemium':
-        return AccountType.FREEMIUM;
-      case 'NerdNudgePro':
-        return AccountType.NERD_NUDGE_PRO;
-      case 'NerdNudgeMax':
-        return AccountType.NERD_NUDGE_MAX;
-    }
-  }
-
-  set totalQuizzesAttempted(Map<String, dynamic> userData) {
-    if (userData.containsKey('Summary')) {
-      Map<String, dynamic> summaryData = userData['Summary'];
-      if (summaryData.containsKey('overallSummary')) {
-        Map<String, dynamic> overallSummaryData = userData['overallSummary'];
-        if (overallSummaryData.containsKey('total')) {
-          List<int> totalSummary = overallSummaryData['total'];
-          _totalQuizzesAttempted = totalSummary[0];
-          return;
-        }
-      }
-    }
-
-    _totalQuizzesAttempted = 0;
-  }
-
-  set totalPercentageCorrect(Map<String, dynamic> userData) {
-    if (userData.containsKey('Summary')) {
-      Map<String, dynamic> summaryData = userData['Summary'];
-      if (summaryData.containsKey('overallSummary')) {
-        Map<String, dynamic> overallSummaryData = userData['overallSummary'];
-        if (overallSummaryData.containsKey('total')) {
-          List<int> totalSummary = overallSummaryData['total'];
-          int totalQuizzes = totalSummary[0];
-          int totalCorrect = totalSummary[1];
-          _totalPercentageCorrect = (totalCorrect / totalQuizzes) * 100;
-          return;
-        }
-      }
-    }
-    _totalPercentageCorrect = 0;
-  }
-
-  set highestInADay(Map<String, dynamic> userData) {
-    if (userData.containsKey('dayStats')) {
-      Map<String, dynamic> dayStats = userData['dayStats'];
-      if (dayStats.containsKey('highest')) {
-        _highestInADay = dayStats['highest'];
-        return;
-      }
-    }
-    _highestInADay = 0;
-  }
-
-  set highestCorrectInADay(Map<String, dynamic> userData) {
-    if (userData.containsKey('dayStats')) {
-      Map<String, dynamic> dayStats = userData['dayStats'];
-      if (dayStats.containsKey('highestCorrect')) {
-        _highestCorrectInADay = dayStats['highestCorrect'];
-        return;
-      }
-    }
-    _highestCorrectInADay = 0;
-  }
-
-  set currentStreak(Map<String, dynamic> userData) {
-    if (userData.containsKey('streak')) {
-      Map<String, int> streak = userData['streak'];
-      if (streak.containsKey('current')) {
-        _currentStreak = streak['current']!;
-        return;
-      }
-    }
-    _currentStreak = 0;
-  }
-
-  set highestStreak(Map<String, dynamic> userData) {
-    if (userData.containsKey('streak')) {
-      Map<String, int> streak = userData['streak'];
-      if (streak.containsKey('highest')) {
-        _highestStreak = streak['highest']!;
-        return;
-      }
-    }
-    _highestStreak = 0;
   }
 
   set quizCountToday(int value) {
@@ -252,5 +161,77 @@ class UserHomeStats {
 
   bool hasUserExhaustedNerdQuiz() {
     return _quizCountToday >= _getTotalNerdQuizQuota(_accountType);
+  }
+
+  AccountType get accountType => _accountType;
+
+  set accountType(AccountType value) {
+    _accountType = value;
+  }
+
+  int get totalQuizzesAttempted => _totalQuizzesAttempted;
+
+  set totalQuizzesAttempted(int value) {
+    _totalQuizzesAttempted = value;
+  }
+
+  double get totalPercentageCorrect => _totalPercentageCorrect;
+
+  set totalPercentageCorrect(double value) {
+    _totalPercentageCorrect = value;
+  }
+
+  int get highestInADay => _highestInADay;
+
+  set highestInADay(int value) {
+    _highestInADay = value;
+  }
+
+  int get highestCorrectInADay => _highestCorrectInADay;
+
+  set highestCorrectInADay(int value) {
+    _highestCorrectInADay = value;
+  }
+
+  int get averagePerDay => _averagePerDay;
+
+  set averagePerDay(int value) {
+    _averagePerDay = value;
+  }
+
+  int get currentStreak => _currentStreak;
+
+  set currentStreak(int value) {
+    _currentStreak = value;
+  }
+
+  int get highestStreak => _highestStreak;
+
+  set highestStreak(int value) {
+    _highestStreak = value;
+  }
+
+  String get quoteOfTheDay => _quoteOfTheDay;
+
+  set quoteOfTheDay(String value) {
+    _quoteOfTheDay = value;
+  }
+
+  int get numPeopleUsedNerdNudge => _numPeopleUsedNerdNudge;
+
+  set numPeopleUsedNerdNudge(int value) {
+    _numPeopleUsedNerdNudge = value;
+  }
+
+  double get lastFetchTime => _lastFetchTime;
+
+  set lastFetchTime(double value) {
+    _lastFetchTime = value;
+  }
+
+  String get quoteAuthor => _quoteAuthor;
+
+  set quoteAuthor(String value) {
+    _quoteAuthor = value;
   }
 }
