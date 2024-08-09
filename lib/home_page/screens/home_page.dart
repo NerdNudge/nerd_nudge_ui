@@ -236,7 +236,8 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           const SizedBox(height: 20.0),
-          Styles.buildNextActionButton(context, 'UPGRADE', 0, SubscriptionPageTabsBased()),
+          Styles.buildNextActionButton(
+              context, 'UPGRADE', 0, SubscriptionPageTabsBased()),
         ],
       ),
     );
@@ -368,7 +369,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildNumPeopleCard(UserHomeStats userHomeStats) {
     int numPeople = userHomeStats.numPeopleUsedNerdNudge;
-    String message = '$numPeople People took Nerd Quiz today.';
+    String message = '$numPeople People used Nerd Nudge today.';
     return Card(
       color: CustomColors.purpleButtonColor,
       margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),

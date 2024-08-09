@@ -4,16 +4,14 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
+import 'package:nerd_nudge/nerd_shots/services/nerd_shots_service.dart';
 import 'package:nerd_nudge/subscriptions/upgrade_page.dart';
 import 'package:nerd_nudge/topics/screens/topic_selection_home_page.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../utilities/colors.dart';
-import '../../../utilities/quiz_topics.dart';
 import '../../../utilities/styles.dart';
-import '../../bottom_menus/screens/bottom_menu_options.dart';
-import '../../menus/screens/menu_options.dart';
 import '../../home_page/dto/user_home_stats.dart';
 import '../../utilities/constants.dart';
 
@@ -25,6 +23,7 @@ class NerdShotsSwiped extends StatefulWidget {
 }
 
 class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
+  int _currentIndex = 0;
   int _likeCount = 0;
   int _dislikeCount = 0;
   int _favoriteCount = 0;
@@ -36,7 +35,7 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
   IconData _shareIcon = Icons.share_outlined;
 
   final GlobalKey _repaintBoundaryKey = GlobalKey();
-  List<dynamic> _currentQuizzes = [];
+  final List<dynamic> _currentQuizzes = [];
 
   @override
   void initState() {
@@ -44,9 +43,9 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
     _updateCurrentQuiz();
   }
 
-  _updateCurrentQuiz() {
-    var nextQuiz = _getNextQuizzes();
-    if (nextQuiz == null) {
+  _updateCurrentQuiz() async {
+    var nextQuizList = await _getNextQuizzes();
+    if (nextQuizList.isEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.push(
           context,
@@ -57,7 +56,7 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
       });
     } else {
       setState(() {
-        _currentQuizzes = nextQuiz;
+        _currentQuizzes.addAll(nextQuizList);
         // Uncomment this once the jsons are updated to have likes, dislikes, etc counts.
         /*_likeCount = _currentQuiz['likes'];
         _dislikeCount = _currentQuiz['dislikes'];
@@ -67,19 +66,14 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
     }
   }
 
-  _getNextQuizzes() {
+  Future<List<dynamic>> _getNextQuizzes() async {
     if (UserHomeStats().hasUserExhaustedNerdShots()) {
       print('User has exhausted the shots counts.');
-      return null;
+      return [];
     } else {
-      String topic = TopicSelection.selectedTopic;
-      String subtopic = TopicSelection.selectedSubtopic;
-      print('topic: $topic, subtopic: $subtopic');
-      UserHomeStats().incrementShotsCount();
-      var quizType = Topics.getQuizType(topic);
-      var nextQuestions = quizType.getNextQuestionsList(5);
+      var nextQuestions = await NerdShotsService().getNextQuizflexes(TopicSelection.selectedTopic, TopicSelection.selectedSubtopic, 6);
       print('$nextQuestions');
-      return nextQuestions;
+      return nextQuestions['data'];
     }
   }
 
@@ -136,7 +130,7 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
           .findRenderObject() as RenderRepaintBoundary;
       ui.Image image = await boundary.toImage(pixelRatio: 3.0);
       ByteData? byteData =
-      await image.toByteData(format: ui.ImageByteFormat.png);
+          await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
 
       final directory = await getApplicationDocumentsDirectory();
@@ -150,12 +144,16 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
     }
   }
 
-  _getDivider() {
-    return const Expanded(
-        child: Divider(
-          thickness: 0.5,
-          color: Colors.grey,
-        ));
+  Widget? _getNextShot() {
+    print('index: $_currentIndex');
+    if (_currentIndex == _currentQuizzes.length - 1) {
+      _updateCurrentQuiz();
+      if(_currentQuizzes.isEmpty) {
+        return null;
+      }
+    }
+
+    return _getCard(_currentQuizzes[_currentIndex]);
   }
 
   Widget _getCard(dynamic quiz) {
@@ -167,7 +165,7 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
           Card(
             color: CustomColors.mainThemeColor,
             margin:
-            const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
             child: ListTile(
               title: Center(
                 child: Text(
@@ -193,7 +191,7 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
               borderRadius: BorderRadius.circular(15),
             ),
             margin:
-            const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
@@ -270,19 +268,30 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
       canPop: false,
       child: Scaffold(
         appBar: Styles.getAppBar('Nerd Shots Summary'),
-        drawer: MenuOptions.getMenuDrawer(context),
+        //drawer: MenuOptions.getMenuDrawer(context),
         body: Container(
           decoration: Styles.getBackgroundBoxDecoration(),
           child: _getBody(),
         ),
-        bottomNavigationBar: const BottomMenu(),
+        //bottomNavigationBar: const BottomMenu(),
       ),
     );
   }
 
   Widget _getBody() {
     final CardSwiperController controller = CardSwiperController();
+    if (_currentQuizzes.isEmpty) {
+      return const Center(
+        child: Text(
+          'No more shots available. Please upgrade your account or come back later.',
+          style: TextStyle(color: Colors.white, fontSize: 16),
+          textAlign: TextAlign.center,
+        ),
+      );
+    }
+
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Styles.getSizedHeightBox(12),
         Expanded(
@@ -300,8 +309,19 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
                 verticalThresholdPercentage,
                 ) =>
                 SingleChildScrollView(
-                  child: _getCard(_currentQuizzes[index]),
+                  child: _getNextShot(), //_getCard(_currentQuizzes[index]),
                 ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 20.0), // Adjust the padding as needed
+          child: Container(
+            child: Styles.getElevatedButton(
+                'CLOSE',
+                CustomColors.mainThemeColor,
+                Colors.white,
+                context,
+                    (ctx) => Navigator.pop(ctx)),
           ),
         ),
       ],
@@ -309,18 +329,31 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
   }
 
   bool _onSwipe(
-      int previousIndex,
-      int? currentIndex,
-      CardSwiperDirection direction,
-      ) {
+    int previousIndex,
+    int? currentIndex,
+    CardSwiperDirection direction,
+  ) {
+    if (direction == CardSwiperDirection.left) {
+      if (_currentIndex < _currentQuizzes.length - 1) {
+        setState(() {
+          _currentIndex++;
+        });
+      }
+    } else if (direction == CardSwiperDirection.right) {
+      if (_currentIndex > 0) {
+        setState(() {
+          _currentIndex--;
+        });
+      }
+    }
     return true;
   }
 
   bool _onUndo(
-      int? previousIndex,
-      int currentIndex,
-      CardSwiperDirection direction,
-      ) {
+    int? previousIndex,
+    int currentIndex,
+    CardSwiperDirection direction,
+  ) {
     return true;
   }
 }

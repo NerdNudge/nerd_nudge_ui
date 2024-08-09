@@ -4,8 +4,7 @@ import 'package:nerd_nudge/utilities/api_end_points.dart';
 
 class ApiService {
 
-  Future<dynamic> getRequest(String endpoint) async {
-    const String baseURL = APIEndpoints.BASE_URL;
+  Future<dynamic> getRequest(String baseURL, String endpoint) async {
     final response = await http.get(Uri.parse('$baseURL$endpoint'));
     if (response.statusCode == 200) {
       return json.decode(response.body);
@@ -15,7 +14,7 @@ class ApiService {
   }
 
   Future<dynamic> postRequest(String endpoint, Map<String, dynamic> data) async {
-    const String baseURL = APIEndpoints.BASE_URL;
+    const String baseURL = APIEndpoints.USER_INSIGHTS_BASE_URL;
     final response = await http.post(
       Uri.parse('$baseURL$endpoint'),
       headers: {'Content-Type': 'application/json'},
