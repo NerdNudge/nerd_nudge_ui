@@ -10,7 +10,7 @@ import '../../menus/screens/menu_options.dart';
 import '../../nerd_shots/screens/shots_home.dart';
 import '../../quiz/home/screens/quiz_home_page.dart';
 import '../../subscriptions/subscription_page_tabs.dart';
-import '../../user_profile/screens/user_stats.dart';
+import '../dto/user_home_stats.dart';
 import '../services/home_page_service.dart';
 
 class HomePage extends StatefulWidget {
@@ -37,6 +37,8 @@ class _HomePageState extends State<HomePage> {
   Widget _getHomePageBody(BuildContext context) {
     String message = WelcomeMessages.messages
         .elementAt(Random().nextInt(WelcomeMessages.messages.length));
+
+    HomePageService().getUserHomePageStats();
 
     var quoteOfTheDayObject = HomePageService().getQuoteOfTheDay();
     String quoteOfTheDay = quoteOfTheDayObject['quote'];
@@ -209,8 +211,8 @@ class _HomePageState extends State<HomePage> {
                   _buildStatsRow(
                       'Quizzes Remaining',
                       'Shots Remaining',
-                      UserStats().getDailyQuizRemaining().toString(),
-                      UserStats().getDailyShotsRemaining().toString()),
+                      UserHomeStats().getDailyQuizRemaining().toString(),
+                      UserHomeStats().getDailyShotsRemaining().toString()),
                 ],
               ),
             ),
@@ -238,8 +240,8 @@ class _HomePageState extends State<HomePage> {
                   _buildStatsRow(
                       'Total Quizzes',
                       'Percentage Correct',
-                      UserStats().getTotalQuizzesAttempted().toString(),
-                      '${UserStats().getTotalPercentageCorrect().toString()} %'),
+                      UserHomeStats().getTotalQuizzesAttempted().toString(),
+                      '${UserHomeStats().getTotalPercentageCorrect().toString()} %'),
                 ],
               ),
             ),
@@ -256,8 +258,8 @@ class _HomePageState extends State<HomePage> {
                   _buildStatsRow(
                       'Highest in a Day',
                       'Highest Correct in a Day',
-                      UserStats().getHighestInADay().toString(),
-                      UserStats().getHighestCorrectInADay().toString()),
+                      UserHomeStats().getHighestInADay().toString(),
+                      UserHomeStats().getHighestCorrectInADay().toString()),
                 ],
               ),
             ),
@@ -274,8 +276,8 @@ class _HomePageState extends State<HomePage> {
                   _buildStatsRow(
                       'Current Streak',
                       'Highest Streak',
-                      UserStats().getCurrentStreak().toString(),
-                      UserStats().getHighestStreak().toString()),
+                      UserHomeStats().getCurrentStreak().toString(),
+                      UserHomeStats().getHighestStreak().toString()),
                 ],
               ),
             ),

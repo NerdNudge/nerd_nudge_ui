@@ -14,7 +14,7 @@ import '../../../utilities/quiz_topics.dart';
 import '../../../utilities/styles.dart';
 import '../../bottom_menus/screens/bottom_menu_options.dart';
 import '../../menus/screens/menu_options.dart';
-import '../../user_profile/screens/user_stats.dart';
+import '../../home_page/dto/user_home_stats.dart';
 import '../../utilities/constants.dart';
 
 class NerdShotsSwiped extends StatefulWidget {
@@ -68,14 +68,14 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
   }
 
   _getNextQuizzes() {
-    if (UserStats().hasUserExhaustedNerdShots()) {
+    if (UserHomeStats().hasUserExhaustedNerdShots()) {
       print('User has exhausted the shots counts.');
       return null;
     } else {
       String topic = TopicSelection.selectedTopic;
       String subtopic = TopicSelection.selectedSubtopic;
       print('topic: $topic, subtopic: $subtopic');
-      UserStats().incrementShotsCount();
+      UserHomeStats().incrementShotsCount();
       var quizType = Topics.getQuizType(topic);
       var nextQuestions = quizType.getNextQuestionsList(5);
       print('$nextQuestions');

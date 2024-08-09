@@ -9,7 +9,7 @@ import '../../../menus/screens/menu_options.dart';
 import '../../../subscriptions/upgrade_page.dart';
 import '../../../user_profile/screens/user_account_types.dart';
 import '../screens/question_complete_screen.dart';
-import '../../../user_profile/screens/user_stats.dart';
+import '../../../home_page/dto/user_home_stats.dart';
 
 class QuizService extends StatefulWidget {
   const QuizService({super.key});
@@ -46,9 +46,9 @@ class _QuizServiceState extends State<QuizService> {
   }
 
   getNextQuiz() {
-    if (UserStats().hasUserExhaustedNerdQuiz()) {
+    if (UserHomeStats().hasUserExhaustedNerdQuiz()) {
       print('User has exhausted the quiz counts.');
-      if (UserStats().getUserAccountType() == AccountType.FREEMIUM) {
+      if (UserHomeStats().getUserAccountType() == AccountType.FREEMIUM) {
         print('Freemium user.');
         // Delay the navigation until after the build phase
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -62,11 +62,11 @@ class _QuizServiceState extends State<QuizService> {
       }
       return null;
     } else {
-      int count = UserStats().getUserQuizCountToday();
+      int count = UserHomeStats().getUserQuizCountToday();
       print('count: $count');
-      if (NerdAdManager.lastShownQuizCount != UserStats().getUserQuizCountToday() && (UserStats().getUserQuizCountToday() == 1 || UserStats().getUserQuizCountToday() == 4)) {
+      if (NerdAdManager.lastShownQuizCount != UserHomeStats().getUserQuizCountToday() && (UserHomeStats().getUserQuizCountToday() == 1 || UserHomeStats().getUserQuizCountToday() == 4)) {
         print('quiz count mod success');
-        NerdAdManager.lastShownQuizCount = UserStats().getUserQuizCountToday();
+        NerdAdManager.lastShownQuizCount = UserHomeStats().getUserQuizCountToday();
         return NerdAdManager(
           onAdClosed: () {
             setState(() {
@@ -86,7 +86,7 @@ class _QuizServiceState extends State<QuizService> {
       else {
         String selectedTopic = TopicSelection.selectedTopic;
         print('QuizService: $selectedTopic');
-        UserStats().incrementQuizCount();
+        UserHomeStats().incrementQuizCount();
         var quizType = Topics.getQuizType(selectedTopic);
         var nextQuestion = quizType.getNextQuestion();
         nextQuestion['category'] = selectedTopic;
