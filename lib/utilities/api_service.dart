@@ -26,4 +26,17 @@ class ApiService {
       throw Exception('Failed to post data');
     }
   }
+
+  Future<dynamic> putRequest(String endpoint, Map<String, dynamic> data) async {
+    final response = await http.put(
+      Uri.parse('$endpoint'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(data),
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to post data');
+    }
+  }
 }

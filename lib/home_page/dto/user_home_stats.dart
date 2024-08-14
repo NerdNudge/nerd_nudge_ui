@@ -139,7 +139,7 @@ class UserHomeStats {
   _getTotalNerdQuizQuota(AccountType accountType) {
     switch (accountType) {
       case AccountType.FREEMIUM:
-        return 12;
+        return 120;
       case AccountType.NERD_NUDGE_PRO:
         return 40;
       case AccountType.NERD_NUDGE_MAX:

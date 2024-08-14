@@ -71,7 +71,7 @@ class QuestionScreen extends StatelessWidget {
             ),
           ),
         ),
-        BottomMenu(),
+        //BottomMenu(),
       ],
     );
   }

@@ -26,9 +26,9 @@ class AnswerScreen extends StatelessWidget {
       canPop: false,
       child: Scaffold(
         appBar: Styles.getAppBar('Answer Details'),
-        drawer: MenuOptions.getMenuDrawer(context),
+        //drawer: MenuOptions.getMenuDrawer(context),
         body: _getBody(),
-        bottomNavigationBar: BottomMenu(),
+        //bottomNavigationBar: BottomMenu(),
       ),
     );
   }

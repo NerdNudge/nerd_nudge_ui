@@ -13,7 +13,10 @@ import 'package:share_plus/share_plus.dart';
 import '../../../utilities/colors.dart';
 import '../../../utilities/styles.dart';
 import '../../home_page/dto/user_home_stats.dart';
+import '../../utilities/api_end_points.dart';
+import '../../utilities/api_service.dart';
 import '../../utilities/constants.dart';
+import '../dto/shots_user_activity_api_entity.dart';
 
 class NerdShotsSwiped extends StatefulWidget {
   NerdShotsSwiped({super.key});
@@ -37,10 +40,27 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
   final GlobalKey _repaintBoundaryKey = GlobalKey();
   final List<dynamic> _currentQuizzes = [];
 
+  late bool _shouldResetIcons = true;
+  late ShotsUserActivityAPIEntity _shotsUserActivityAPIEntity;
+
   @override
   void initState() {
     super.initState();
     _updateCurrentQuiz();
+    _shotsUserActivityAPIEntity = ShotsUserActivityAPIEntity();
+    print('Inited. $_shotsUserActivityAPIEntity');
+  }
+
+  _resetIconsAndCounts(dynamic quiz) {
+    _likesIcon = Icons.thumb_up_alt_outlined;
+    _dislikesIcon = Icons.thumb_down_alt_outlined;
+    _favoriteIcon = Icons.favorite_border_outlined;
+    _shareIcon = Icons.share_outlined;
+
+    _likeCount = quiz['likes'];
+    _dislikeCount = quiz['dislikes'];
+    _favoriteCount = quiz['favorites'];
+    _shareCount = quiz['shares'];
   }
 
   _updateCurrentQuiz() async {
@@ -57,11 +77,6 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
     } else {
       setState(() {
         _currentQuizzes.addAll(nextQuizList);
-        // Uncomment this once the jsons are updated to have likes, dislikes, etc counts.
-        /*_likeCount = _currentQuiz['likes'];
-        _dislikeCount = _currentQuiz['dislikes'];
-        _favoriteCount = _currentQuiz['favorites'];
-        _shareCount = _currentQuiz['shares'];*/
       });
     }
   }
@@ -71,54 +86,63 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
       print('User has exhausted the shots counts.');
       return [];
     } else {
-      var nextQuestions = await NerdShotsService().getNextQuizflexes(TopicSelection.selectedTopic, TopicSelection.selectedSubtopic, 6);
+      var nextQuestions = await NerdShotsService().getNextQuizflexes(
+          TopicSelection.selectedTopic, TopicSelection.selectedSubtopic, 6);
       print('$nextQuestions');
       return nextQuestions['data'];
     }
   }
 
-  void _updateLike() {
+  void _updateLike(String id) {
     setState(() {
       if (_likesIcon == Icons.thumb_up_alt_outlined) {
+        print('updating likes');
         _likesIcon = Icons.thumb_up;
         _likeCount++;
+        _shotsUserActivityAPIEntity.addLike(id);
       } else {
         _likesIcon = Icons.thumb_up_alt_outlined;
         _likeCount--;
+        _shotsUserActivityAPIEntity.removeLike(id);
       }
     });
   }
 
-  void _updateDislike() {
+  void _updateDislike(String id) {
     setState(() {
       if (_dislikesIcon == Icons.thumb_down_alt_outlined) {
         _dislikesIcon = Icons.thumb_down;
         _dislikeCount++;
+        _shotsUserActivityAPIEntity.addDislike(id);
       } else {
         _dislikesIcon = Icons.thumb_down_alt_outlined;
         _dislikeCount--;
+        _shotsUserActivityAPIEntity.removeDislike(id);
       }
     });
   }
 
-  void _updateFavorite() {
+  void _updateFavorite(dynamic quiz) {
     setState(() {
       if (_favoriteIcon == Icons.favorite_border_outlined) {
         _favoriteIcon = Icons.favorite;
         _favoriteCount++;
+        _shotsUserActivityAPIEntity.addFavorite(quiz['topic_name'], quiz['sub_topic'], quiz['id']);
       } else {
         _favoriteIcon = Icons.favorite_border_outlined;
         _favoriteCount--;
+        _shotsUserActivityAPIEntity.removeFavorite(quiz['topic_name'], quiz['sub_topic'], quiz['id']);
       }
     });
   }
 
-  void _updateShare() {
+  void _updateShare(String id) {
     setState(() {
       if (_shareIcon == Icons.share_outlined) {
         _shareIcon = Icons.share;
       }
       _shareCount++;
+      _shotsUserActivityAPIEntity.addShare(id);
     });
 
     _shareContent();
@@ -148,7 +172,7 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
     print('index: $_currentIndex');
     if (_currentIndex == _currentQuizzes.length - 1) {
       _updateCurrentQuiz();
-      if(_currentQuizzes.isEmpty) {
+      if (_currentQuizzes.isEmpty) {
         return null;
       }
     }
@@ -157,7 +181,16 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
   }
 
   Widget _getCard(dynamic quiz) {
-    String title = TopicSelection.selectedSubtopic + ': ' + quiz['title'];
+    print('get card called');
+    String title = quiz['sub_topic'] + ': ' + quiz['title'];
+    String quizId = quiz['id'];
+
+    if (_shouldResetIcons) {
+      _resetIconsAndCounts(quiz);
+      _shouldResetIcons = false;
+      _shotsUserActivityAPIEntity.incrementShot(quiz['topic_name'], quiz['sub_topic']);
+    }
+
     return Container(
       alignment: Alignment.center,
       child: Column(
@@ -231,25 +264,25 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
                       icon: _likesIcon,
                       color: Colors.green,
                       count: _likeCount,
-                      onPressed: _updateLike,
+                      onPressed: () => _updateLike(quizId),
                     ),
                     Styles.buildIconButtonWithCounter(
                       icon: _dislikesIcon,
                       color: Colors.red,
                       count: _dislikeCount,
-                      onPressed: _updateDislike,
+                      onPressed: () => _updateDislike(quizId),
                     ),
                     Styles.buildIconButtonWithCounter(
                       icon: _favoriteIcon,
                       color: Colors.pink,
                       count: _favoriteCount,
-                      onPressed: _updateFavorite,
+                      onPressed: () => _updateFavorite(quiz),
                     ),
                     Styles.buildIconButtonWithCounter(
                       icon: _shareIcon,
                       color: Colors.blue,
                       count: _shareCount,
-                      onPressed: _updateShare,
+                      onPressed: () => _updateShare(quizId),
                     ),
                   ],
                 ),
@@ -303,29 +336,45 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
             numberOfCardsDisplayed: 1,
             padding: const EdgeInsets.all(1.0),
             cardBuilder: (
-                context,
-                index,
-                horizontalThresholdPercentage,
-                verticalThresholdPercentage,
-                ) =>
+              context,
+              index,
+              horizontalThresholdPercentage,
+              verticalThresholdPercentage,
+            ) =>
                 SingleChildScrollView(
-                  child: _getNextShot(), //_getCard(_currentQuizzes[index]),
-                ),
+              child: _getNextShot(), //_getCard(_currentQuizzes[index]),
+            ),
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(bottom: 20.0), // Adjust the padding as needed
+          padding: const EdgeInsets.only(
+              bottom: 20.0), // Adjust the padding as needed
           child: Container(
             child: Styles.getElevatedButton(
-                'CLOSE',
-                CustomColors.mainThemeColor,
-                Colors.white,
-                context,
-                    (ctx) => Navigator.pop(ctx)),
+              'CLOSE',
+              CustomColors.mainThemeColor,
+              Colors.white,
+              context,
+              _onClose,
+            ),
           ),
         ),
       ],
     );
+  }
+
+  Future<void> _onClose(BuildContext context) async {
+    print('updated value: $_shotsUserActivityAPIEntity');
+    final ApiService apiService = ApiService();
+    Map<String, dynamic> result = {};
+    try {
+      print(APIEndpoints.USER_ACTIVITY_BASE_URL + APIEndpoints.SHOTS_SUBMISSION);
+      result = await apiService.putRequest(APIEndpoints.USER_ACTIVITY_BASE_URL + APIEndpoints.SHOTS_SUBMISSION, _shotsUserActivityAPIEntity.toJson());
+      print('API Result: $result');
+    } catch (e) {
+      print(e);
+    }
+    Navigator.pop(context);
   }
 
   bool _onSwipe(
@@ -337,12 +386,14 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
       if (_currentIndex < _currentQuizzes.length - 1) {
         setState(() {
           _currentIndex++;
+          _shouldResetIcons = true;
         });
       }
     } else if (direction == CardSwiperDirection.right) {
       if (_currentIndex > 0) {
         setState(() {
           _currentIndex--;
+          _shouldResetIcons = true;
         });
       }
     }

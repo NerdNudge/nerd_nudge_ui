@@ -72,8 +72,9 @@ class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
                     ),
                     onPressed: () {
                       setState(() {
-                        TopicSelection.selectedSubtopic =
-                            keys[Random().nextInt(keys.length)];
+                        TopicSelection.selectedSubtopic = 'Random';
+                        /*TopicSelection.selectedSubtopic =
+                            keys[Random().nextInt(keys.length)];*/
                       });
                       widget.showShotsOrQuiz();
                     },
