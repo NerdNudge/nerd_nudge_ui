@@ -27,6 +27,7 @@ class NerdShotsSwiped extends StatefulWidget {
 
 class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
   int _currentIndex = 0;
+  int _maxIndex = -1;
   int _likeCount = 0;
   int _dislikeCount = 0;
   int _favoriteCount = 0;
@@ -52,15 +53,15 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
   }
 
   _resetIconsAndCounts(dynamic quiz) {
-    _likesIcon = Icons.thumb_up_alt_outlined;
-    _dislikesIcon = Icons.thumb_down_alt_outlined;
-    _favoriteIcon = Icons.favorite_border_outlined;
-    _shareIcon = Icons.share_outlined;
+    _likesIcon = _getLikesIcon(quiz['id']);
+    _dislikesIcon = _getDisLikesIcon(quiz['id']);
+    _favoriteIcon = _getFavoritesIcon(quiz['topic_name'], quiz['sub_topic'], quiz['id']);
+    _shareIcon = _getSharesIcon(quiz['id']);
 
-    _likeCount = quiz['likes'];
-    _dislikeCount = quiz['dislikes'];
-    _favoriteCount = quiz['favorites'];
-    _shareCount = quiz['shares'];
+    _likeCount = _getLikesCount(quiz, quiz['id']);
+    _dislikeCount =_getDisLikesCount(quiz, quiz['id']);
+    _favoriteCount = _getFavoritesCount(quiz, quiz['id']);
+    _shareCount = _getSharesCount(quiz, quiz['id']);
   }
 
   _updateCurrentQuiz() async {
@@ -188,7 +189,11 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
     if (_shouldResetIcons) {
       _resetIconsAndCounts(quiz);
       _shouldResetIcons = false;
-      _shotsUserActivityAPIEntity.incrementShot(quiz['topic_name'], quiz['sub_topic']);
+
+      if(_currentIndex > _maxIndex) {
+        _maxIndex = _currentIndex;
+        _shotsUserActivityAPIEntity.incrementShot(quiz['topic_name'], quiz['sub_topic']);
+      }
     }
 
     return Container(
@@ -295,6 +300,70 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
     );
   }
 
+  IconData _getLikesIcon(String id) {
+    if(_shotsUserActivityAPIEntity.isLikedByUser(id)) {
+      return Icons.thumb_up;
+    }
+    
+    return Icons.thumb_up_alt_outlined;
+  }
+
+  int _getLikesCount(dynamic quiz, String id) {
+    if(_shotsUserActivityAPIEntity.isLikedByUser(id)) {
+      return quiz['likes'] + 1;
+    }
+
+    return quiz['likes'];
+  }
+
+  IconData _getDisLikesIcon(String id) {
+    if(_shotsUserActivityAPIEntity.isDisLikedByUser(id)) {
+      return Icons.thumb_down;
+    }
+
+    return Icons.thumb_down_alt_outlined;
+  }
+
+  int _getDisLikesCount(dynamic quiz, String id) {
+    if(_shotsUserActivityAPIEntity.isDisLikedByUser(id)) {
+      return quiz['dislikes'] + 1;
+    }
+
+    return quiz['dislikes'];
+  }
+
+  IconData _getFavoritesIcon(String topic, String subtopic, String id) {
+    if(_shotsUserActivityAPIEntity.isFavoriteByUser(topic, subtopic, id)) {
+      return Icons.favorite;
+    }
+
+    return Icons.favorite_border_outlined;
+  }
+
+  int _getFavoritesCount(dynamic quiz, String id) {
+    if(_shotsUserActivityAPIEntity.isFavoriteByUser(quiz['topic_name'], quiz['sub_topic'], id)) {
+      return quiz['favorites'] + 1;
+    }
+
+    return quiz['favorites'];
+  }
+
+  IconData _getSharesIcon(String id) {
+    if(_shotsUserActivityAPIEntity.isSharedByUser(id)) {
+      return Icons.share;
+    }
+
+    return Icons.share_outlined;
+  }
+
+  int _getSharesCount(dynamic quiz, String id) {
+    if(_shotsUserActivityAPIEntity.isSharedByUser(id)) {
+      return quiz['shares'] + 1;
+    }
+
+    return quiz['shares'];
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -364,16 +433,7 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
   }
 
   Future<void> _onClose(BuildContext context) async {
-    print('updated value: $_shotsUserActivityAPIEntity');
-    final ApiService apiService = ApiService();
-    Map<String, dynamic> result = {};
-    try {
-      print(APIEndpoints.USER_ACTIVITY_BASE_URL + APIEndpoints.SHOTS_SUBMISSION);
-      result = await apiService.putRequest(APIEndpoints.USER_ACTIVITY_BASE_URL + APIEndpoints.SHOTS_SUBMISSION, _shotsUserActivityAPIEntity.toJson());
-      print('API Result: $result');
-    } catch (e) {
-      print(e);
-    }
+    await NerdShotsService().shotsSubmission(_shotsUserActivityAPIEntity);
     Navigator.pop(context);
   }
 

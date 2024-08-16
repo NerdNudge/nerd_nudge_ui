@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nerd_nudge/quiz/quiz_answers/screens/read_more.dart';
 
 class AnswerWithStats extends StatefulWidget {
   const AnswerWithStats({super.key, required this.completeQuiz, required this.didTimerEnd});
@@ -39,6 +40,9 @@ class _AnswerWithStatsState extends State<AnswerWithStats> {
     (widget.completeQuiz['possible_answers']).forEach((key, value) {
       createAnswerBox(key, value);
     });
+
+    var quiz = widget.completeQuiz;
+    ReadMorePage.quizflexUserActivityAPIEntity.addQuizflex(quiz['topic_name'], quiz['sub_topic'], quiz['id'], quiz['difficulty_level'], isAnswerCorrect());
   }
 
   Color getAnswerOptionContainerColor(String answerSequence) {
@@ -46,8 +50,9 @@ class _AnswerWithStatsState extends State<AnswerWithStats> {
       return (answerSequence == widget.completeQuiz['right_answer']) ? selectedAnswerBorderColor : defaultAnswerBorderColor;
     }
     else {
-      if (!widget.completeQuiz['selected_answers'].contains(answerSequence))
+      if (!widget.completeQuiz['selected_answers'].contains(answerSequence)) {
         return defaultAnswerBorderColor;
+      }
 
       return (answerSequence == widget.completeQuiz['right_answer']) ? selectedAnswerBorderColor : wrongAnswerBorderColor;
     }
@@ -64,6 +69,14 @@ class _AnswerWithStatsState extends State<AnswerWithStats> {
 
       return (!widget.completeQuiz['selected_answers'].contains(answerSequence)) ? defaultIcon : wrongIcon;
     }
+  }
+
+  bool isAnswerCorrect() {
+    if(widget.didTimerEnd) {
+      return false;
+    }
+
+    return (widget.completeQuiz['selected_answers'].contains(widget.completeQuiz['right_answer']));
   }
 
   Color getAnswerTextColor(String answerSequence) {

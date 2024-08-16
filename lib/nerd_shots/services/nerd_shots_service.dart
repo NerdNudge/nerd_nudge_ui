@@ -40,19 +40,17 @@ class NerdShotsService {
     final ApiService apiService = ApiService();
     dynamic result;
     try {
-      // Construct the full URL for the PUT request
-      final String url = APIEndpoints.CONTENT_MANAGER_BASE_URL +
+      final String url = APIEndpoints.USER_ACTIVITY_BASE_URL +
           APIEndpoints.SHOTS_SUBMISSION;
 
-      String jsonBody = json.encode(entity.toJson());
+      final Map<String, dynamic> jsonBody = entity.toJson();
 
       print('Sending PUT request to: $url');
-      print('Request Body: $jsonBody');
+      print('Request Body: ${json.encode(jsonBody)}');
 
-      result = await apiService.putRequest(url, jsonBody as Map<String, dynamic>);
+      result = await apiService.putRequest(url, jsonBody);
       print('API Result: $result');
 
-      // Process the response
       if (result is Map<String, dynamic>) {
         return result;
       } else if (result is String) {
@@ -61,7 +59,7 @@ class NerdShotsService {
         throw const FormatException("Unexpected response format");
       }
     } catch (e) {
-      print(e);
+      print('Error during shotsSubmission: $e');
       return '{}';
     }
   }

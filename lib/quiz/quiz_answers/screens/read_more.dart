@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:nerd_nudge/quiz/quiz_answers/dto/quizflex_user_activity_api_entity.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/rendering.dart';
@@ -8,6 +9,8 @@ import 'dart:io';
 
 import '../../../menus/screens/menu_options.dart';
 import '../../../topics/screens/topic_selection_home_page.dart';
+import '../../../utilities/api_end_points.dart';
+import '../../../utilities/api_service.dart';
 import '../../../utilities/colors.dart';
 import '../../../utilities/constants.dart';
 import '../../../utilities/styles.dart';
@@ -17,6 +20,16 @@ class ReadMorePage extends StatefulWidget {
   const ReadMorePage({super.key, required this.completeQuiz});
 
   final completeQuiz;
+  static QuizflexUserActivityAPIEntity quizflexUserActivityAPIEntity = QuizflexUserActivityAPIEntity();
+
+  static void initializeUserActivityEntity() {
+    quizflexUserActivityAPIEntity = QuizflexUserActivityAPIEntity();
+  }
+
+  static void resetUserActivityEntity() {
+    quizflexUserActivityAPIEntity.clearData();
+    initializeUserActivityEntity();
+  }
 
   @override
   State<ReadMorePage> createState() => _ReadMorePageState();
@@ -38,61 +51,139 @@ class _ReadMorePageState extends State<ReadMorePage> {
   @override
   void initState() {
     super.initState();
-
-    // Uncomment this once the jsons are updated to have likes, dislikes, etc counts.
-    /*_likeCount = widget.completeQuiz['likes'];
-    _dislikeCount = widget.completeQuiz['dislikes'];
-    _favoriteCount = widget.completeQuiz['favorites'];
-    _shareCount = widget.completeQuiz['shares'];*/
-
-    // Remove this after uncommenting the above.
-    _likeCount = 0;
-    _dislikeCount = 0;
-    _favoriteCount = 0;
-    _shareCount = 0;
+    ReadMorePage.initializeUserActivityEntity();
   }
 
-  void _updateLike() {
+  _resetIconsAndCounts(dynamic quiz) {
+    setState(() {
+      _likesIcon = _getLikesIcon(quiz['id']);
+      _dislikesIcon = _getDisLikesIcon(quiz['id']);
+      _favoriteIcon = _getFavoritesIcon(quiz['topic_name'], quiz['sub_topic'], quiz['id']);
+      _shareIcon = _getSharesIcon(quiz['id']);
+
+      _likeCount = _getLikesCount(quiz, quiz['id']);
+      _dislikeCount =_getDisLikesCount(quiz, quiz['id']);
+      _favoriteCount = _getFavoritesCount(quiz, quiz['id']);
+      _shareCount = _getSharesCount(quiz, quiz['id']);
+    });
+  }
+
+  void _updateLike(String id) {
     setState(() {
       if (_likesIcon == Icons.thumb_up_alt_outlined) {
         _likesIcon = Icons.thumb_up;
         _likeCount++;
+        ReadMorePage.quizflexUserActivityAPIEntity.addLike(id);
       } else {
         _likesIcon = Icons.thumb_up_alt_outlined;
         _likeCount--;
+        ReadMorePage.quizflexUserActivityAPIEntity.removeLike(id);
       }
     });
   }
 
-  void _updateDislike() {
+  void _updateDislike(String id) {
     setState(() {
       if (_dislikesIcon == Icons.thumb_down_alt_outlined) {
         _dislikesIcon = Icons.thumb_down;
         _dislikeCount++;
+        ReadMorePage.quizflexUserActivityAPIEntity.addDislike(id);
       } else {
         _dislikesIcon = Icons.thumb_down_alt_outlined;
         _dislikeCount--;
+        ReadMorePage.quizflexUserActivityAPIEntity.removeDislike(id);
       }
     });
   }
 
-  void _updateFavorite() {
+  void _updateFavorite(dynamic quiz) {
     setState(() {
       if (_favoriteIcon == Icons.favorite_border_outlined) {
         _favoriteIcon = Icons.favorite;
         _favoriteCount++;
+        ReadMorePage.quizflexUserActivityAPIEntity.addFavorite(
+            quiz['topic_name'], quiz['sub_topic'], quiz['id']);
       } else {
         _favoriteIcon = Icons.favorite_border_outlined;
         _favoriteCount--;
+        ReadMorePage.quizflexUserActivityAPIEntity.removeFavorite(
+            quiz['topic_name'], quiz['sub_topic'], quiz['id']);
       }
     });
   }
 
-  Future<void> _captureAndShareScreenshot() async {
+  IconData _getLikesIcon(String id) {
+    if(ReadMorePage.quizflexUserActivityAPIEntity.isLikedByUser(id)) {
+      return Icons.thumb_up;
+    }
+
+    return Icons.thumb_up_alt_outlined;
+  }
+
+  int _getLikesCount(dynamic quiz, String id) {
+    if(ReadMorePage.quizflexUserActivityAPIEntity.isLikedByUser(id)) {
+      return quiz['likes'] + 1;
+    }
+
+    return quiz['likes'];
+  }
+
+  IconData _getDisLikesIcon(String id) {
+    if(ReadMorePage.quizflexUserActivityAPIEntity.isDisLikedByUser(id)) {
+      return Icons.thumb_down;
+    }
+
+    return Icons.thumb_down_alt_outlined;
+  }
+
+  int _getDisLikesCount(dynamic quiz, String id) {
+    if(ReadMorePage.quizflexUserActivityAPIEntity.isDisLikedByUser(id)) {
+      return quiz['dislikes'] + 1;
+    }
+
+    return quiz['dislikes'];
+  }
+
+  IconData _getFavoritesIcon(String topic, String subtopic, String id) {
+    if(ReadMorePage.quizflexUserActivityAPIEntity.isFavoriteByUser(topic, subtopic, id)) {
+      return Icons.favorite;
+    }
+
+    return Icons.favorite_border_outlined;
+  }
+
+  int _getFavoritesCount(dynamic quiz, String id) {
+    if(ReadMorePage.quizflexUserActivityAPIEntity.isFavoriteByUser(quiz['topic_name'], quiz['sub_topic'], id)) {
+      return quiz['favorites'] + 1;
+    }
+
+    return quiz['favorites'];
+  }
+
+  IconData _getSharesIcon(String id) {
+    if(ReadMorePage.quizflexUserActivityAPIEntity.isSharedByUser(id)) {
+      return Icons.share;
+    }
+
+    return Icons.share_outlined;
+  }
+
+  int _getSharesCount(dynamic quiz, String id) {
+    if(ReadMorePage.quizflexUserActivityAPIEntity.isSharedByUser(id)) {
+      return quiz['shares'] + 1;
+    }
+
+    return quiz['shares'];
+  }
+
+  Future<void> _captureAndShareScreenshot(String id) async {
     try {
-      RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      ReadMorePage.quizflexUserActivityAPIEntity.addShare(id);
+      RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext!
+          .findRenderObject() as RenderRepaintBoundary;
       ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
 
       final directory = await getApplicationDocumentsDirectory();
@@ -120,6 +211,9 @@ class _ReadMorePageState extends State<ReadMorePage> {
     String description = widget.completeQuiz['description_and_explanation'];
     String pro_tip = widget.completeQuiz['pro_tip'];
     String fun_fact = widget.completeQuiz['fun_fact'];
+    String quizId = widget.completeQuiz['id'];
+
+    _resetIconsAndCounts(widget.completeQuiz);
 
     return RepaintBoundary(
       key: _repaintBoundaryKey,
@@ -143,7 +237,8 @@ class _ReadMorePageState extends State<ReadMorePage> {
             ),
             Card(
               color: CustomColors.mainThemeColor,
-              margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+              margin:
+                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
               child: ListTile(
                 title: Center(
                   child: Text(title,
@@ -158,16 +253,17 @@ class _ReadMorePageState extends State<ReadMorePage> {
             ),
             Card(
               child: Container(
-                margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+                margin: const EdgeInsets.symmetric(
+                    vertical: 10.0, horizontal: 25.0),
                 child: Column(
                   children: <Widget>[
-                    Styles.getTitleDescriptionWidget('Description: ', description,
-                        Colors.black, Colors.black, 18, 17),
+                    Styles.getTitleDescriptionWidget('Description: ',
+                        description, Colors.black, Colors.black, 18, 17),
                     const SizedBox(
                       height: 30.0,
                     ),
-                    Styles.getTitleDescriptionWidget(
-                        'Pro Tip: ', pro_tip, Colors.black, Colors.black, 18, 17),
+                    Styles.getTitleDescriptionWidget('Pro Tip: ', pro_tip,
+                        Colors.black, Colors.black, 18, 17),
                     const SizedBox(
                       height: 30.0,
                     ),
@@ -187,28 +283,28 @@ class _ReadMorePageState extends State<ReadMorePage> {
                           icon: _likesIcon,
                           color: Colors.green,
                           count: _likeCount,
-                          onPressed: _updateLike,
+                          onPressed: () => _updateLike(quizId),
                         ),
                         const SizedBox(width: 10),
                         Styles.buildIconButtonWithCounter(
                           icon: _dislikesIcon,
                           color: Colors.red,
                           count: _dislikeCount,
-                          onPressed: _updateDislike,
+                          onPressed: () => _updateDislike(quizId),
                         ),
                         const SizedBox(width: 10),
                         Styles.buildIconButtonWithCounter(
                           icon: _favoriteIcon,
                           color: Colors.pink,
                           count: _favoriteCount,
-                          onPressed: _updateFavorite,
+                          onPressed: () => _updateFavorite(widget.completeQuiz),
                         ),
                         const SizedBox(width: 10),
                         Styles.buildIconButtonWithCounter(
                           icon: _shareIcon,
                           color: Colors.blue,
                           count: _shareCount,
-                          onPressed: _captureAndShareScreenshot,
+                          onPressed: () => _captureAndShareScreenshot(quizId),
                         ),
                       ],
                     ),
@@ -224,7 +320,7 @@ class _ReadMorePageState extends State<ReadMorePage> {
                               CustomColors.mainThemeColor,
                               Colors.white,
                               context,
-                                  (ctx) => Navigator.pop(ctx)),
+                              (ctx) => Navigator.pop(ctx)),
                         ),
                       ],
                     ),

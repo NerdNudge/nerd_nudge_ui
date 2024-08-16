@@ -35,7 +35,7 @@ class QuestionScreen extends StatelessWidget {
                 Container(
                   child: QuestionHeader(
                     topic: TopicSelection.selectedTopic,
-                    subtopic: TopicSelection.selectedSubtopic,
+                    subtopic: completeQuiz['sub_topic'],
                     difficultyLevel: completeQuiz['difficulty_level'],
                   ),
                 ),

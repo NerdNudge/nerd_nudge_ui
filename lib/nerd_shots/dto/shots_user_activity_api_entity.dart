@@ -20,6 +20,16 @@ class ShotsUserActivityAPIEntity {
     }
   }
 
+  bool isFavoriteByUser(String topic, String subtopic, String id) {
+    if(! _favorites.containsKey(topic))
+      return false;
+
+    if(! _favorites[topic]!.containsKey(subtopic))
+      return false;
+
+    return _favorites[topic]?[subtopic]?.contains(id) ?? false;
+  }
+
 
   void incrementShot(String topic, String subtopic) {
     Map<String, int>? topicObject;
@@ -58,6 +68,17 @@ class ShotsUserActivityAPIEntity {
     _shots[topic] = topicObject;
   }
 
+  bool isLikedByUser(String id) {
+    return _likes.contains(id);
+  }
+
+  bool isDisLikedByUser(String id) {
+    return _dislikes.contains(id);
+  }
+
+  bool isSharedByUser(String id) {
+    return _shares.contains(id);
+  }
 
   void addLike(String id) {
     _addToArray(_likes, id);
