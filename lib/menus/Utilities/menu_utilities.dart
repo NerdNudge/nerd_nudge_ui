@@ -7,8 +7,8 @@ class MenuUtils {
     required Map<String, dynamic> recentFavorite,
     required Function onTap,
   }) {
-    final String type = recentFavorite['topic'];
-    final String topic = recentFavorite['sub-topic'];
+    final String type = recentFavorite['topic_name'];
+    final String topic = recentFavorite['sub_topic'];
     final String title = recentFavorite['title'];
     final String difficulty_level = recentFavorite['difficulty_level'];
 
@@ -43,14 +43,13 @@ class MenuUtils {
                       ),
                     ],
                   ),
-                  SizedBox(height: 15.0),
+                  Styles.getSizedHeightBox(15),
                   _getCardRowForText('Topic: ', type, Icons.category),
-                  SizedBox(height: 5.0),
+                  Styles.getSizedHeightBox(5),
                   _getCardRowForText('Sub-Topic: ', topic, Icons.topic),
-                  SizedBox(height: 5.0),
-                  _getCardRowForText(
-                      'Difficulty Level: ', difficulty_level, Icons.assessment),
-                  SizedBox(height: 10.0),
+                  Styles.getSizedHeightBox(5),
+                  _getCardRowForText('Difficulty Level: ', difficulty_level, Icons.assessment),
+                  Styles.getSizedHeightBox(10),
                 ],
               ),
             ),

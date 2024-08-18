@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:nerd_nudge/menus/screens/favorites/favoriteCommons/favorites_details_swiped.dart';
+import 'package:nerd_nudge/utilities/styles.dart';
 import '../screens/favorites/recents/recent_favorites_details.dart';
 import 'menu_utilities.dart';
 
 class FavoriteUtils {
   static getFavoritesListing(BuildContext context, List<Map<String, dynamic>> favoritesListings) {
     return DefaultTabController(
-      length: 2,
+      length: 1,
       child: Stack(
         children: [
           SingleChildScrollView(
@@ -17,9 +19,7 @@ class FavoriteUtils {
                     color: Colors.white,
                   ),
                 ),
-                SizedBox(
-                  height: 15,
-                ),
+                Styles.getSizedHeightBox(15),
                 ...favoritesListings.asMap().entries.map((entry) {
                   int index = entry.key;
                   Map<String, dynamic> recentFavorite = entry.value;
@@ -28,13 +28,11 @@ class FavoriteUtils {
                       MenuUtils.getRecentFavoritesCard(
                         recentFavorite: recentFavorite,
                         onTap: () {
-                          print('Challenge ${recentFavorite['topic']} selected');
-
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => RecentFavoritesDetails(
-                                recentFavorites: favoritesListings,
+                              builder: (context) => FavoritesDetailsSwiped(
+                                favorites: favoritesListings,
                                 index: index,
                               ),
                             ),
@@ -42,7 +40,7 @@ class FavoriteUtils {
                         },
                       ),
                       SizedBox(
-                        height: 20,
+                        height: 15,
                       ),
                     ],
                   );

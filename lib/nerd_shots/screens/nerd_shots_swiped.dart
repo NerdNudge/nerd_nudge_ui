@@ -13,8 +13,6 @@ import 'package:share_plus/share_plus.dart';
 import '../../../utilities/colors.dart';
 import '../../../utilities/styles.dart';
 import '../../home_page/dto/user_home_stats.dart';
-import '../../utilities/api_end_points.dart';
-import '../../utilities/api_service.dart';
 import '../../utilities/constants.dart';
 import '../dto/shots_user_activity_api_entity.dart';
 

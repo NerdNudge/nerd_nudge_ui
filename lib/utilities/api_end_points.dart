@@ -7,4 +7,7 @@ class APIEndpoints {
   static const String QUIZFLEXES = '/api/nerdnudge/quizflexes/getQuizFlexes';
   static const String SHOTS_SUBMISSION = '/api/nerdnudge/useractivity/shotsSubmission';
   static const String QUIZFLEX_SUBMISSION = '/api/nerdnudge/useractivity/quizflexSubmission';
+  static const String FAVORITES_SUBMISSION = '/api/nerdnudge/useractivity/favoritesSubmission';
+
+  static const String RECENT_FAVORITES = '/api/nerdnudge/favorites/getUserRecentFavorites/abc@gmail.com';
 }

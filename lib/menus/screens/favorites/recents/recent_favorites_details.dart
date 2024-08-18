@@ -111,8 +111,8 @@ class _RecentFavoritesDetailsState extends State<RecentFavoritesDetails> {
         children: <Widget>[
           Container(
             child: QuestionHeader(
-              topic: widget.recentFavorites[widget.index]['topic'],
-              subtopic: widget.recentFavorites[widget.index]['sub-topic'],
+              topic: widget.recentFavorites[widget.index]['topic_name'],
+              subtopic: widget.recentFavorites[widget.index]['sub_topic'],
               difficultyLevel: widget.recentFavorites[widget.index]
                   ['difficulty_level'],
             ),
