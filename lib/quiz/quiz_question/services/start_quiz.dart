@@ -15,16 +15,22 @@ import '../../../home_page/dto/user_home_stats.dart';
 class QuizService extends StatefulWidget {
   const QuizService({super.key});
 
+  static void resetCurrentQuizzes() {
+    _QuizServiceState._currentQuizzes = [];
+  }
+
   @override
   State<QuizService> createState() => _QuizServiceState();
 }
 
 class _QuizServiceState extends State<QuizService> {
-  static final List<dynamic> _currentQuizzes = [];
+  static List<dynamic> _currentQuizzes = [];
   static int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    int l = _currentQuizzes.length;
+    print('lenth of current quizzes: $l');
     var nextQuiz = _getNextQuiz();
     if (nextQuiz == null) {
       return Scaffold(
@@ -44,7 +50,9 @@ class _QuizServiceState extends State<QuizService> {
       child: Scaffold(
         appBar: Styles.getAppBar(Constants.title),
         drawer: MenuOptions.getMenuDrawer(context),
-        body: nextQuiz is Widget ? nextQuiz : QuestionScreen(completeQuiz: nextQuiz),
+        body: nextQuiz is Widget
+            ? nextQuiz
+            : QuestionScreen(completeQuiz: nextQuiz),
       ),
     );
   }
@@ -65,9 +73,12 @@ class _QuizServiceState extends State<QuizService> {
       }
       return null;
     } else {
-      if (NerdAdManager.lastShownQuizCount != UserHomeStats().getUserQuizCountToday() &&
-          (UserHomeStats().getUserQuizCountToday() == 4 || UserHomeStats().getUserQuizCountToday() == 8)) {
-        NerdAdManager.lastShownQuizCount = UserHomeStats().getUserQuizCountToday();
+      if (NerdAdManager.lastShownQuizCount !=
+              UserHomeStats().getUserQuizCountToday() &&
+          (UserHomeStats().getUserQuizCountToday() == 4 ||
+              UserHomeStats().getUserQuizCountToday() == 8)) {
+        NerdAdManager.lastShownQuizCount =
+            UserHomeStats().getUserQuizCountToday();
         return NerdAdManager(
           onAdClosed: () {
             setState(() {

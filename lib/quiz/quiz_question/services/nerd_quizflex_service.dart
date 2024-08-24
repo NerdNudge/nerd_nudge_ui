@@ -6,19 +6,35 @@ import '../../../utilities/api_service.dart';
 class NerdQuizflexService {
   NerdQuizflexService._privateConstructor();
   static final NerdQuizflexService _instance =
-  NerdQuizflexService._privateConstructor();
+      NerdQuizflexService._privateConstructor();
 
   factory NerdQuizflexService() {
     return _instance;
   }
 
-  Future<dynamic> getNextQuizflexes(String topic, String subtopic, int limit) async {
+  Future<dynamic> getNextQuizflexes(
+      String topic, String subtopic, int limit) async {
     print('getting Quizflex data now..');
     final ApiService apiService = ApiService();
     dynamic result;
     try {
-      print(APIEndpoints.CONTENT_MANAGER_BASE_URL + APIEndpoints.QUIZFLEXES + "?topic=" + topic + "&subtopic=" + subtopic + "&limit=" + limit.toString());
-      result = await apiService.getRequest(APIEndpoints.CONTENT_MANAGER_BASE_URL, APIEndpoints.QUIZFLEXES + "?topic=" + topic + "&subtopic=" + subtopic + "&limit=" + limit.toString());
+      print(APIEndpoints.CONTENT_MANAGER_BASE_URL +
+          APIEndpoints.QUIZFLEXES +
+          "?topic=" +
+          topic +
+          "&subtopic=" +
+          subtopic +
+          "&limit=" +
+          limit.toString());
+      result = await apiService.getRequest(
+          APIEndpoints.CONTENT_MANAGER_BASE_URL,
+          APIEndpoints.QUIZFLEXES +
+              "?topic=" +
+              topic +
+              "&subtopic=" +
+              subtopic +
+              "&limit=" +
+              limit.toString());
       print('API Result: $result');
 
       if (result is Map<String, dynamic>) {
@@ -33,7 +49,6 @@ class NerdQuizflexService {
       return '{}';
     }
   }
-
 
   /*Future<dynamic> quizflexSubmission(ShotsUserActivityAPIEntity entity) async {
     final ApiService apiService = ApiService();

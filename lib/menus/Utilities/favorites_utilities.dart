@@ -39,9 +39,7 @@ class FavoriteUtils {
                           );
                         },
                       ),
-                      SizedBox(
-                        height: 15,
-                      ),
+                      Styles.getSizedHeightBox(15),
                     ],
                   );
                 }).toList(),

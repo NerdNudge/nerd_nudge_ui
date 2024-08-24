@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:nerd_nudge/quiz/home/screens/quiz_home_page.dart';
-import 'package:nerd_nudge/quiz/quiz_question/services/start_quiz.dart';
 import 'package:nerd_nudge/topics/screens/topic_selection_home_page.dart';
-import 'package:nerd_nudge/utilities/quiz_topics.dart';
-import 'dart:math';
 
 import '../../../../utilities/styles.dart';
 import '../../../bottom_menus/screens/bottom_menu_options.dart';
 import '../../../menus/screens/menu_options.dart';
+import '../services/topics_service.dart';
 
 class SubtopicSelectionPage extends StatefulWidget {
-  const SubtopicSelectionPage(
-      {super.key, required this.title, required this.showShotsOrQuiz});
+  const SubtopicSelectionPage({super.key, required this.title, required this.showShotsOrQuiz});
   final String title;
   final Function showShotsOrQuiz;
 
@@ -20,12 +16,30 @@ class SubtopicSelectionPage extends StatefulWidget {
 }
 
 class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
-  Map<String, dynamic> subtopics =
-      Topics.getSubtopics(TopicSelection.selectedTopic);
+  late List<Map<String, String>> subtopics = [];
+
+  _getSubtopics() async {
+    try {
+      final result = await TopicsService().getSubtopics(TopicSelection.selectedTopic);
+      setState(() {
+        subtopics = result;
+      });
+    } catch (e) {
+      print('Error loading topics: $e');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getSubtopics();  // Load subtopics when the widget is initialized
+  }
 
   @override
   Widget build(BuildContext context) {
-    print('Sub topics called');
+    String topicsel = TopicSelection.selectedTopic;
+    print('Subtopics called for topic: $topicsel');
+
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -38,22 +52,24 @@ class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
   }
 
   Widget _getBody() {
-    List<String> keys = subtopics.keys.toList();
-    String title = widget.title;
+    if (subtopics.isEmpty) {
+      return Center(child: Text('No subtopics available.'));
+    }
+
+    List<String> keys = subtopics.map((e) => e['name'] ?? 'Unnamed').toList();
     return Stack(
       children: [
         Positioned.fill(
           child: Container(
             decoration: Styles.getBackgroundBoxDecoration(),
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Center(
                     child: Text(
-                      '$title Sub-topics',
+                      '${widget.title} Sub-topics',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 28,
@@ -72,9 +88,9 @@ class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
                     ),
                     onPressed: () {
                       setState(() {
-                        TopicSelection.selectedSubtopic = 'Random';
-                        /*TopicSelection.selectedSubtopic =
-                            keys[Random().nextInt(keys.length)];*/
+                        if (keys.isNotEmpty) {
+                          TopicSelection.selectedSubtopic = 'Random';
+                        }
                       });
                       widget.showShotsOrQuiz();
                     },
@@ -92,8 +108,9 @@ class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
                     child: ListView.builder(
                       itemCount: subtopics.length,
                       itemBuilder: (context, index) {
-                        String key = keys[index];
-                        String value = subtopics[key]!;
+                        String? key = subtopics[index]['subtopicName'];
+                        String value = subtopics[index]['description'] ?? 'No description available';
+
                         return Card(
                           margin: const EdgeInsets.symmetric(vertical: 10.0),
                           shape: RoundedRectangleBorder(
@@ -110,11 +127,10 @@ class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      key,
+                                      key!,
                                       style: const TextStyle(
                                         fontSize: 18.0,
                                         fontWeight: FontWeight.bold,
@@ -126,14 +142,14 @@ class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
                                         backgroundColor: Color(0xFF6A69EB),
                                         minimumSize: Size(15, 35),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
+                                          borderRadius: BorderRadius.circular(12),
                                         ),
                                       ),
                                       onPressed: () {
                                         setState(() {
                                           TopicSelection.selectedSubtopic = key;
-                                          print('Selected subtopic: $key');
+                                          String ts = TopicSelection.selectedTopic;
+                                          print('Selected subtopic: $key for topic: $ts');
                                         });
                                         widget.showShotsOrQuiz();
                                       },
@@ -150,12 +166,13 @@ class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
                                 ),
                                 const SizedBox(height: 8.0),
                                 Styles.getTitleDescriptionWidget(
-                                    'Desc: ',
-                                    value,
-                                    const Color(0xFF6A69EB),
-                                    Colors.black54,
-                                    16,
-                                    15),
+                                  'Desc: ',
+                                  value,
+                                  const Color(0xFF6A69EB),
+                                  Colors.black54,
+                                  16,
+                                  15,
+                                ),
                                 const SizedBox(height: 8.0),
                               ],
                             ),

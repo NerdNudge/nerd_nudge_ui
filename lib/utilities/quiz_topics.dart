@@ -20,6 +20,7 @@ class Topics {
   static IconData getIconForTopics(String type) {
     switch (type) {
       case 'Data Structures and Algorithms':
+      case 'DSA':
         return Icons.graphic_eq;
       case 'System Design':
         return Icons.architecture;
