@@ -129,12 +129,15 @@ class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      key!,
-                                      style: const TextStyle(
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xFF6A69EB),
+                                    Expanded(
+                                      child: Text(
+                                        key!,
+                                        style: const TextStyle(
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: Color(0xFF6A69EB),
+                                        ),
+                                        overflow: TextOverflow.ellipsis, // Handle overflow
                                       ),
                                     ),
                                     ElevatedButton(

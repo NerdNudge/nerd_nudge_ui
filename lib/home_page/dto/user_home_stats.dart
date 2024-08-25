@@ -14,6 +14,7 @@ class UserHomeStats {
   late int _shotsCountToday = 0;
   late String _quoteOfTheDay = '';
   late String _quoteAuthor = '';
+  late String _quoteId = '';
   late int _numPeopleUsedNerdNudge = 0;
   late double _lastFetchTime = 0.0;
 
@@ -45,6 +46,7 @@ class UserHomeStats {
     instance._shotsCountToday = jsonData['shotsCountToday'] ?? 0;
     instance._quoteOfTheDay = jsonData['quoteOfTheDay'] ?? '';
     instance._quoteAuthor = jsonData['quoteAuthor'] ?? '';
+    instance._quoteId = jsonData['quoteId'] ?? '';
     instance._numPeopleUsedNerdNudge = jsonData['numPeopleUsedNerdNudgeToday'] ?? 0;
 
     return instance;
@@ -233,5 +235,11 @@ class UserHomeStats {
 
   set quoteAuthor(String value) {
     _quoteAuthor = value;
+  }
+
+  String get quoteId => _quoteId;
+
+  set quoteId(String value) {
+    _quoteId = value;
   }
 }

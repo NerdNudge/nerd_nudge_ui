@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import '../../../utilities/api_end_points.dart';
+import '../../../utilities/api_service.dart';
+
 class FavoriteTopicsService {
   final Map<String, dynamic> favSDESubTopics = json.decode('{"scalability":"Strategies for scaling systems.","load_balancing":"Distributing workloads across multiple servers.","caching":"Techniques to cache data for faster access.","database_replication":"Replicating databases for redundancy and availability.","data_partitioning":"Partitioning data to manage large datasets.","microservices":"Designing and managing microservices architecture."}');
   final Map<String, dynamic> favDSASubTopics = json.decode('{"arrays":"Introduction to arrays and their uses.","linked_lists":"Understanding linked lists and their operations.","stacks":"Stack data structure and its applications.","queues":"Queue data structure and its operations.","trees":"Introduction to tree data structures.","graphs":"Understanding graph theory and its algorithms."}');
@@ -44,5 +47,30 @@ class FavoriteTopicsService {
         break;
     }
     return subtopicsMap.entries.map((entry) => {'id': entry.key, 'description': entry.value.toString()}).toList();
+  }
+
+
+  Future<List<Map<String, dynamic>>> getFavoritesTopics() async {
+    print('getting Quizflex data now..');
+    final ApiService apiService = ApiService();
+    dynamic result;
+    try {
+      final String url = APIEndpoints.USER_INSIGHTS_BASE_URL + APIEndpoints.FAVORITE_TOPICS;
+      print('Sending GET request to: $url');
+      result = await apiService.getRequest(APIEndpoints.USER_INSIGHTS_BASE_URL, APIEndpoints.FAVORITE_TOPICS);
+      print('API Result: $result');
+
+      if (result is Map<String, dynamic>) {
+        return List<Map<String, dynamic>>.from(result['data']);
+      } else if (result is String) {
+        Map<String, dynamic> decodedResult = json.decode(result);
+        return List<Map<String, dynamic>>.from(decodedResult['data']);
+      } else {
+        throw const FormatException("Unexpected response format");
+      }
+    } catch (e) {
+      print('Error during getRecentFavorites: $e');
+      throw e;
+    }
   }
 }

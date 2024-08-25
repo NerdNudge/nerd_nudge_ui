@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:nerd_nudge/menus/screens/favorites/topic_wise/favorites_sub_topics.dart';
-import '../../../../utilities/colors.dart';
 import '../../../../utilities/quiz_topics.dart';
 import '../../../../utilities/styles.dart';
 import '../../../services/favorites/favorite_topics_service.dart';
@@ -15,162 +13,91 @@ class FavoritesTopicSelectionPage extends StatefulWidget {
 
 class _FavoritesTopicSelectionPageState
     extends State<FavoritesTopicSelectionPage> {
+  late Future<List<Map<String, dynamic>>> _futureTopics;
   late Widget tabPlaceholder;
+  late final topics;
 
   @override
   void initState() {
     super.initState();
+    _futureTopics = _loadTopics();
     tabPlaceholder = _getTopicListingPage(context);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: tabPlaceholder,
-    );
+  Future<List<Map<String, dynamic>>> _loadTopics() async {
+    print('Starting to load topics...');
+    try {
+      final loadedTopics = await FavoriteTopicsService().getFavoritesTopics();
+      print('Topics loaded successfully.');
+      return loadedTopics;
+    } catch (e) {
+      print('Error loading topics: $e');
+      return [];
+    }
   }
 
-  void updateListingPage(Widget onTapWidget) {
-    setState(() {
-      print('Called the update listing page');
-      tabPlaceholder = onTapWidget;
-    });
-  }
-
-  Widget _getSubTopicListingPage(String topic) {
+  _getSubtopicsListingPage(int topicindex) {
     return Stack(
       children: [
         Positioned.fill(
           child: Container(
-            decoration: BoxDecoration(
-              color: Colors.black, // Background color of the box
-              borderRadius: BorderRadius.circular(0), // Rounded corners
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: Offset(0, 3), // Shadow position
-                ),
-              ],
-            ),
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.only(
-                  bottom: 300.0,
-                  right: 40.0,
-                  left: 40.0,
-                ), // Padding to leave space for buttons
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(height: 40),
-                    Text(
-                      'Select a Sub-Topic.',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 40),
-                    Wrap(
-                      spacing: 8.0,
-                      runSpacing: 4.0,
-                      children: FavoriteTopicsService()
-                          .getSubtopicList(topic)
-                          .map((subtopic) {
-                        return FilterChip(
-                          label: Text(subtopic['id'] ?? ''),
-                          onSelected: (bool val) {
-                            print('${subtopic['id']}');
-                            updateListingPage(_getSubtopicListDrillDown(topic, subtopic['id']!));
-                          },
-                          selectedColor: Colors.white,
-                          checkmarkColor: Colors.green,
-                          backgroundColor: Colors.grey.shade500,
-                        );
-                      }).toList(),
-                    ),
-                    SizedBox(
-                      height: 40,
-                    ),
-                    Container(
-                      child: Styles.getElevatedButton(
-                          'CLOSE',
-                          CustomColors.mainThemeColor,
-                          Colors.white,
-                          context,
-                          (ctx) =>
-                              updateListingPage(_getTopicListingPage(context))),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _getSubtopicListDrillDown(String topic, String subtopic) {
-    return FavoriteSubTopics(topic: topic, subtopic: subtopic);
-  }
-
-  Widget _getTopicListingPage(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned.fill(
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.black, // Background color of the box
-              borderRadius: BorderRadius.circular(0), // Rounded corners
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: Offset(0, 3), // Shadow position
-                ),
-              ],
-            ),
+            decoration: Styles.getBackgroundBoxDecoration(),
             child: Padding(
-              padding: EdgeInsets.only(
-                bottom: 300.0,
-                right: 40.0,
-                left: 40.0,
-              ), // Padding to leave space for buttons
+              padding:
+              const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    'Select a Topic.',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: topics[topicindex]['subtopics'].length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final subtopics = topics[topicindex]['subtopics'];
+
+                        return GestureDetector(
+                          onTap: () {
+                            // Handle tap to show subtopics or other action
+                          },
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                              side: const BorderSide(
+                                color: Colors.white,
+                                width: 2,
+                              ),
+                            ),
+                            color: Colors.white,
+                            elevation: 5,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Row(
+                                children: [
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: [
+                                        Styles.getSizedHeightBox(10),
+                                        Text(
+                                          subtopics[index]['name'],
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                        Styles.getSizedHeightBox(10),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                  ),
-                  SizedBox(height: 40),
-                  Wrap(
-                    spacing: 8.0,
-                    runSpacing: 4.0,
-                    children: Topics.options.map((String option) {
-                      return FilterChip(
-                        label: Text(option),
-                        onSelected: (bool val) {
-                          print('$option');
-                          updateListingPage(_getSubTopicListingPage(option));
-                        },
-                        selectedColor: Colors.white,
-                        checkmarkColor: Colors.green,
-                        backgroundColor: Colors.grey.shade500,
-                      );
-                    }).toList(),
                   ),
                 ],
               ),
@@ -179,5 +106,142 @@ class _FavoritesTopicSelectionPageState
         ),
       ],
     );
+  }
+
+  _getTopicListingPage(BuildContext context) {
+    return FutureBuilder<List<Map<String, dynamic>>>(
+      future: _futureTopics,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error loading topics.'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Center(child: Text('No topics available.'));
+        } else {
+          topics = snapshot.data!;
+          return Stack(
+            children: [
+              Positioned.fill(
+                child: Container(
+                  decoration: Styles.getBackgroundBoxDecoration(),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 30.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: topics.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              final topic = topics[index];
+                              final topicName = topic['topicName'];
+                              final favoritesCount = topic['favoritesCount'];
+                              final subtopics = topic['subtopics'];
+
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    tabPlaceholder =
+                                        _getSubtopicsListingPage(index);
+                                  });
+                                },
+                                child: Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    side: const BorderSide(
+                                      color: Colors.white,
+                                      width: 2,
+                                    ),
+                                  ),
+                                  color: Colors.white,
+                                  elevation: 5,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Topics.getIconForTopics(topicName),
+                                          size: 40,
+                                          color: const Color(0xFF6A69EB),
+                                        ),
+                                        const SizedBox(width: 20),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                topicName,
+                                                style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 10),
+                                              Row(
+                                                children: [
+                                                  Icon(Icons.favorite,
+                                                      size: 16,
+                                                      color: Colors.red),
+                                                  SizedBox(width: 5),
+                                                  Text(
+                                                    "Favorite Count: $favoritesCount",
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                      FontWeight.bold,
+                                                      color: Colors.black54,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 10),
+                                              Row(
+                                                children: [
+                                                  Icon(Icons.list_alt,
+                                                      size: 16,
+                                                      color: Colors.blueAccent),
+                                                  SizedBox(width: 5),
+                                                  Text(
+                                                    "Favorite Subtopics: ${subtopics.length}",
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                      FontWeight.bold,
+                                                      color: Colors.black54,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Styles.getSizedHeightBox(10),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        }
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return tabPlaceholder;
   }
 }

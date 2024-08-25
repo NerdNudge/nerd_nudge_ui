@@ -27,10 +27,8 @@ class FavoritesService {
       print('API Result: $result');
 
       if (result is Map<String, dynamic>) {
-        // Ensure that the data returned is a List<Map<String, dynamic>>
         return List<Map<String, dynamic>>.from(result['data']);
       } else if (result is String) {
-        // Decode the string into a Map and then into a List<Map<String, dynamic>>
         Map<String, dynamic> decodedResult = json.decode(result);
         return List<Map<String, dynamic>>.from(decodedResult['data']);
       } else {

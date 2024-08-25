@@ -61,6 +61,7 @@ class _HomePageState extends State<HomePage> {
 
     String quoteOfTheDay = userHomeStats.quoteOfTheDay;
     String quoteAuthor = userHomeStats.quoteAuthor;
+    String quoteId = userHomeStats.quoteId;
 
     return Stack(
       children: [
@@ -141,7 +142,7 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 20),
 
                     _buildSectionTitle('Quote of the day'),
-                    Styles.buildQuoteCard(context, quoteOfTheDay, quoteAuthor),
+                    Styles.buildQuoteCard(context, quoteOfTheDay, quoteAuthor, quoteId),
                     _getPurpleDivider(),
                     const SizedBox(height: 20),
                     _buildNumPeopleCard(userHomeStats),

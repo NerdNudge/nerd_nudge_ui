@@ -144,27 +144,7 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
       _shotsUserActivityAPIEntity.addShare(id);
     });
 
-    _shareContent();
-  }
-
-  Future<void> _shareContent() async {
-    try {
-      RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext!
-          .findRenderObject() as RenderRepaintBoundary;
-      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      ByteData? byteData =
-          await image.toByteData(format: ui.ImageByteFormat.png);
-      Uint8List pngBytes = byteData!.buffer.asUint8List();
-
-      final directory = await getApplicationDocumentsDirectory();
-      final imagePath = File('${directory.path}/screenshot.png');
-      await imagePath.writeAsBytes(pngBytes as List<int>);
-
-      const String shareMessage = Constants.shareQuoteMessage;
-      Share.shareFiles([imagePath.path], text: '\n\n$shareMessage');
-    } catch (e) {
-      print('Error capturing screenshot: $e');
-    }
+    Styles.shareCardContent(_repaintBoundaryKey);
   }
 
   Widget? _getNextShot() {
@@ -369,9 +349,12 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
       child: Scaffold(
         appBar: Styles.getAppBar('Nerd Shots Summary'),
         //drawer: MenuOptions.getMenuDrawer(context),
-        body: Container(
-          decoration: Styles.getBackgroundBoxDecoration(),
-          child: _getBody(),
+        body: RepaintBoundary(
+          key: _repaintBoundaryKey,
+          child: Container(
+            decoration: Styles.getBackgroundBoxDecoration(),
+            child: _getBody(),
+          ),
         ),
         //bottomNavigationBar: const BottomMenu(),
       ),

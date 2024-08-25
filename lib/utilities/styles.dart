@@ -1,9 +1,17 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:nerd_nudge/utilities/constants.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../bottom_menus/screens/bottom_menu_options.dart';
-import '../login/screens/login_or_register.dart';
+import 'api_end_points.dart';
+import 'api_service.dart';
 import 'colors.dart';
+import 'dart:ui' as ui;
 
 class Styles {
   static final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
@@ -302,70 +310,74 @@ class Styles {
   }
 
   static Widget buildQuoteCard(
-      BuildContext context, String quoteOfTheDay, String author) {
+      BuildContext context, String quoteOfTheDay, String author, String quoteId) {
+    final GlobalKey repaintBoundaryKey = GlobalKey();
+
     return Column(
       children: [
-        Card(
-          color: CustomColors.purpleButtonColor,
-          margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        quoteOfTheDay,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+        RepaintBoundary(
+          key: repaintBoundaryKey, // Assign the key to the RepaintBoundary
+          child: Card(
+            color: CustomColors.purpleButtonColor,
+            margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          quoteOfTheDay,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        textAlign: TextAlign.center,
                       ),
-                    ),
-                    IconButton(
-                      icon: const Icon(
-                        Icons.favorite_outlined,
+                      IconButton(
+                        icon: const Icon(
+                          Icons.favorite_border,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          print('Marked as favorite');
+                          showGlobalSnackbarMessage('Quote Marked As Favorite.');
+                          favoriteQuoteSubmission(quoteId, true);
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      '~ $author',
+                      style: const TextStyle(
                         color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
                       ),
-                      onPressed: () {
-                        // Add functionality to mark as favorite
-                        print('Marked as favorite');
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    '~ $author',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
         const SizedBox(height: 12),
         ElevatedButton(
           onPressed: () {
-            String shareMessage = Constants.shareQuoteMessage;
-            final String content = '$quoteOfTheDay\n~ $author\n\n$shareMessage';
-            Share.share(content);
+            Styles.shareCardContent(repaintBoundaryKey);
           },
           style: ElevatedButton.styleFrom(
             foregroundColor: CustomColors.purpleButtonColor,
             backgroundColor: Colors.white, // Text color
             minimumSize: const Size(300, 10),
             padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+            const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
@@ -374,7 +386,6 @@ class Styles {
             'SHARE',
             style: TextStyle(
               color: CustomColors.purpleButtonColor,
-              //fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -382,6 +393,40 @@ class Styles {
         const SizedBox(height: 16),
       ],
     );
+  }
+
+  static Map<String, dynamic> favoriteQuoteToJson(String userId, int timestamp, String quoteId, bool add) {
+    String type = add ? 'add' : 'delete';
+    return {
+      'userId': userId,
+      'quoteId': quoteId,
+    };
+  }
+
+  static Future<dynamic> favoriteQuoteSubmission(String quoteId, bool add) async {
+    final ApiService apiService = ApiService();
+    dynamic result;
+    try {
+      final String url = APIEndpoints.USER_ACTIVITY_BASE_URL +
+          APIEndpoints.FAVORITES_QUOTE_SUBMISSION;
+
+      final Map<String, dynamic> jsonBody = favoriteQuoteToJson('abc@gmail.com', 0, quoteId, add);
+
+      print('Sending PUT request to: $url, value: $jsonBody');
+      result = await apiService.putRequest(url, jsonBody);
+      print('API Result: $result');
+
+      if (result is Map<String, dynamic>) {
+        return result;
+      } else if (result is String) {
+        return json.decode(result);
+      } else {
+        throw const FormatException("Unexpected response format");
+      }
+    } catch (e) {
+      print('Error during shotsSubmission: $e');
+      return '{}';
+    }
   }
 
   static getBackgroundBoxDecoration() {
@@ -422,4 +467,39 @@ class Styles {
       ),
     );
   }
+
+    static Future<void> shareCardContent(GlobalKey key) async {
+      try {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          await Future.delayed(Duration(milliseconds: 100));
+
+          RenderRepaintBoundary? boundary = key.currentContext!
+              .findRenderObject() as RenderRepaintBoundary?;
+
+          if (boundary == null) {
+            print('Error: RenderRepaintBoundary is null');
+            return;
+          }
+
+          ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+          ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+
+          if (byteData == null) {
+            print('Error: byteData is null');
+            return;
+          }
+
+          Uint8List pngBytes = byteData.buffer.asUint8List();
+
+          final directory = await getApplicationDocumentsDirectory();
+          final imagePath = File('${directory.path}/screenshot.png');
+          await imagePath.writeAsBytes(pngBytes);
+
+          const String shareMessage = Constants.shareQuoteMessage;
+          Share.shareFiles([imagePath.path], text: '\n\n$shareMessage');
+        });
+      } catch (e) {
+        print('Error capturing screenshot: $e');
+      }
+    }
 }

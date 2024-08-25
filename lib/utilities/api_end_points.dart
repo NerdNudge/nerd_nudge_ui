@@ -8,8 +8,11 @@ class APIEndpoints {
   static const String SHOTS_SUBMISSION = '/api/nerdnudge/useractivity/shotsSubmission';
   static const String QUIZFLEX_SUBMISSION = '/api/nerdnudge/useractivity/quizflexSubmission';
   static const String FAVORITES_SUBMISSION = '/api/nerdnudge/useractivity/favoritesSubmission';
+  static const String FAVORITES_QUOTE_SUBMISSION = '/api/nerdnudge/useractivity/favoriteQuoteSubmission';
 
   static const String RECENT_FAVORITES = '/api/nerdnudge/favorites/getUserRecentFavorites/abc@gmail.com';
+  static const String FAVORITE_QUOTES = '/api/nerdnudge/favorites/getUserFavoriteQuotes/abc@gmail.com';
+  static const String FAVORITE_TOPICS = '/api/nerdnudge/favorites/getUserFavoriteTopics/abc@gmail.com';
 
   static const String TOPICS = '/api/nerdnudge/topics/getall/abc@gmail.com';
   static const String SUB_TOPICS = '/api/nerdnudge/topics/getsubtopics';
