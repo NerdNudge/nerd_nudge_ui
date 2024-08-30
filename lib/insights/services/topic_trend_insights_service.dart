@@ -1,24 +1,47 @@
-import 'dart:convert';
 
 class TopicTrendInsightsService {
-  var topicScoreTrend = json.decode(
-      '{"status":"SUCCESS","frequency":"Weekly","score_trend":{"2024-06-18":24.5,"2024-06-19":27.8,"2024-06-20":53.4,"2024-06-21":31.7,"2024-06-22":36.9,"2024-06-23":44.3,"2024-06-24":28.1,"2024-06-25":52.6,"2024-06-26":39.2,"2024-06-27":25.4,"2024-06-28":46.7,"2024-06-29":33.9,"2024-06-30":40.5},"rank_trend":{"2024-06-18":1243,"2024-06-19":1123,"2024-06-20":1455,"2024-06-21":1090,"2024-06-22":875,"2024-06-23":999,"2024-06-24":761,"2024-06-25":621,"2024-06-26":555,"2024-06-27":590,"2024-06-28":432,"2024-06-29":499,"2024-06-30":401}}');
-
   TopicTrendInsightsService._privateConstructor();
   static final TopicTrendInsightsService _instance =
-  TopicTrendInsightsService._privateConstructor();
+      TopicTrendInsightsService._privateConstructor();
 
   factory TopicTrendInsightsService() {
     return _instance;
   }
 
-  Map<String, double> getTopicTrend(String topic, String type) {
-    Map<String, dynamic> trend;
-    if(type == 'Score')
-      trend = topicScoreTrend['score_trend'];
-    else
-      trend = topicScoreTrend['rank_trend'];
+  Map<String, dynamic> getTopicTrendInsights(
+      String topic, String type, Map<String, dynamic> userTrendsObject) {
+    Map<String, dynamic> trendData = {};
+    print('input: $userTrendsObject');
 
-    return trend.map((key, value) => MapEntry(key, (value as num).toDouble()));
+    if (!userTrendsObject.containsKey('userTrends')) {
+      return trendData;
+    }
+
+    Map<String, dynamic> topicsTrendData = userTrendsObject['userTrends'];
+    if (topicsTrendData.containsKey(topic)) {
+      Map<String, dynamic> topicData = topicsTrendData[topic];
+
+      trendData = topicData.map((key, value) {
+        int dayOfYear = int.parse(key.substring(0, 3));
+        int year = 2000 +
+            int.parse(key.substring(3, 5));
+
+        DateTime date = DateTime(year).add(Duration(days: dayOfYear - 1));
+        String formattedDate =
+            '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+
+        if (type == 'Score') {
+          return MapEntry(formattedDate, (value[0] as num).toDouble());
+        } else if (type == 'Rank') {
+          return MapEntry(formattedDate, (value[1] as num).toDouble());
+        } else {
+          return MapEntry(
+              formattedDate, 0.0); // Default case, can be customized
+        }
+      });
+    }
+
+    print('returning: $trendData');
+    return trendData;
   }
 }

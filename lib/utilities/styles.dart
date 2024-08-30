@@ -309,8 +309,8 @@ class Styles {
     );
   }
 
-  static Widget buildQuoteCard(
-      BuildContext context, String quoteOfTheDay, String author, String quoteId) {
+  static Widget buildQuoteCard(BuildContext context, String quoteOfTheDay,
+      String author, String quoteId) {
     final GlobalKey repaintBoundaryKey = GlobalKey();
 
     return Column(
@@ -319,7 +319,8 @@ class Styles {
           key: repaintBoundaryKey, // Assign the key to the RepaintBoundary
           child: Card(
             color: CustomColors.purpleButtonColor,
-            margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+            margin:
+                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -344,7 +345,8 @@ class Styles {
                         ),
                         onPressed: () {
                           print('Marked as favorite');
-                          showGlobalSnackbarMessage('Quote Marked As Favorite.');
+                          showGlobalSnackbarMessage(
+                              'Quote Marked As Favorite.');
                           favoriteQuoteSubmission(quoteId, true);
                         },
                       ),
@@ -377,7 +379,7 @@ class Styles {
             backgroundColor: Colors.white, // Text color
             minimumSize: const Size(300, 10),
             padding:
-            const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
@@ -395,7 +397,8 @@ class Styles {
     );
   }
 
-  static Map<String, dynamic> favoriteQuoteToJson(String userId, int timestamp, String quoteId, bool add) {
+  static Map<String, dynamic> favoriteQuoteToJson(
+      String userId, int timestamp, String quoteId, bool add) {
     String type = add ? 'add' : 'delete';
     return {
       'userId': userId,
@@ -403,14 +406,16 @@ class Styles {
     };
   }
 
-  static Future<dynamic> favoriteQuoteSubmission(String quoteId, bool add) async {
+  static Future<dynamic> favoriteQuoteSubmission(
+      String quoteId, bool add) async {
     final ApiService apiService = ApiService();
     dynamic result;
     try {
       final String url = APIEndpoints.USER_ACTIVITY_BASE_URL +
           APIEndpoints.FAVORITES_QUOTE_SUBMISSION;
 
-      final Map<String, dynamic> jsonBody = favoriteQuoteToJson('abc@gmail.com', 0, quoteId, add);
+      final Map<String, dynamic> jsonBody =
+          favoriteQuoteToJson('abc@gmail.com', 0, quoteId, add);
 
       print('Sending PUT request to: $url, value: $jsonBody');
       result = await apiService.putRequest(url, jsonBody);
@@ -463,43 +468,66 @@ class Styles {
   static void showGlobalSnackbarMessage(String message) {
     scaffoldMessengerKey.currentState?.showSnackBar(
       SnackBar(
-        content: Center(child: Text(message)),
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Text(
+                message,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: CustomColors.purpleButtonColor,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        duration: Duration(seconds: 3),
+        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       ),
     );
   }
 
-    static Future<void> shareCardContent(GlobalKey key) async {
-      try {
-        WidgetsBinding.instance.addPostFrameCallback((_) async {
-          await Future.delayed(Duration(milliseconds: 100));
+  static Future<void> shareCardContent(GlobalKey key) async {
+    try {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        await Future.delayed(Duration(milliseconds: 100));
 
-          RenderRepaintBoundary? boundary = key.currentContext!
-              .findRenderObject() as RenderRepaintBoundary?;
+        RenderRepaintBoundary? boundary =
+            key.currentContext!.findRenderObject() as RenderRepaintBoundary?;
 
-          if (boundary == null) {
-            print('Error: RenderRepaintBoundary is null');
-            return;
-          }
+        if (boundary == null) {
+          print('Error: RenderRepaintBoundary is null');
+          return;
+        }
 
-          ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-          ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+        ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+        ByteData? byteData =
+            await image.toByteData(format: ui.ImageByteFormat.png);
 
-          if (byteData == null) {
-            print('Error: byteData is null');
-            return;
-          }
+        if (byteData == null) {
+          print('Error: byteData is null');
+          return;
+        }
 
-          Uint8List pngBytes = byteData.buffer.asUint8List();
+        Uint8List pngBytes = byteData.buffer.asUint8List();
 
-          final directory = await getApplicationDocumentsDirectory();
-          final imagePath = File('${directory.path}/screenshot.png');
-          await imagePath.writeAsBytes(pngBytes);
+        final directory = await getApplicationDocumentsDirectory();
+        final imagePath = File('${directory.path}/screenshot.png');
+        await imagePath.writeAsBytes(pngBytes);
 
-          const String shareMessage = Constants.shareQuoteMessage;
-          Share.shareFiles([imagePath.path], text: '\n\n$shareMessage');
-        });
-      } catch (e) {
-        print('Error capturing screenshot: $e');
-      }
+        const String shareMessage = Constants.shareQuoteMessage;
+        Share.shareFiles([imagePath.path], text: '\n\n$shareMessage');
+      });
+    } catch (e) {
+      print('Error capturing screenshot: $e');
     }
+  }
 }

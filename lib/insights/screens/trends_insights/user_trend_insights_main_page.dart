@@ -1,33 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:nerd_nudge/insights/screens/trends_insights/user_topic_trend_insights_chart.dart';
 import '../../../utilities/colors.dart';
-import '../../services/insights_duration_state.dart';
-import '../../services/summary_insights_service.dart';
 import '../../services/topic_trend_insights_service.dart';
 
 class UserTrendsMainPage extends StatefulWidget {
-  const UserTrendsMainPage({super.key});
+  const UserTrendsMainPage({super.key, required this.userInsights});
 
-  static final userSummaryInsights =
-      SummaryInsightsService().getUserSummaryInsights();
-  static var userSummaryInsightsObject;
-  static var userTopics;
+  final Map<String, dynamic> userInsights;
+
+  static Map<String, dynamic> userTrendsObject = {};
+  static List<String> userTopics = [];
 
   @override
   State<UserTrendsMainPage> createState() => _UserTrendsMainPageState();
 
-  static void setValues() {
-    userSummaryInsightsObject = InsightsDurationState.last30DaysFlag
-        ? userSummaryInsights['last30days']
-        : userSummaryInsights['lifetime'];
-    userTopics = userSummaryInsightsObject['userTopics'];
+  static void setValues(Map<String, dynamic> userInsights) {
+    userTrendsObject = userInsights['trendSummary'];
+    userTopics = _getUserTopics();
+  }
+
+  static List<String> _getUserTopics() {
+    List<String> userTopics = [];
+    userTopics.add('global');
+    if (userTrendsObject.containsKey('userTrends')) {
+      Map<String, dynamic> userTrends = userTrendsObject['userTrends'];
+      userTopics = userTrends.keys.toList();
+    }
+
+    return userTopics;
   }
 }
 
 class _UserTrendsMainPageState extends State<UserTrendsMainPage> {
   late String selectedTopic;
   late Widget _currentTopicScreen;
-  late List<String> userTopics;
   late String _trendType;
   late String _alternativeTrendType;
 
@@ -35,19 +41,10 @@ class _UserTrendsMainPageState extends State<UserTrendsMainPage> {
   void initState() {
     super.initState();
 
-    UserTrendsMainPage.setValues();
+    UserTrendsMainPage.setValues(widget.userInsights);
     _trendType = 'Score';
     _alternativeTrendType = 'Rank';
-    updateTopics();
     _currentTopicScreen = _getUserTopicsForTrends();
-  }
-
-  void updateTopics() {
-    userTopics = [];
-    userTopics.add('Overall');
-    UserTrendsMainPage.userTopics.forEach((topicName) {
-      userTopics.add(topicName);
-    });
   }
 
   @override
@@ -89,7 +86,7 @@ class _UserTrendsMainPageState extends State<UserTrendsMainPage> {
         Wrap(
           spacing: 8.0,
           runSpacing: 4.0,
-          children: userTopics.map((String option) {
+          children: UserTrendsMainPage.userTopics.map((String option) {
             return FilterChip(
               label: Text(option),
               onSelected: (bool selected) {
@@ -99,7 +96,7 @@ class _UserTrendsMainPageState extends State<UserTrendsMainPage> {
                   _currentTopicScreen = UserTrendDataChart.getSelectedTopicTrend(
                       context,
                       selectedTopic,
-                      TopicTrendInsightsService().getTopicTrend(selectedTopic, _trendType), _trendType, closeButtonFunctionality);
+                      TopicTrendInsightsService().getTopicTrendInsights(selectedTopic, _trendType, UserTrendsMainPage.userTrendsObject), _trendType, closeButtonFunctionality);
                 });
               },
               selectedColor: Colors.white,

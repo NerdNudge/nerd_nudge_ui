@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class UserTrendsBarChartCreator extends StatefulWidget {
-  final Map<String, double> trendsData;
-  final bool isScore; // Add a flag to determine if the data is for score or rank
+  final Map<String, dynamic> trendsData;
+  final bool isScore;
 
   UserTrendsBarChartCreator({required this.trendsData, required this.isScore});
 
@@ -14,17 +14,26 @@ class UserTrendsBarChartCreator extends StatefulWidget {
 
 class _UserTrendsBarChartCreatorState extends State<UserTrendsBarChartCreator> {
   int touchedIndex = -1;
-  double maxY = 60; // Default maxY value
+  double maxY = 60;
 
   @override
   void initState() {
     super.initState();
-    maxY = widget.isScore ? 60 : _calculateMaxY(widget.trendsData); // Update maxY based on the data
+    maxY = _calculateMaxY(widget.trendsData);
   }
 
-  double _calculateMaxY(Map<String, double> data) {
-    double maxValue = data.values.reduce((a, b) => a > b ? a : b);
-    return maxValue / (widget.isScore ? 1 : 10); // Scale down rank values
+  double _calculateMaxY(Map<String, dynamic> data) {
+    double maxValue = data.values.map((value) {
+      if (value is List && value.length > 1) {
+        return value[widget.isScore ? 0 : 1] as double;
+      } else if (value is double) {
+        return value;
+      } else {
+        return 0.0;
+      }
+    }).reduce((a, b) => a > b ? a : b);
+
+    return widget.isScore ? maxValue : (maxValue / 10).ceilToDouble();
   }
 
   @override
@@ -76,12 +85,11 @@ class _UserTrendsBarChartCreatorState extends State<UserTrendsBarChartCreator> {
     final style = TextStyle(
       color: Colors.blue,
       fontWeight: FontWeight.bold,
-      fontSize: 10, // Reduce font size to help prevent overlap
+      fontSize: 10,
     );
 
     String text;
     try {
-      // Parse the date and format it as "d MMM"
       DateTime date = DateTime.parse(widget.trendsData.keys.elementAt(value.toInt()));
       text = DateFormat('d MMM').format(date);
     } catch (e) {
@@ -90,9 +98,9 @@ class _UserTrendsBarChartCreatorState extends State<UserTrendsBarChartCreator> {
 
     return SideTitleWidget(
       axisSide: meta.axisSide,
-      space: 22, // Add more space between the labels and the bars
+      space: 22,
       child: Transform.rotate(
-        angle: -45 * 3.14159 / 180, // Rotate labels by 45 degrees
+        angle: -45 * 3.14159 / 180,
         child: Text(text, style: style),
       ),
     );
@@ -104,6 +112,25 @@ class _UserTrendsBarChartCreatorState extends State<UserTrendsBarChartCreator> {
       fontWeight: FontWeight.bold,
       fontSize: 12,
     );
+
+    // Adjust intervals based on the range of maxY
+    double interval;
+    if (maxY > 400) {
+      interval = 100;
+    } else if (maxY > 200) {
+      interval = 50;
+    } else if (maxY > 100) {
+      interval = 20;
+    } else if (maxY > 50) {
+      interval = 10;
+    } else {
+      interval = 5;
+    }
+
+    if (value % interval != 0) {
+      return Container(); // Skip this title
+    }
+
     int displayValue = widget.isScore ? value.toInt() : (value * 10).toInt();
     return Text(displayValue.toString(), style: style, textAlign: TextAlign.center);
   }
@@ -113,17 +140,17 @@ class _UserTrendsBarChartCreatorState extends State<UserTrendsBarChartCreator> {
     bottomTitles: AxisTitles(
       sideTitles: SideTitles(
         showTitles: true,
-        reservedSize: 50, // Increase reserved size to accommodate rotated labels
+        reservedSize: 50,
         getTitlesWidget: getTitles,
-        interval: 1, // Show every label
+        interval: 1,
       ),
     ),
     leftTitles: AxisTitles(
       sideTitles: SideTitles(
         showTitles: true,
-        reservedSize: 40, // Reserve space for the left titles
+        reservedSize: 40,
         getTitlesWidget: getLeftTitles,
-        interval: widget.isScore ? 10 : maxY / 5, // Adjust interval based on data type
+        interval: 1, // Interval is controlled inside `getLeftTitles`
       ),
     ),
     topTitles: const AxisTitles(
@@ -152,7 +179,7 @@ class _UserTrendsBarChartCreatorState extends State<UserTrendsBarChartCreator> {
     int index = 0;
 
     widget.trendsData.forEach((date, score) {
-      double normalizedScore = widget.isScore ? score : score / 10; // Normalize rank values
+      double normalizedScore = widget.isScore ? score : score / 10;
       barChartGroups.add(
         BarChartGroupData(
           x: index,
@@ -160,7 +187,7 @@ class _UserTrendsBarChartCreatorState extends State<UserTrendsBarChartCreator> {
             BarChartRodData(
               toY: normalizedScore,
               gradient: _barsGradient,
-              width: 10, // Reduce bar width to preferred size
+              width: 10,
             )
           ],
           showingTooltipIndicators: touchedIndex == index ? [0] : [],

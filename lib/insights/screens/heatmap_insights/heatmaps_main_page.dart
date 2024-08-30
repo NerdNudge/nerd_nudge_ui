@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
-
-import '../../services/summary_insights_service.dart';
-
+import 'package:nerd_nudge/utilities/styles.dart';
 
 class HeatmapsMainPage extends StatefulWidget {
-  const HeatmapsMainPage({super.key});
+  const HeatmapsMainPage({super.key, required this.userInsights});
+
+  final Map<String, dynamic> userInsights;
 
   @override
   State<HeatmapsMainPage> createState() => _HeatmapsMainPageState();
@@ -19,9 +19,6 @@ class _HeatmapsMainPageState extends State<HeatmapsMainPage> {
 
   @override
   Widget build(BuildContext context) {
-    var summaryInsights = SummaryInsightsService().getUserSummaryInsights();
-    var heatmapData = summaryInsights['heatmap'];
-
     return Card(
       margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
       color: Colors.white,
@@ -42,7 +39,7 @@ class _HeatmapsMainPageState extends State<HeatmapsMainPage> {
             SizedBox(height: 20),
             Flexible(
               fit: FlexFit.loose,
-              child: _getPerformanceHeatMap(heatmapData),
+              child: _getPerformanceHeatMap(),
             ),
           ],
         ),
@@ -50,29 +47,34 @@ class _HeatmapsMainPageState extends State<HeatmapsMainPage> {
     );
   }
 
-  Widget _getPerformanceHeatMap(var heatmapData) {
+  Widget _getPerformanceHeatMap() {
+    var heatmapData = widget.userInsights['heatMap'];
+    print(heatmapData);
+
     DateTime now = DateTime.now();
     DateTime sixMonthsAgo = DateTime(now.year, now.month - 6, now.day);
 
-    Map<DateTime, int> datasets = {};
+    Map<DateTime, List<int>> datasets = {};
     heatmapData.forEach((key, value) {
-      datasets[DateTime.parse(key)] = value;
+      datasets[DateTime.parse(key)] =
+          List<int>.from(value);
     });
 
     return HeatMap(
-      datasets: datasets,
+      datasets:
+          datasets.map((key, value) => MapEntry(key, value[0] + value[1])),
       colorMode: ColorMode.color,
       showText: false,
       scrollable: true,
       colorsets: _getColorSets(),
       startDate: sixMonthsAgo,
       onClick: (date) {
-        int? count = datasets[date];
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Date: ${date.toLocal().toIso8601String().split('T').first}\nCount: $count'),
-          ),
-        );
+        List<int>? values = datasets[date];
+        if (values != null) {
+          Styles.showGlobalSnackbarMessage(
+            'Date: ${date.toLocal().toIso8601String().split('T').first}\nQuizflex Count: ${values[0]}\nShots Count: ${values[1]}',
+          );
+        }
       },
     );
   }

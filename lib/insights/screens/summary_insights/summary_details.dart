@@ -6,10 +6,10 @@ import '../../../utilities/styles.dart';
 class SummaryDetails {
   static Widget getQuestionSummaryDrillDown(dynamic accuracy, Function buttonClick) {
 
-    int easyPercentage = accuracy['easy'];
-    int mediumPercentage = accuracy['medium'];
-    int hardPercentage = accuracy['hard'];
-    int overallPercentage = accuracy['overall'];
+    double easyPercentage = accuracy['easy'];
+    double mediumPercentage = accuracy['medium'];
+    double hardPercentage = accuracy['hard'];
+    double overallPercentage = accuracy['overall'];
 
     return Column(
       children: [

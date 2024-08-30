@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nerd_nudge/insights/screens/trends_insights/user_trends_bar_chart_creator.dart';
+import 'package:nerd_nudge/utilities/styles.dart';
 
 import '../../../utilities/colors.dart';
 import '../../services/insights_duration_state.dart';
@@ -8,7 +9,7 @@ class UserTrendDataChart {
   static getSelectedTopicTrend(
       BuildContext context, String selectedTopic, var trendsData, String type, Function closeButtonFunction) {
     String trendType =
-        InsightsDurationState.last30DaysFlag ? 'Daily' : 'Weekly';
+        InsightsDurationState.last30DaysFlag ? 'Daily' : 'Daily';
     bool isScore = (type == 'Score');
     return Column(
       children: [
@@ -19,7 +20,7 @@ class UserTrendDataChart {
             fontSize: 18,
           ),
         ),
-        SizedBox(height: 6),
+        Styles.getSizedHeightBox(10),
         Text(
           'Topic: $selectedTopic',
           style: TextStyle(
@@ -27,6 +28,7 @@ class UserTrendDataChart {
             fontSize: 12,
           ),
         ),
+        Styles.getSizedHeightBox(14),
         AspectRatio(
           aspectRatio: 1.6,
           child: UserTrendsBarChartCreator(

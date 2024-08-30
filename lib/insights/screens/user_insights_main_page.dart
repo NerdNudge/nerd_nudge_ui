@@ -6,6 +6,7 @@ import '../../menus/screens/menu_options.dart';
 import '../../utilities/styles.dart';
 import '../../bottom_menus/screens/bottom_menu_options.dart';
 import '../services/insights_duration_state.dart';
+import '../services/user_insights_service.dart';
 import 'heatmap_insights/heatmaps_main_page.dart';
 import 'topics_insights/topics_insights_main_page.dart';
 
@@ -18,6 +19,23 @@ class UserInsights extends StatefulWidget {
 
 class _UserInsightsState extends State<UserInsights> {
   int touchedIndex = -1;
+  Future<Map<String, dynamic>>? userInsightsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    userInsightsFuture = _fetchUserInsights();
+  }
+
+  Future<Map<String, dynamic>> _fetchUserInsights() async {
+    try {
+      final insights = await UserInsightsService().getUserInsights();
+      return insights;
+    } catch (e) {
+      print('Error fetching user insights: $e');
+      return {};
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,21 +46,30 @@ class _UserInsightsState extends State<UserInsights> {
         drawer: MenuOptions.getMenuDrawer(context),
         backgroundColor: Colors.black,
         body: SingleChildScrollView(
-          child: _getDashboardBody(),
+          child: FutureBuilder<Map<String, dynamic>>(
+            future: userInsightsFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
+                return Center(child: Text('Error loading insights.', style: TextStyle(color: Colors.white)));
+              } else {
+                return _getDashboardBody(snapshot.data!);
+              }
+            },
+          ),
         ),
         bottomNavigationBar: const BottomMenu(),
       ),
     );
   }
 
-  Widget _getDashboardBody() {
+  Widget _getDashboardBody(Map<String, dynamic> userInsights) {
     return Container(
       decoration: Styles.getBackgroundBoxDecoration(),
       child: Column(
         children: [
-          SizedBox(
-            height: 50.0,
-          ),
+          SizedBox(height: 50.0),
           Column(
             children: [
               Row(
@@ -55,7 +82,7 @@ class _UserInsightsState extends State<UserInsights> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  _getToggleButtonOptions(),
+                  _getToggleButtonOptions(userInsights),
                   Text(
                     '   Last 30 days',
                     style: TextStyle(
@@ -65,13 +92,11 @@ class _UserInsightsState extends State<UserInsights> {
                   ),
                 ],
               ),
-              SizedBox(
-                height: 30.0,
-              ),
-              SummaryInsights(key: UniqueKey()),
+              SizedBox(height: 30.0),
+              SummaryInsights(key: UniqueKey(), userInsights: userInsights,), // Pass the data here
               TopicsInsights(),
-              UserTrendsMainPage(key: UniqueKey()),
-              HeatmapsMainPage(),
+              UserTrendsMainPage(key: UniqueKey(), userInsights: userInsights,),
+              HeatmapsMainPage(userInsights: userInsights,),
             ],
           ),
         ],
@@ -79,11 +104,10 @@ class _UserInsightsState extends State<UserInsights> {
     );
   }
 
-  Widget _getToggleButtonOptions() {
+  Widget _getToggleButtonOptions(Map<String, dynamic> userInsights) {
     Future<bool> _getFuture() async {
       await Future.delayed(const Duration(milliseconds: 200));
-      InsightsDurationState.setLast30DaysFlag(
-          !InsightsDurationState.last30DaysFlag);
+      InsightsDurationState.setLast30DaysFlag(!InsightsDurationState.last30DaysFlag);
       return InsightsDurationState.last30DaysFlag;
     }
 
@@ -96,8 +120,8 @@ class _UserInsightsState extends State<UserInsights> {
       onChange: (bool newValue) {
         setState(() {
           InsightsDurationState.setLast30DaysFlag(newValue);
-          SummaryInsights.setValues();
-          UserTrendsMainPage.setValues();
+          SummaryInsights.setValues(userInsights);
+          UserTrendsMainPage.setValues(userInsights);
         });
         bool val = InsightsDurationState.last30DaysFlag;
         print('Value changed to $val');

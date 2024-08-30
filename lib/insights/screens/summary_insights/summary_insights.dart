@@ -5,33 +5,51 @@ import 'package:nerd_nudge/insights/screens/summary_insights/summary_details.dar
 import '../../../../utilities/colors.dart';
 import '../../../../utilities/styles.dart';
 import '../../services/insights_duration_state.dart';
-import '../../services/summary_insights_service.dart';
 import '../Utilities/PeerComparisonInsights.dart';
 
 class SummaryInsights extends StatefulWidget {
-  const SummaryInsights({super.key});
+  SummaryInsights({Key? key, required this.userInsights}) : super(key: key);
+
+  final Map<String, dynamic> userInsights;
 
   @override
   State<SummaryInsights> createState() => _SummaryInsightsState();
-
-  static final userSummaryInsights = SummaryInsightsService().getUserSummaryInsights();
   static var userSummaryInsightsObject;
   static var peerComparisonDataObject;
   static var summaryObject;
+  static var overallSummaryObject;
 
-  static void setValues() {
-    userSummaryInsightsObject = InsightsDurationState.last30DaysFlag ? userSummaryInsights['last30days'] : userSummaryInsights['lifetime'];
+  static void setValues(Map<String, dynamic> userInsights) {
+    print('Under set values: ');
+    print(userInsights);
+    overallSummaryObject = userInsights['overallSummary'];
+    print(overallSummaryObject);
+    userSummaryInsightsObject = InsightsDurationState.last30DaysFlag
+        ? overallSummaryObject['last30Days']
+        : overallSummaryObject['lifetime'];
+    print(userSummaryInsightsObject);
     summaryObject = userSummaryInsightsObject['summary'];
+    print(summaryObject);
     peerComparisonDataObject = summaryObject['peerComparison'];
   }
 }
 
 class _SummaryInsightsState extends State<SummaryInsights> {
+  Map<String, dynamic>? userInsights;
+  bool isLoading = true;
+  String? errorMessage;
+
   @override
   void initState() {
     super.initState();
-    SummaryInsights.setValues();  // Initialize values based on the current flag
-    cardDetails = _getSummaryInsights();  // Initialize cardDetails
+    _updateSummary();
+  }
+
+  void _updateSummary() {
+    SummaryInsights.setValues(widget.userInsights);
+    setState(() {
+      cardDetails = _getSummaryInsights();
+    });
   }
 
   @override
@@ -54,6 +72,7 @@ class _SummaryInsightsState extends State<SummaryInsights> {
     int mediumValue = summaryObject['stats']['medium'];
     int hardValue = summaryObject['stats']['hard'];
     int rank = summaryObject['rank'];
+    print('updating now.');
 
     return Column(
       children: [
