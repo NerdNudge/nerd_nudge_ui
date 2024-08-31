@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:nerd_nudge/insights/screens/trends_insights/user_topic_trend_insights_chart.dart';
 import '../../../topics/services/topics_service.dart';
 import '../../../utilities/colors.dart';
-import '../../services/topic_trend_insights_service.dart';
 
 class UserTrendsMainPage extends StatefulWidget {
   const UserTrendsMainPage({super.key, required this.userInsights});
@@ -84,7 +83,7 @@ class _UserTrendsMainPageState extends State<UserTrendsMainPage> {
             children: <Widget>[
               Center(
                 child: Text(
-                  '$_trendType Trend Insights',
+                  'Trend Insights',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 20,
@@ -120,7 +119,15 @@ class _UserTrendsMainPageState extends State<UserTrendsMainPage> {
                         _currentTopicScreen = UserTrendDataChart.getSelectedTopicTrend(
                             context,
                             selectedTopic,
-                            TopicTrendInsightsService().getTopicTrendInsights(actualTopicNamesToCodesMapping[option]!, _trendType, UserTrendsMainPage.userTrendsObject), _trendType, closeButtonFunctionality);
+                            _alternativeTrendType,
+                            actualTopicNamesToCodesMapping,
+                            _trendType,
+                            closeButtonFunctionality,
+                                (newScreen) {
+                              setState(() {
+                                _currentTopicScreen = newScreen;
+                              });
+                            });
                       });
                     },
                     selectedColor: CustomColors.mainThemeColor,
@@ -133,34 +140,6 @@ class _UserTrendsMainPageState extends State<UserTrendsMainPage> {
                 }).toList(),
               ),
               SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    '$_alternativeTrendType Trend: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 16,
-                  ),
-                  Container(
-                    width: 40.0,
-                    height: 40.0,
-                    decoration: BoxDecoration(
-                      color: CustomColors.mainThemeColor,
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: IconButton(
-                      icon: Icon(Icons.swap_horiz),
-                      onPressed: () => _toggleScoreAndRankingsTrendLabels(),
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
             ],
           );
         } else {
@@ -170,13 +149,6 @@ class _UserTrendsMainPageState extends State<UserTrendsMainPage> {
     );
   }
 
-  _toggleScoreAndRankingsTrendLabels() {
-    setState(() {
-      _alternativeTrendType = (_alternativeTrendType == 'Score') ? 'Rank' : 'Score';
-      _trendType = (_trendType == 'Score') ? 'Rank' : 'Score';
-      _currentTopicScreen = _getUserTopicsForTrends();
-    });
-  }
 
   closeButtonFunctionality() {
     setState(() {

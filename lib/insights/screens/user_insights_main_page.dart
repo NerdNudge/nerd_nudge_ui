@@ -94,7 +94,7 @@ class _UserInsightsState extends State<UserInsights> {
               ),
               SizedBox(height: 30.0),
               SummaryInsights(key: UniqueKey(), userInsights: userInsights,), // Pass the data here
-              TopicsInsights(),
+              TopicsInsights(userInsights: userInsights,),
               UserTrendsMainPage(key: UniqueKey(), userInsights: userInsights,),
               HeatmapsMainPage(userInsights: userInsights,),
             ],

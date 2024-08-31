@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nerd_nudge/quiz/quiz_question/services/start_quiz.dart';
 import 'package:nerd_nudge/topics/screens/subtopic_selection.dart';
 import 'package:nerd_nudge/topics/services/topics_service.dart';
+import 'package:nerd_nudge/utilities/percentage_gauge.dart';
 import 'package:nerd_nudge/utilities/quiz_topics.dart';
 import '../../../../utilities/styles.dart';
 import '../../../bottom_menus/screens/bottom_menu_options.dart';
@@ -141,7 +142,7 @@ class _TopicSelectionHomePageState extends State<TopicSelectionHomePage> {
                                           children: [
                                             Icon(Icons.people, size: 16, color: Colors.black54),
                                             SizedBox(width: 5),
-                                            Text("$numPeople people took this", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black54)),
+                                            Text(_getNumPeopleText(numPeople), style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black54)),
                                           ],
                                         ),
                                         const SizedBox(height: 5),
@@ -179,6 +180,10 @@ class _TopicSelectionHomePageState extends State<TopicSelectionHomePage> {
         ),
       ],
     );
+  }
+
+  _getNumPeopleText(int num) {
+    return (num == 1) ? '$num person took this.' : '$num people took this.';
   }
 
   showSubtopics(BuildContext context) {

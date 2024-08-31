@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'dart:math';
 
 class UserTrendsBarChartCreator extends StatefulWidget {
   final Map<String, dynamic> trendsData;
@@ -14,12 +15,26 @@ class UserTrendsBarChartCreator extends StatefulWidget {
 
 class _UserTrendsBarChartCreatorState extends State<UserTrendsBarChartCreator> {
   int touchedIndex = -1;
-  double maxY = 60;
+  late double maxY;
 
   @override
   void initState() {
     super.initState();
-    maxY = _calculateMaxY(widget.trendsData);
+    _updateMaxYAndRebuild();
+  }
+
+  @override
+  void didUpdateWidget(covariant UserTrendsBarChartCreator oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.trendsData != widget.trendsData || oldWidget.isScore != widget.isScore) {
+      _updateMaxYAndRebuild();
+    }
+  }
+
+  void _updateMaxYAndRebuild() {
+    setState(() {
+      maxY = _calculateMaxY(widget.trendsData);
+    });
   }
 
   double _calculateMaxY(Map<String, dynamic> data) {
@@ -33,7 +48,14 @@ class _UserTrendsBarChartCreatorState extends State<UserTrendsBarChartCreator> {
       }
     }).reduce((a, b) => a > b ? a : b);
 
-    return widget.isScore ? maxValue : (maxValue / 10).ceilToDouble();
+    return _roundUpMaxValue(maxValue); // Adjusted max value
+  }
+
+  double _roundUpMaxValue(double maxValue) {
+    if (maxValue == 0) return 1.0;
+
+    final double magnitude = pow(10, maxValue.floor().toString().length - 1).toDouble();
+    return (maxValue / magnitude).ceil() * magnitude;
   }
 
   @override
@@ -106,6 +128,7 @@ class _UserTrendsBarChartCreatorState extends State<UserTrendsBarChartCreator> {
     );
   }
 
+
   Widget getLeftTitles(double value, TitleMeta meta) {
     final style = TextStyle(
       color: Colors.blue,
@@ -113,26 +136,20 @@ class _UserTrendsBarChartCreatorState extends State<UserTrendsBarChartCreator> {
       fontSize: 12,
     );
 
-    // Adjust intervals based on the range of maxY
-    double interval;
-    if (maxY > 400) {
-      interval = 100;
-    } else if (maxY > 200) {
-      interval = 50;
-    } else if (maxY > 100) {
-      interval = 20;
-    } else if (maxY > 50) {
-      interval = 10;
-    } else {
-      interval = 5;
-    }
+    double interval = maxY / 8;
 
     if (value % interval != 0) {
-      return Container(); // Skip this title
+      return Container();
     }
 
-    int displayValue = widget.isScore ? value.toInt() : (value * 10).toInt();
-    return Text(displayValue.toString(), style: style, textAlign: TextAlign.center);
+    String displayValue;
+    if (value >= 1000) {
+      displayValue = '${(value / 1000).toStringAsFixed(1)}k';
+    } else {
+      displayValue = value.toInt().toString();
+    }
+
+    return Text(displayValue, style: style, textAlign: TextAlign.center);
   }
 
   FlTitlesData get titlesData => FlTitlesData(
@@ -150,7 +167,7 @@ class _UserTrendsBarChartCreatorState extends State<UserTrendsBarChartCreator> {
         showTitles: true,
         reservedSize: 40,
         getTitlesWidget: getLeftTitles,
-        interval: 1, // Interval is controlled inside `getLeftTitles`
+        interval: maxY / 8,
       ),
     ),
     topTitles: const AxisTitles(
@@ -179,7 +196,7 @@ class _UserTrendsBarChartCreatorState extends State<UserTrendsBarChartCreator> {
     int index = 0;
 
     widget.trendsData.forEach((date, score) {
-      double normalizedScore = widget.isScore ? score : score / 10;
+      double normalizedScore = score / maxY * maxY; // Use maxY to normalize the score
       barChartGroups.add(
         BarChartGroupData(
           x: index,

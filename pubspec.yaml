@@ -32,6 +32,7 @@ dependencies:
 
   flutter_card_swiper: ^7.0.1
   http: ^0.13.3
+  syncfusion_flutter_gauges: ^20.2.41
 
 dev_dependencies:
   flutter_test:

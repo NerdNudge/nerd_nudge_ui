@@ -12,6 +12,7 @@ import 'package:nerd_nudge/subscriptions/subscription_comparison_page.dart';
 import 'package:nerd_nudge/subscriptions/subscription_page.dart';
 import 'package:nerd_nudge/subscriptions/subscription_page_tabs.dart';
 import 'package:nerd_nudge/subscriptions/upgrade_page.dart';
+import 'package:nerd_nudge/utilities/gauge_tester_base.dart';
 import 'package:nerd_nudge/utilities/share_test.dart';
 import 'package:nerd_nudge/utilities/styles.dart';
 import 'package:nerd_nudge/ads_manager/ads_manager.dart';
@@ -56,7 +57,7 @@ class NerdNudgeApp extends StatelessWidget {
         '/favorites': (context) => const Favorites(),
         '/subscription': (context) => SubscriptionPageTabsBased(),
         '/inviteNerds': (context) => UpgradePage(),
-        '/share': (context) => ShareExample(),
+        '/gaugetest': (context) => GaugeTesterBase(),
         '/signout': (context) => SignOut(),
         '/authpage': (context) => Authpage(),
         '/startpage': (context) => LoginOrRegister(),

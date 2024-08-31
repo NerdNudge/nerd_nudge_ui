@@ -30,7 +30,7 @@ class MenuOptions {
           _getMenuListTile(context, Icons.subscriptions, 'Subscription', '/subscription'),
           _getMenuListTile(context, Icons.feedback, 'Feedback', '/feedback'),
           _getMenuListTile(context, Icons.group_add, 'Invite Nerds', '/inviteNerds'),
-          _getMenuListTile(context, Icons.notifications_active, 'Nudger', ''),
+          _getMenuListTile(context, Icons.notifications_active, 'Nudger', '/gaugetest'),
           _getMenuListTile(context, Icons.delete_forever, 'Delete Account', ''),
           //_getMenuListTile(context, Icons.exit_to_app, 'Sign Out', '/signout'),
           _getSignOutTile(context),

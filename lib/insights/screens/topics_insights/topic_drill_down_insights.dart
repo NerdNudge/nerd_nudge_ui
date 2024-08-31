@@ -23,26 +23,28 @@ class TopicDrillDown {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              for (var topic in lifetimeSummary[selectedTopic]['topics'])
+              // Corrected iteration over map entries
+              for (var entry in lifetimeSummary[selectedTopic]['subtopics'].entries)
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Styles.getSizedHeightBox(10),
                     Styles.getTitleDescriptionWidget(
-                      '${topic['id']} ',
-                      '(${topic['percentage_correct']}%)',
+                      '${entry.key} ',  // Subtopic name
+                      '(${entry.value}%)',  // Percentage correct
                       Styles.getSliderColorForPercentageCorrect(
-                        topic['percentage_correct'].toDouble(),
+                        entry.value.toDouble(),
                       ),
                       Styles.getSliderColorForPercentageCorrect(
-                        topic['percentage_correct'].toDouble(),
+                        entry.value.toDouble(),
                       ),
                       14,
                       14,
                     ),
                     Styles.getSlider(
-                      topic['percentage_correct'].toDouble(),
+                      entry.value.toDouble(),
                       Styles.getSliderColorForPercentageCorrect(
-                        topic['percentage_correct'].toDouble(),
+                        entry.value.toDouble(),
                       ),
                     ),
                   ],

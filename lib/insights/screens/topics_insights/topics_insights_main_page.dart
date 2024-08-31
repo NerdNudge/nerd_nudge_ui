@@ -4,51 +4,98 @@ import 'package:flutter/material.dart';
 import 'package:nerd_nudge/insights/screens/topics_insights/topic_drill_down_insights.dart';
 import 'package:nerd_nudge/insights/screens/topics_insights/topics_summary_insights.dart';
 import '../../../../utilities/styles.dart';
+import '../../../topics/services/topics_service.dart';
+import '../../../utilities/colors.dart';
 import '../Utilities/PeerComparisonInsights.dart';
 
 class TopicsInsights extends StatefulWidget {
-  const TopicsInsights({super.key});
+  TopicsInsights({super.key, required this.userInsights});
+
+  final Map<String, dynamic> userInsights;
 
   @override
   State<TopicsInsights> createState() => _TopicsInsightsState();
-}
 
-class _TopicsInsightsState extends State<TopicsInsights> {
-  dynamic userSummary = json.decode(
-      '{"overall":{"System Design":{"easy":7,"medium":11,"hard":3,"topics":[{"id":"Replication","questions_attempted":21,"percentage_correct":59},{"id":"Load Balancer","questions_attempted":19,"percentage_correct":71},{"id":"Caching","questions_attempted":11,"percentage_correct":88}]},"Java":{"easy":70,"medium":51,"hard":32,"topics":[{"id":"Multi-threading","questions_attempted":13,"percentage_correct":66},{"id":"OOPs Concepts","questions_attempted":26,"percentage_correct":88},{"id":"Data Structures","questions_attempted":31,"percentage_correct":77}]}},"last30days":{"System Design":{"easy":4,"medium":7,"hard":1,"topics":[{"id":"Replication","questions_attempted":11,"percentage_correct":76},{"id":"Caching","questions_attempted":5,"percentage_correct":96}]},"Java":{"easy":40,"medium":31,"hard":12,"topics":[{"id":"Multi-threading","questions_attempted":23,"percentage_correct":71},{"id":"Data Structures","questions_attempted":17,"percentage_correct":92}]}}}');
+  static Map<String, dynamic> userTopicsInsightsObject = {};
 
-  final peerComparisonData = json.decode('{"Easy":[85.0,70.0,96.0],"Medium":[75.0,65.0,88.0],"Hard":[85.0,95.0,99.0],"userAvg":"85%","peersAvg":"78%","topAvg":"96%"}');
+  static late String selectedTopic;
+  static late var lifetimeSummary;
+  static late var last30DaysSummary;
+  static late Map<String, String> topicCodesToNamesMap;
+  static late Map<String, String> topicNamesToCodesMap;
 
-  late String selectedTopic;
-  late Widget _currentTopicScreen = _getUserTopicsSummary();
-  late var lifetimeSummary;
-  late var last30DaysSummary;
+  static late List<String> lifetimeTopics;
+  static late List<String> last30DaysTopics;
 
-  late List<String> lifetimeTopics;
-  late List<String> last30DaysTopics;
+  static Future<void> updateTopics(Map<String, dynamic> userInsights) async {
+    userTopicsInsightsObject = userInsights['topicSummary'];
+    lifetimeSummary = userTopicsInsightsObject['lifetime'];
+    last30DaysSummary = userTopicsInsightsObject['last30Days'];
 
-  @override
-  void initState() {
-    super.initState();
+    print('user insights: $userInsights');
+    print('user topics insights: $userTopicsInsightsObject');
 
-    lifetimeSummary = userSummary['overall'];
-    last30DaysSummary = userSummary['last30days'];
-
-    updateTopics();
-  }
-
-  void updateTopics() {
     lifetimeTopics = [];
     last30DaysTopics = [];
 
+    topicCodesToNamesMap = await _getTopicCodesToNamesMap();
+    topicNamesToCodesMap = await _getTopicNamesToCodesMap();
+
+    print('topic codes to names mapping: $topicCodesToNamesMap');
+    print('topic names to codes mapping: $topicNamesToCodesMap');
+
     lifetimeSummary.forEach((topicName, topicDetails) {
-      lifetimeTopics.add(topicName);
+      lifetimeTopics.add(topicCodesToNamesMap[topicName] ?? topicName);
     });
 
     last30DaysSummary.forEach((topicName, topicDetails) {
-      last30DaysTopics.add(topicName);
+      last30DaysTopics.add(topicCodesToNamesMap[topicName] ?? topicName);
+    });
+
+    print('lifetime: $lifetimeSummary');
+    print('last 30: $last30DaysSummary');
+
+    print('lifetime topics: $lifetimeTopics');
+    print('last 30 topics: $last30DaysTopics');
+  }
+
+  static Future<Map<String, String>> _getTopicCodesToNamesMap() async {
+    return TopicsService().getTopicCodesToNamesMapping().then((topicCodesToNamesMapping) {
+      return topicCodesToNamesMapping;
+    }).catchError((error) {
+      print('Error occurred: $error');
+      return <String, String>{};
     });
   }
+
+  static Future<Map<String, String>> _getTopicNamesToCodesMap() async {
+    return TopicsService().getTopicNamesToCodesMapping().then((topicNamesToCodesMapping) {
+      return topicNamesToCodesMapping;
+    }).catchError((error) {
+      print('Error occurred: $error');
+      return <String, String>{};
+    });
+  }
+}
+
+class _TopicsInsightsState extends State<TopicsInsights> {
+  final peerComparisonData = json.decode('{"Easy":[85.0,70.0,96.0],"Medium":[75.0,65.0,88.0],"Hard":[85.0,95.0,99.0],"userAvg":"85%","peersAvg":"78%","topAvg":"96%"}');
+  late Widget _currentTopicScreen = _getUserTopicsSummary();
+
+  @override
+  initState() {
+    super.initState();
+    _fetchAndSetTopics();
+  }
+
+  Future<void> _fetchAndSetTopics() async {
+    await TopicsInsights.updateTopics(widget.userInsights);
+    setState(() {
+      _currentTopicScreen = _getUserTopicsSummary();
+    });
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +109,9 @@ class _TopicsInsightsState extends State<TopicsInsights> {
   }
 
   _getUserTopicsSummary() {
+    print('Topics under summary(): ${TopicsInsights.lifetimeTopics}');
+    print('Topics summary under summary(): ${TopicsInsights.lifetimeSummary}');
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,7 +126,7 @@ class _TopicsInsightsState extends State<TopicsInsights> {
             ),
           ),
         ),
-        SizedBox(height: 20),
+        Styles.getSizedHeightBox(20),
         Styles.getTitleDescriptionWidgetWithSoftWrap(
           'Strongest Topic: ',
           'System Design',
@@ -85,7 +135,7 @@ class _TopicsInsightsState extends State<TopicsInsights> {
           15,
           15,
         ),
-        SizedBox(height: 5),
+        Styles.getSizedHeightBox(5),
         Styles.getTitleDescriptionWidgetWithSoftWrap(
           'Weakest Topic: ',
           'Data Structures and Algorithms',
@@ -94,7 +144,7 @@ class _TopicsInsightsState extends State<TopicsInsights> {
           15,
           15,
         ),
-        SizedBox(height: 20),
+        Styles.getSizedHeightBox(20),
         Text(
           'Select a Topic: ',
           style: TextStyle(
@@ -103,26 +153,36 @@ class _TopicsInsightsState extends State<TopicsInsights> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 13),
+        Styles.getSizedHeightBox(13),
         Wrap(
           spacing: 8.0,
           runSpacing: 4.0,
-          children: lifetimeTopics.map((String option) {
+          children: TopicsInsights.lifetimeTopics.map((String option) {
+            print('topic in card: $option');
             return FilterChip(
               label: Text(option),
+              labelStyle: TextStyle(
+                color: Colors.black54,
+                fontWeight: FontWeight.bold,
+              ),
               onSelected: (bool selected) {
                 print(option);
                 setState(() {
-                  selectedTopic = option;
-                  _currentTopicScreen = TopicSummaryInsights.getSelectedTopicSummary(context, selectedTopic, topicsDrillDown, getPeerComparison, closeButtonToTopicInsightsMainPage);
+                  TopicsInsights.selectedTopic = option;
+                  String? topicCode = TopicsInsights.topicNamesToCodesMap[option];
+                  _currentTopicScreen = TopicSummaryInsights.getSelectedTopicSummary(context, TopicsInsights.lifetimeSummary[topicCode], TopicsInsights.selectedTopic, topicsDrillDown, getPeerComparison, closeButtonToTopicInsightsMainPage);
                 });
               },
-              selectedColor: Colors.white,
-              checkmarkColor: Colors.green,
+              selectedColor: CustomColors.mainThemeColor,
+              checkmarkColor: Colors.white,
               backgroundColor: Colors.grey.shade500,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
             );
           }).toList(),
         ),
+        Styles.getSizedHeightBox(10),
       ],
     );
   }
@@ -132,14 +192,15 @@ class _TopicsInsightsState extends State<TopicsInsights> {
     setState(() {
       _currentTopicScreen = PeerComparisonInsights(closeButton: closeButtonToTopicInsightsSummaryPage,
         peerComparisonData: peerComparisonData,
-        topic: selectedTopic,);
+        topic: TopicsInsights.selectedTopic,);
     });
   }
 
   topicsDrillDown() {
     print('details clicked.');
     setState(() {
-      _currentTopicScreen = TopicDrillDown.getTopicDrillDown(lifetimeSummary, selectedTopic, closeButtonToTopicInsightsSummaryPage);
+      String? topicCode = TopicsInsights.topicNamesToCodesMap[TopicsInsights.selectedTopic];
+      _currentTopicScreen = TopicDrillDown.getTopicDrillDown(TopicsInsights.lifetimeSummary, topicCode, closeButtonToTopicInsightsSummaryPage);
     });
   }
 
@@ -153,7 +214,8 @@ class _TopicsInsightsState extends State<TopicsInsights> {
     print('Close button clicked.');
     setState(() {
       //_currentTopicScreen = _getUserTopicsSummary();
-      _currentTopicScreen = TopicSummaryInsights.getSelectedTopicSummary(context, selectedTopic, topicsDrillDown, getPeerComparison, closeButtonToTopicInsightsMainPage);
+      String? topicCode = TopicsInsights.topicNamesToCodesMap[TopicsInsights.selectedTopic];
+      _currentTopicScreen = TopicSummaryInsights.getSelectedTopicSummary(context, TopicsInsights.lifetimeSummary[topicCode], TopicsInsights.selectedTopic, topicsDrillDown, getPeerComparison, closeButtonToTopicInsightsMainPage);
     });
   }
 }

@@ -5,8 +5,9 @@ import '../../../utilities/colors.dart';
 import '../../../utilities/styles.dart';
 
 class TopicSummaryInsights {
-  static getSelectedTopicSummary(BuildContext context, String selectedTopic,
+  static getSelectedTopicSummary(BuildContext context, dynamic topicObject, String selectedTopic,
       Function getDetails, Function getPeerComparison, Function getCloseButtonClick) {
+    print('Under topic summary details: $topicObject');
     return Column(
       children: [
         Text(
@@ -16,8 +17,18 @@ class TopicSummaryInsights {
             fontSize: 18,
           ),
         ),
-        _getCompleteDashboardSection(selectedTopic, 'Topic Rank: 1524', 32, 14,
-            6, 52, context, getDetails, getPeerComparison, getCloseButtonClick),
+        _getCompleteDashboardSection(
+          selectedTopic,
+          'Topic Rank: 1524',
+          (topicObject['easy'] as num).toDouble(),      // Convert to double
+          (topicObject['medium'] as num).toDouble(),    // Convert to double
+          (topicObject['hard'] as num).toDouble(),      // Convert to double
+          topicObject['easy'] + topicObject['medium'] + topicObject['hard'],
+          context,
+          getDetails,
+          getPeerComparison,
+          getCloseButtonClick,
+        ),
       ],
     );
   }
