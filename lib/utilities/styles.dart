@@ -495,6 +495,36 @@ class Styles {
     );
   }
 
+  static void showGlobalSnackbarMessageAndIcon(String message, IconData icon) {
+    scaffoldMessengerKey.currentState?.showSnackBar(
+      SnackBar(
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: Colors.black),
+            SizedBox(width: 8.0),
+            Text(
+              message,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+        backgroundColor: CustomColors.purpleButtonColor,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        duration: Duration(seconds: 3),
+        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      ),
+    );
+  }
+
   static Future<void> shareCardContent(GlobalKey key) async {
     try {
       WidgetsBinding.instance.addPostFrameCallback((_) async {

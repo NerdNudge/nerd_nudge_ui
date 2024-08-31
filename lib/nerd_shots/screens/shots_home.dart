@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:nerd_nudge/nerd_shots/screens/nerd_shots_swiped.dart';
 import 'package:nerd_nudge/topics/screens/topic_selection_home_page.dart';
 
+import '../../utilities/styles.dart';
+
 class NerdShotsSelectedTopics {
   static final Set<String> selectedOptions = {};
 }
@@ -20,16 +22,20 @@ class NerdShotsHome extends StatefulWidget {
 class _NerdShotsHomeState extends State<NerdShotsHome> {
   @override
   Widget build(BuildContext context) {
-    return TopicSelectionHomePage(title: 'Nerd Shots', showShotsOrQuiz: startShots,);
+    return TopicSelectionHomePage(
+      title: 'Nerd Shots',
+      showShotsOrQuiz: startShots,
+    );
   }
 
   startShots() {
+    Styles.showGlobalSnackbarMessageAndIcon('Swipe Right for the next shot!', Icons.swipe);
     print('Start Shots home');
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => NerdShotsSwiped(),
-        ),
-      );
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => NerdShotsSwiped(),
+      ),
+    );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:load_switch/load_switch.dart';
 import 'package:nerd_nudge/insights/screens/summary_insights/summary_insights.dart';
 import 'package:nerd_nudge/insights/screens/trends_insights/user_trend_insights_main_page.dart';
+import 'package:nerd_nudge/topics/services/topics_service.dart';
 import '../../menus/screens/menu_options.dart';
 import '../../utilities/styles.dart';
 import '../../bottom_menus/screens/bottom_menu_options.dart';
@@ -29,8 +30,7 @@ class _UserInsightsState extends State<UserInsights> {
 
   Future<Map<String, dynamic>> _fetchUserInsights() async {
     try {
-      final insights = await UserInsightsService().getUserInsights();
-      return insights;
+      return await UserInsightsService().getUserInsights();
     } catch (e) {
       print('Error fetching user insights: $e');
       return {};
@@ -121,7 +121,7 @@ class _UserInsightsState extends State<UserInsights> {
         setState(() {
           InsightsDurationState.setLast30DaysFlag(newValue);
           SummaryInsights.setValues(userInsights);
-          UserTrendsMainPage.setValues(userInsights);
+          //UserTrendsMainPage.setValues(userInsights);
         });
         bool val = InsightsDurationState.last30DaysFlag;
         print('Value changed to $val');

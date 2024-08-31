@@ -53,11 +53,12 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
   _resetIconsAndCounts(dynamic quiz) {
     _likesIcon = _getLikesIcon(quiz['id']);
     _dislikesIcon = _getDisLikesIcon(quiz['id']);
-    _favoriteIcon = _getFavoritesIcon(quiz['topic_name'], quiz['sub_topic'], quiz['id']);
+    _favoriteIcon =
+        _getFavoritesIcon(quiz['topic_name'], quiz['sub_topic'], quiz['id']);
     _shareIcon = _getSharesIcon(quiz['id']);
 
     _likeCount = _getLikesCount(quiz, quiz['id']);
-    _dislikeCount =_getDisLikesCount(quiz, quiz['id']);
+    _dislikeCount = _getDisLikesCount(quiz, quiz['id']);
     _favoriteCount = _getFavoritesCount(quiz, quiz['id']);
     _shareCount = _getSharesCount(quiz, quiz['id']);
   }
@@ -126,11 +127,13 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
       if (_favoriteIcon == Icons.favorite_border_outlined) {
         _favoriteIcon = Icons.favorite;
         _favoriteCount++;
-        _shotsUserActivityAPIEntity.addFavorite(quiz['topic_name'], quiz['sub_topic'], quiz['id']);
+        _shotsUserActivityAPIEntity.addFavorite(
+            quiz['topic_name'], quiz['sub_topic'], quiz['id']);
       } else {
         _favoriteIcon = Icons.favorite_border_outlined;
         _favoriteCount--;
-        _shotsUserActivityAPIEntity.removeFavorite(quiz['topic_name'], quiz['sub_topic'], quiz['id']);
+        _shotsUserActivityAPIEntity.removeFavorite(
+            quiz['topic_name'], quiz['sub_topic'], quiz['id']);
       }
     });
   }
@@ -168,9 +171,10 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
       _resetIconsAndCounts(quiz);
       _shouldResetIcons = false;
 
-      if(_currentIndex > _maxIndex) {
+      if (_currentIndex > _maxIndex) {
         _maxIndex = _currentIndex;
-        _shotsUserActivityAPIEntity.incrementShot(quiz['topic_name'], quiz['sub_topic']);
+        _shotsUserActivityAPIEntity.incrementShot(
+            quiz['topic_name'], quiz['sub_topic']);
       }
     }
 
@@ -279,15 +283,15 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
   }
 
   IconData _getLikesIcon(String id) {
-    if(_shotsUserActivityAPIEntity.isLikedByUser(id)) {
+    if (_shotsUserActivityAPIEntity.isLikedByUser(id)) {
       return Icons.thumb_up;
     }
-    
+
     return Icons.thumb_up_alt_outlined;
   }
 
   int _getLikesCount(dynamic quiz, String id) {
-    if(_shotsUserActivityAPIEntity.isLikedByUser(id)) {
+    if (_shotsUserActivityAPIEntity.isLikedByUser(id)) {
       return quiz['likes'] + 1;
     }
 
@@ -295,7 +299,7 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
   }
 
   IconData _getDisLikesIcon(String id) {
-    if(_shotsUserActivityAPIEntity.isDisLikedByUser(id)) {
+    if (_shotsUserActivityAPIEntity.isDisLikedByUser(id)) {
       return Icons.thumb_down;
     }
 
@@ -303,7 +307,7 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
   }
 
   int _getDisLikesCount(dynamic quiz, String id) {
-    if(_shotsUserActivityAPIEntity.isDisLikedByUser(id)) {
+    if (_shotsUserActivityAPIEntity.isDisLikedByUser(id)) {
       return quiz['dislikes'] + 1;
     }
 
@@ -311,7 +315,7 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
   }
 
   IconData _getFavoritesIcon(String topic, String subtopic, String id) {
-    if(_shotsUserActivityAPIEntity.isFavoriteByUser(topic, subtopic, id)) {
+    if (_shotsUserActivityAPIEntity.isFavoriteByUser(topic, subtopic, id)) {
       return Icons.favorite;
     }
 
@@ -319,7 +323,8 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
   }
 
   int _getFavoritesCount(dynamic quiz, String id) {
-    if(_shotsUserActivityAPIEntity.isFavoriteByUser(quiz['topic_name'], quiz['sub_topic'], id)) {
+    if (_shotsUserActivityAPIEntity.isFavoriteByUser(
+        quiz['topic_name'], quiz['sub_topic'], id)) {
       return quiz['favorites'] + 1;
     }
 
@@ -327,7 +332,7 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
   }
 
   IconData _getSharesIcon(String id) {
-    if(_shotsUserActivityAPIEntity.isSharedByUser(id)) {
+    if (_shotsUserActivityAPIEntity.isSharedByUser(id)) {
       return Icons.share;
     }
 
@@ -335,7 +340,7 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
   }
 
   int _getSharesCount(dynamic quiz, String id) {
-    if(_shotsUserActivityAPIEntity.isSharedByUser(id)) {
+    if (_shotsUserActivityAPIEntity.isSharedByUser(id)) {
       return quiz['shares'] + 1;
     }
 
