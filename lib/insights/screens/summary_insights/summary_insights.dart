@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:mrx_charts/mrx_charts.dart';
 import 'package:nerd_nudge/insights/screens/summary_insights/summary_details.dart';
@@ -30,7 +32,7 @@ class SummaryInsights extends StatefulWidget {
     print(userSummaryInsightsObject);
     summaryObject = userSummaryInsightsObject['summary'];
     print(summaryObject);
-    peerComparisonDataObject = summaryObject['peerComparison'];
+    peerComparisonDataObject = overallSummaryObject['peerComparison'];
   }
 }
 
@@ -71,8 +73,8 @@ class _SummaryInsightsState extends State<SummaryInsights> {
     int easyValue = summaryObject['stats']['easy'];
     int mediumValue = summaryObject['stats']['medium'];
     int hardValue = summaryObject['stats']['hard'];
-    int rank = summaryObject['rank'];
-    print('updating now.');
+    int topicRank = widget.userInsights['rankings']['global'];
+    print('Topic rank: $topicRank');
 
     return Column(
       children: [
@@ -84,7 +86,7 @@ class _SummaryInsightsState extends State<SummaryInsights> {
           ),
         ),
         Text(
-          'Global Rank: $rank',
+          'Global Rank: $topicRank',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 14,
@@ -196,8 +198,7 @@ class _SummaryInsightsState extends State<SummaryInsights> {
   void _getPeerComparison() {
     print('Peer comparison called.');
     setState(() {
-      var summaryObject = SummaryInsights.userSummaryInsightsObject['summary'];
-      SummaryInsights.peerComparisonDataObject = summaryObject['peerComparison'];
+      SummaryInsights.peerComparisonDataObject = SummaryInsights.overallSummaryObject['peerComparison'];
       cardDetails = PeerComparisonInsights(
         closeButton: getCloseButtonClick,
         peerComparisonData: SummaryInsights.peerComparisonDataObject,

@@ -15,9 +15,7 @@ class TopicDrillDown {
             fontSize: 20,
           ),
         ),
-        SizedBox(
-          height: 20,
-        ),
+        Styles.getSizedHeightBox(20),
         Container(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -52,9 +50,7 @@ class TopicDrillDown {
             ],
           ),
         ),
-        SizedBox(
-          height: 20,
-        ),
+        Styles.getSizedHeightBox(20),
         Row(
           children: [
             Styles.getTitleDescriptionWidget(
@@ -65,7 +61,7 @@ class TopicDrillDown {
               15,
               15,
             ),
-            SizedBox(width: 40),
+            Styles.getSizedWidthBox(40),
             Container(
               width: 40.0,
               height: 40.0,

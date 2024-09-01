@@ -6,7 +6,7 @@ import '../../../utilities/styles.dart';
 
 class TopicSummaryInsights {
   static getSelectedTopicSummary(BuildContext context, dynamic topicObject, String selectedTopic,
-      Function getDetails, Function getPeerComparison, Function getCloseButtonClick) {
+      Function getDetails, Function getPeerComparison, Function getCloseButtonClick, int topicRank) {
     print('Under topic summary details: $topicObject');
     return Column(
       children: [
@@ -19,7 +19,7 @@ class TopicSummaryInsights {
         ),
         _getCompleteDashboardSection(
           selectedTopic,
-          'Topic Rank: 1524',
+          'Topic Rank: $topicRank',
           (topicObject['easy'] as num).toDouble(),      // Convert to double
           (topicObject['medium'] as num).toDouble(),    // Convert to double
           (topicObject['hard'] as num).toDouble(),      // Convert to double
