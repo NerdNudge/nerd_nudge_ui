@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../home_page/screens/home_page.dart';
 import '../../quiz/home/screens/quiz_home_page.dart';
+import '../../user_profile/dto/user_profile_entity.dart';
 import '../../utilities/colors.dart';
 import '../../challenges/screens/main_challenge_page.dart';
 import '../../insights/screens/user_insights_main_page.dart';
@@ -51,7 +52,8 @@ class _BottomMenuState extends State<BottomMenu> {
     var navigateScreen;
     switch (index) {
       case 0:
-        navigateScreen = HomePage();
+        UserProfileEntity userProfileEntity = UserProfileEntity();
+        navigateScreen = HomePage(userFullName: userProfileEntity.getUserFullName(), userEmail: userProfileEntity.getUserEmail(),);
         break;
       case 1:
         navigateScreen = QuizHomePage();

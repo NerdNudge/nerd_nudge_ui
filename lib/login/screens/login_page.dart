@@ -44,11 +44,11 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     const SizedBox(
-                      height: 100,
+                      height: 70,
                     ),
                     Image.asset(
                       'images/NN_icon_2.png',
-                      height: 150,
+                      height: 130,
                     ),
                     const SizedBox(
                       height: 30,
@@ -163,10 +163,12 @@ class _LoginPageState extends State<LoginPage> {
 
     if (user != null) {
       print('Sign-in successful: ${user.displayName}');
+      String userFullName = user.displayName ?? user.email ?? '';
+      String email = user.email ?? '';
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => HomePage(),
+          builder: (context) => HomePage(userFullName: userFullName, userEmail: email,),
         ),
       );
     } else {
@@ -225,10 +227,11 @@ class _LoginPageState extends State<LoginPage> {
       );
       Navigator.pop(context);
 
+      String userFullName = user?.displayName ?? usernameController.text ?? '';
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => HomePage(),
+          builder: (context) => HomePage(userFullName: userFullName, userEmail: usernameController.text,),
         ),
       );
     } on FirebaseAuthException catch (e) {
@@ -237,10 +240,12 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.pop(context);
       if (e.code == 'user-not-found') {
         print('User not found !');
-        Styles.showGlobalSnackbarMessage('Invalid username and password!');
+        Styles.showGlobalSnackbarMessage('Invalid email and password!');
       } else if (e.code == 'invalid-credential') {
         print('Invalid username and password !');
-        Styles.showGlobalSnackbarMessage('Invalid username and password!');
+        Styles.showGlobalSnackbarMessage('Invalid email and password!');
+      } else if(e.code == 'invalid-email'){
+        Styles.showGlobalSnackbarMessage('Invalid email!');
       }
     }
   }

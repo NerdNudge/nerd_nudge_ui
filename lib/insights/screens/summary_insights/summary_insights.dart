@@ -73,7 +73,9 @@ class _SummaryInsightsState extends State<SummaryInsights> {
     int easyValue = summaryObject['stats']['easy'];
     int mediumValue = summaryObject['stats']['medium'];
     int hardValue = summaryObject['stats']['hard'];
-    int topicRank = widget.userInsights['rankings']['global'];
+    int topicRank = (widget.userInsights.containsKey('rankings') && widget.userInsights['rankings'].containsKey('global'))
+        ? widget.userInsights['rankings']['global'] as int
+        : 0;
     print('Topic rank: $topicRank');
 
     return Column(

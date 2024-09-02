@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
+import 'package:nerd_nudge/user_profile/dto/user_profile_entity.dart';
 import 'package:nerd_nudge/utilities/styles.dart';
 
 class HeatmapsMainPage extends StatefulWidget {
@@ -15,6 +16,8 @@ class _HeatmapsMainPageState extends State<HeatmapsMainPage> {
   @override
   void initState() {
     super.initState();
+    UserProfileEntity userProfileEntity = UserProfileEntity();
+    print('User fullName: ${userProfileEntity.getUserFullName()}, User Email: ${userProfileEntity.getUserEmail()}');
   }
 
   @override

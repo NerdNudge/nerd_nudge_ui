@@ -8,6 +8,7 @@ import 'package:nerd_nudge/utilities/constants.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../bottom_menus/screens/bottom_menu_options.dart';
+import '../user_profile/dto/user_profile_entity.dart';
 import 'api_end_points.dart';
 import 'api_service.dart';
 import 'colors.dart';
@@ -397,11 +398,10 @@ class Styles {
     );
   }
 
-  static Map<String, dynamic> favoriteQuoteToJson(
-      String userId, int timestamp, String quoteId, bool add) {
+  static Map<String, dynamic> favoriteQuoteToJson(int timestamp, String quoteId, bool add) {
     String type = add ? 'add' : 'delete';
     return {
-      'userId': userId,
+      'userId': UserProfileEntity().getUserEmail(),
       'quoteId': quoteId,
     };
   }
@@ -415,7 +415,7 @@ class Styles {
           APIEndpoints.FAVORITES_QUOTE_SUBMISSION;
 
       final Map<String, dynamic> jsonBody =
-          favoriteQuoteToJson('abc@gmail.com', 0, quoteId, add);
+          favoriteQuoteToJson(0, quoteId, add);
 
       print('Sending PUT request to: $url, value: $jsonBody');
       result = await apiService.putRequest(url, jsonBody);

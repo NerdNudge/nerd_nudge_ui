@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:nerd_nudge/menus/dto/favorite_entity.dart';
 
+import '../../../user_profile/dto/user_profile_entity.dart';
 import '../../../utilities/api_end_points.dart';
 import '../../../utilities/api_service.dart';
 
@@ -21,9 +22,9 @@ class FavoritesService {
     final ApiService apiService = ApiService();
     dynamic result;
     try {
-      final String url = APIEndpoints.USER_INSIGHTS_BASE_URL + APIEndpoints.RECENT_FAVORITES;
+      final String url = APIEndpoints.USER_INSIGHTS_BASE_URL + APIEndpoints.RECENT_FAVORITES + "/" + UserProfileEntity().getUserEmail();
       print('Sending GET request to: $url');
-      result = await apiService.getRequest(APIEndpoints.USER_INSIGHTS_BASE_URL, APIEndpoints.RECENT_FAVORITES);
+      result = await apiService.getRequest(APIEndpoints.USER_INSIGHTS_BASE_URL, APIEndpoints.RECENT_FAVORITES + "/" + UserProfileEntity().getUserEmail());
       print('API Result: $result');
 
       if (result is Map<String, dynamic>) {

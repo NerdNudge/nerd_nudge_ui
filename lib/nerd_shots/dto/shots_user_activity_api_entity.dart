@@ -1,5 +1,7 @@
+import '../../user_profile/dto/user_profile_entity.dart';
+
 class ShotsUserActivityAPIEntity {
-  String _id = 'abc@gmail.com';
+  final String _id = UserProfileEntity().getUserEmail();
   int _timestamp = 0;
   Map<String, Map<String, int>> _shots = {};
   List<String> _likes = [];

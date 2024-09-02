@@ -1,5 +1,7 @@
+import 'package:nerd_nudge/user_profile/dto/user_profile_entity.dart';
+
 class FavoriteUserActivityEntity {
-  String _id = 'abc@gmail.com';
+  final String _id = UserProfileEntity().getUserEmail();
   int _timestamp = 0;
   List<String> _likes = [];
   List<String> _dislikes = [];

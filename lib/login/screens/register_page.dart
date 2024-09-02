@@ -14,10 +14,9 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final usernameController = TextEditingController();
-
+  final fullNameController = TextEditingController();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
-
   final confirmPasswordController = TextEditingController();
 
   Widget getBody(BuildContext context) {
@@ -74,7 +73,10 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
                     Styles.getSizedHeightBox(30),
-                    Styles.getTextFormField(usernameController,
+                    Styles.getTextFormField(fullNameController,
+                        'Enter your Full Name', 'Full Name', false),
+                    Styles.getSizedHeightBox(20),
+                    Styles.getTextFormField(emailController,
                         'Enter your e-mail', 'E-mail', false),
                     Styles.getSizedHeightBox(20),
                     /*Styles.getTextFormField('Enter your Name', 'Name', false),
@@ -152,7 +154,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }*/
 
   Future<void> createNewAccount() async {
-    if(usernameController.text == '' || passwordController.text == '' || confirmPasswordController.text == '') {
+    if(fullNameController.text == '' || emailController.text == '' || passwordController.text == '' || confirmPasswordController.text == '') {
       Styles.showGlobalSnackbarMessage('Please fill all the details!');
       return;
     }
@@ -164,7 +166,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     try {
       UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: usernameController.text,
+        email: emailController.text,
         password: passwordController.text,
       );
 
@@ -190,7 +192,7 @@ class _RegisterPageState extends State<RegisterPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => HomePage(),
+            builder: (context) => HomePage(userFullName: fullNameController.text, userEmail: emailController.text,),
           ),
         );
       }

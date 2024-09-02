@@ -14,7 +14,7 @@ class QuestionTimer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LinearTimer(
-      duration: const Duration(seconds: 10),
+      duration: Duration(seconds: completeQuiz['time_limit_secs']),
 
       onTimerEnd: () {
         print('Timer Ended !!!');

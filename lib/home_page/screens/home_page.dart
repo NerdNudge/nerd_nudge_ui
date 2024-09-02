@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:nerd_nudge/user_profile/dto/user_profile_entity.dart';
 
 import '../../../utilities/colors.dart';
 import '../../../utilities/startup_welcome_messages.dart';
@@ -14,7 +15,10 @@ import '../dto/user_home_stats.dart';
 import '../services/home_page_service.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  HomePage({super.key, required this.userFullName, required this.userEmail});
+
+  final String userFullName;
+  final String userEmail;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -26,6 +30,12 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    print('uname: ${widget.userFullName}, email: ${widget.userEmail}');
+    UserProfileEntity userProfileEntity = UserProfileEntity();
+    userProfileEntity.setUserFullName(widget.userFullName);
+    userProfileEntity.setUserEmail(widget.userEmail);
+
+    print('Home page: User fullName: ${userProfileEntity.getUserFullName()}, User Email: ${userProfileEntity.getUserEmail()}');
     _futureUserHomeStats = HomePageService().getUserHomePageStats();
   }
 

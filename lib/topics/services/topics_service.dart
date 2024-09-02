@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import '../../user_profile/dto/user_profile_entity.dart';
 import '../../utilities/api_end_points.dart';
 import '../../utilities/api_service.dart';
 
@@ -33,8 +34,8 @@ class TopicsService {
 
   Future<void> _updateTopicCache() async {
     try {
-      print(APIEndpoints.CONTENT_MANAGER_BASE_URL + APIEndpoints.TOPICS);
-      _result = await _apiService.getRequest(APIEndpoints.CONTENT_MANAGER_BASE_URL, APIEndpoints.TOPICS);
+      print(APIEndpoints.CONTENT_MANAGER_BASE_URL + APIEndpoints.TOPICS + "/" + UserProfileEntity().getUserEmail());
+      _result = await _apiService.getRequest(APIEndpoints.CONTENT_MANAGER_BASE_URL, APIEndpoints.TOPICS + "/" + UserProfileEntity().getUserEmail());
       _lastFetchedTime = DateTime.now();
       print('API Result: $_result');
 

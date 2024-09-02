@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import '../../user_profile/dto/user_profile_entity.dart';
 import '../../utilities/api_end_points.dart';
 import '../../utilities/api_service.dart';
 
@@ -17,8 +18,8 @@ class UserInsightsService {
     final ApiService apiService = ApiService();
     dynamic result;
     try {
-      print(APIEndpoints.USER_INSIGHTS_BASE_URL + APIEndpoints.USER_INSIGHTS);
-      result = await apiService.getRequest(APIEndpoints.USER_INSIGHTS_BASE_URL, APIEndpoints.USER_INSIGHTS);
+      print(APIEndpoints.USER_INSIGHTS_BASE_URL + APIEndpoints.USER_INSIGHTS + "/" + UserProfileEntity().getUserEmail());
+      result = await apiService.getRequest(APIEndpoints.USER_INSIGHTS_BASE_URL, APIEndpoints.USER_INSIGHTS + "/" + UserProfileEntity().getUserEmail());
       print('API Result: $result');
 
       if (result is Map<String, dynamic>) {
