@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:nerd_nudge/quiz/quiz_answers/screens/read_more.dart';
 import 'package:nerd_nudge/quiz/quiz_question/services/nerd_quizflex_service.dart';
 import 'package:nerd_nudge/topics/screens/topic_selection_home_page.dart';
 import 'package:nerd_nudge/ads_manager/ads_manager.dart';
 
 import '../../../../utilities/constants.dart';
 import '../../../../utilities/styles.dart';
+import '../../../cache_and_lock_manager/cache_locks_keys.dart';
 import '../../../menus/screens/menu_options.dart';
 import '../../../subscriptions/upgrade_page.dart';
 import '../../../user_profile/screens/user_account_types.dart';
@@ -24,6 +24,15 @@ class QuizService extends StatefulWidget {
 }
 
 class _QuizServiceState extends State<QuizService> {
+
+  @override
+  void initState() {
+    super.initState();
+    CacheLockKeys cacheLockKeys = CacheLockKeys();
+    cacheLockKeys.updateQuizFlexShotsKey();
+  }
+
+
   static List<dynamic> _currentQuizzes = [];
   static int _currentIndex = 0;
 

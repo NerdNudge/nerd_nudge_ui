@@ -1,19 +1,13 @@
-import 'dart:io';
-import 'dart:ui' as ui;
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:nerd_nudge/nerd_shots/services/nerd_shots_service.dart';
 import 'package:nerd_nudge/subscriptions/upgrade_page.dart';
 import 'package:nerd_nudge/topics/screens/topic_selection_home_page.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
 
 import '../../../utilities/colors.dart';
 import '../../../utilities/styles.dart';
 import '../../home_page/dto/user_home_stats.dart';
-import '../../utilities/constants.dart';
+import '../../cache_and_lock_manager/cache_locks_keys.dart';
 import '../dto/shots_user_activity_api_entity.dart';
 
 class NerdShotsSwiped extends StatefulWidget {
@@ -48,6 +42,8 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
     _updateCurrentQuiz();
     _shotsUserActivityAPIEntity = ShotsUserActivityAPIEntity();
     print('Inited. $_shotsUserActivityAPIEntity');
+    CacheLockKeys cacheLockKeys = CacheLockKeys();
+    cacheLockKeys.updateQuizFlexShotsKey();
   }
 
   _resetIconsAndCounts(dynamic quiz) {

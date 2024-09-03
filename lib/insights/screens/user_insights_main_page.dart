@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:load_switch/load_switch.dart';
+import 'package:nerd_nudge/cache_and_lock_manager/user_insights_cache_manager.dart';
 import 'package:nerd_nudge/insights/screens/summary_insights/summary_insights.dart';
 import 'package:nerd_nudge/insights/screens/trends_insights/user_trend_insights_main_page.dart';
-import 'package:nerd_nudge/topics/services/topics_service.dart';
+import '../../cache_and_lock_manager/cache_locks_keys.dart';
 import '../../menus/screens/menu_options.dart';
 import '../../utilities/styles.dart';
 import '../../bottom_menus/screens/bottom_menu_options.dart';
 import '../services/insights_duration_state.dart';
-import '../services/user_insights_service.dart';
 import 'heatmap_insights/heatmaps_main_page.dart';
 import 'topics_insights/topics_insights_main_page.dart';
 
@@ -20,7 +20,8 @@ class UserInsights extends StatefulWidget {
 
 class _UserInsightsState extends State<UserInsights> {
   int touchedIndex = -1;
-  Future<Map<String, dynamic>>? userInsightsFuture;
+  static Future<Map<String, dynamic>>? userInsightsFuture;
+  static String _currentLockKey = '';
 
   @override
   void initState() {
@@ -29,12 +30,18 @@ class _UserInsightsState extends State<UserInsights> {
   }
 
   Future<Map<String, dynamic>> _fetchUserInsights() async {
-    try {
-      return await UserInsightsService().getUserInsights();
-    } catch (e) {
-      print('Error fetching user insights: $e');
-      return {};
-    }
+    UserInsightsCacheManager cacheManager = UserInsightsCacheManager();
+    print('Current local key: $_currentLockKey');
+    print('cache key: ${CacheLockKeys().getCurrentKey()}');
+    Map<String, dynamic> userInsights = await cacheManager.fetchUserInsights(_currentLockKey);
+    setState(() {
+      _currentLockKey = CacheLockKeys().getCurrentKey();
+    });
+
+    print('User Insights: $userInsights');
+    print('under insighst: $_currentLockKey');
+
+    return userInsights;
   }
 
   @override

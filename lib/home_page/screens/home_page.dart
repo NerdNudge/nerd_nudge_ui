@@ -6,13 +6,14 @@ import '../../../utilities/colors.dart';
 import '../../../utilities/startup_welcome_messages.dart';
 import '../../../utilities/styles.dart';
 import '../../../bottom_menus/screens/bottom_menu_options.dart';
+import '../../cache_and_lock_manager/cache_locks_keys.dart';
+import '../../cache_and_lock_manager/user_home_page_cache_manager.dart';
 import '../../insights/screens/user_insights_main_page.dart';
 import '../../menus/screens/menu_options.dart';
 import '../../nerd_shots/screens/shots_home.dart';
 import '../../quiz/home/screens/quiz_home_page.dart';
 import '../../subscriptions/subscription_page_tabs.dart';
 import '../dto/user_home_stats.dart';
-import '../services/home_page_service.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({super.key, required this.userFullName, required this.userEmail});
@@ -26,6 +27,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late Future<UserHomeStats> _futureUserHomeStats;
+  static String _currentLockKey = '';
 
   @override
   void initState() {
@@ -36,7 +38,23 @@ class _HomePageState extends State<HomePage> {
     userProfileEntity.setUserEmail(widget.userEmail);
 
     print('Home page: User fullName: ${userProfileEntity.getUserFullName()}, User Email: ${userProfileEntity.getUserEmail()}');
-    _futureUserHomeStats = HomePageService().getUserHomePageStats();
+    //_futureUserHomeStats = HomePageService().getUserHomePageStats();
+    _futureUserHomeStats = _fetchUserHomeStats();
+  }
+
+  Future<UserHomeStats> _fetchUserHomeStats() async {
+    UserHomePageCacheManager cacheManager = UserHomePageCacheManager();
+    print('Current local key: $_currentLockKey');
+    print('cache key: ${CacheLockKeys().getCurrentKey()}');
+    Future<UserHomeStats> homeStats = cacheManager.fetchUserHomePageStats(_currentLockKey);
+    setState(() {
+      _currentLockKey = CacheLockKeys().getCurrentKey();
+    });
+
+    print('Home Stats Insights: $homeStats');
+    print('under insighst: $_currentLockKey');
+
+    return homeStats;
   }
 
   @override
