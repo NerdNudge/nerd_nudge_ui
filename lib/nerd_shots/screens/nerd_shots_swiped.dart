@@ -6,8 +6,10 @@ import 'package:nerd_nudge/topics/screens/topic_selection_home_page.dart';
 
 import '../../../utilities/colors.dart';
 import '../../../utilities/styles.dart';
-import '../../home_page/dto/user_home_stats.dart';
+import '../../ads_manager/ads_manager.dart';
+import '../../../user_home_page/dto/user_home_stats.dart';
 import '../../cache_and_lock_manager/cache_locks_keys.dart';
+import '../../user_profile/screens/user_account_types.dart';
 import '../dto/shots_user_activity_api_entity.dart';
 
 class NerdShotsSwiped extends StatefulWidget {
@@ -39,9 +41,9 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
   @override
   void initState() {
     super.initState();
-    _updateCurrentQuiz();
     _shotsUserActivityAPIEntity = ShotsUserActivityAPIEntity();
     print('Inited. $_shotsUserActivityAPIEntity');
+    _updateCurrentQuiz();
     CacheLockKeys cacheLockKeys = CacheLockKeys();
     cacheLockKeys.updateQuizFlexShotsKey();
   }
@@ -62,6 +64,12 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
   _updateCurrentQuiz() async {
     var nextQuizList = await _getNextQuizzes();
     if (nextQuizList.isEmpty) {
+      if (!_shotsSubmitted && !_shotsUserActivityAPIEntity.isShotsEmpty()) {
+        print('User has exhausted the shots counts.');
+        await NerdShotsService().shotsSubmission(_shotsUserActivityAPIEntity);
+        _shotsUserActivityAPIEntity.clear();
+        _shotsSubmitted = true; // Set the flag to true after submission
+      }
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.push(
           context,
@@ -83,7 +91,7 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
       return [];
     } else {
       var nextQuestions = await NerdShotsService().getNextQuizflexes(
-          TopicSelection.selectedTopic, TopicSelection.selectedSubtopic, 6);
+          TopicSelection.selectedTopic, TopicSelection.selectedSubtopic, 10);
       print('$nextQuestions');
       return nextQuestions['data'];
     }
@@ -146,16 +154,67 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
     Styles.shareCardContent(_repaintBoundaryKey);
   }
 
-  Widget? _getNextShot() {
-    print('index: $_currentIndex');
-    if (_currentIndex == _currentQuizzes.length - 1) {
-      _updateCurrentQuiz();
-      if (_currentQuizzes.isEmpty) {
-        return null;
-      }
-    }
+  bool _shotsSubmitted = false;
 
-    return _getCard(_currentQuizzes[_currentIndex]);
+  Widget? _getNextShot() {
+    print(
+        'index: $_currentIndex, shots count: ${UserHomeStats().getUserShotsCountToday()}, ${_shotsUserActivityAPIEntity.isShotsEmpty()}');
+
+    if (UserHomeStats().hasUserExhaustedNerdShots()) {
+      if (!_shotsSubmitted && !_shotsUserActivityAPIEntity.isShotsEmpty()) {
+        print('User has exhausted the shots counts.');
+        NerdShotsService().shotsSubmission(_shotsUserActivityAPIEntity);
+        _shotsUserActivityAPIEntity.clear();
+        _shotsSubmitted = true; // Set the flag to true after submission
+      }
+      if (UserHomeStats().getUserAccountType() == AccountType.FREEMIUM) {
+        print('Freemium user.');
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => UpgradePage(),
+            ),
+          );
+        });
+      }
+      return null;
+    } else {
+      _shotsSubmitted = false;
+      print(
+          'Last shown Quiz count: ${NerdAdManager.lastShownShotsCount}, Quiz count today: ${UserHomeStats().getUserShotsCountToday()}');
+      if (NerdAdManager.lastShownShotsCount !=
+              UserHomeStats().getUserShotsCountToday() &&
+          UserHomeStats().adsFrequencyShots != 0 &&
+          (UserHomeStats().getUserShotsCountToday() %
+                  UserHomeStats().adsFrequencyShots ==
+              0)) {
+        NerdAdManager.lastShownShotsCount =
+            UserHomeStats().getUserShotsCountToday();
+        return Container(
+          height: 300,
+          child: NerdAdManager(
+            onAdClosed: () {
+              setState(() {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NerdShotsSwiped(),
+                  ),
+                );
+              });
+            },
+          ),
+        );
+      } else if (_currentIndex == _currentQuizzes.length - 1) {
+        _updateCurrentQuiz();
+        if (_currentQuizzes.isEmpty) {
+          return null;
+        }
+      }
+
+      return _getCard(_currentQuizzes[_currentIndex]);
+    }
   }
 
   Widget _getCard(dynamic quiz) {
@@ -172,6 +231,7 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
         _shotsUserActivityAPIEntity.incrementShot(
             quiz['topic_name'], quiz['sub_topic']);
       }
+      UserHomeStats().incrementShotsCount();
     }
 
     return Container(
@@ -416,6 +476,7 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
 
   Future<void> _onClose(BuildContext context) async {
     await NerdShotsService().shotsSubmission(_shotsUserActivityAPIEntity);
+    _shotsUserActivityAPIEntity.clear();
     Navigator.pop(context);
   }
 

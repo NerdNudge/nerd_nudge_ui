@@ -6,6 +6,8 @@ import 'package:nerd_nudge/quiz/quiz_question/screens/question_options_body.dart
 import 'package:nerd_nudge/quiz/quiz_question/screens/question_timer_body.dart';
 import 'package:nerd_nudge/topics/screens/topic_selection_home_page.dart';
 
+import '../../../user_home_page/dto/user_home_stats.dart';
+
 class QuestionScreen extends StatelessWidget {
   QuestionScreen({super.key, required this.completeQuiz});
 
@@ -24,6 +26,7 @@ class QuestionScreen extends StatelessWidget {
     }
 
     completeQuiz['startTime'] = DateTime.now();
+    UserHomeStats().incrementQuizCount();
     return Column(
       children: [
         Expanded(

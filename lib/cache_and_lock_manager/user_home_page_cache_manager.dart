@@ -1,5 +1,5 @@
-import '../home_page/dto/user_home_stats.dart';
-import '../home_page/services/home_page_service.dart';
+import '../user_home_page/dto/user_home_stats.dart';
+import '../user_home_page/services/home_page_service.dart';
 import 'cache_locks_keys.dart';
 
 class UserHomePageCacheManager {

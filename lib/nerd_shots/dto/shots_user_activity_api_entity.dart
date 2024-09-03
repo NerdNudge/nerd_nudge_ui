@@ -1,6 +1,17 @@
 import '../../user_profile/dto/user_profile_entity.dart';
 
 class ShotsUserActivityAPIEntity {
+
+  static final ShotsUserActivityAPIEntity _instance = ShotsUserActivityAPIEntity._internal();
+
+  factory ShotsUserActivityAPIEntity() {
+    return _instance;
+  }
+
+  ShotsUserActivityAPIEntity._internal() {
+    _initialize();
+  }
+
   final String _id = UserProfileEntity().getUserEmail();
   int _timestamp = 0;
   Map<String, Map<String, int>> _shots = {};
@@ -8,6 +19,18 @@ class ShotsUserActivityAPIEntity {
   List<String> _dislikes = [];
   List<String> _shares = [];
   Map<String, Map<String, List<String>>> _favorites = {};
+
+  void _initialize() {
+    _shots.clear();
+    _likes.clear();
+    _dislikes.clear();
+    _favorites.clear();
+    _shares.clear();
+  }
+
+  void clear() {
+    _initialize();
+  }
 
   void addFavorite(String topic, String subtopic, String id) {
     _favorites[topic] ??= {};
@@ -110,6 +133,10 @@ class ShotsUserActivityAPIEntity {
     if (!array.contains(id)) {
       array.add(id);
     }
+  }
+
+  bool isShotsEmpty() {
+    return _shots.isEmpty;
   }
 
   Map<String, dynamic> toJson() {

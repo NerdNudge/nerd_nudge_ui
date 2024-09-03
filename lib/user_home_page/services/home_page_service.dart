@@ -1,6 +1,4 @@
-import 'dart:convert';
-
-import 'package:nerd_nudge/home_page/dto/user_home_stats.dart';
+import '../../../user_home_page/dto/user_home_stats.dart';
 import 'package:nerd_nudge/utilities/api_end_points.dart';
 
 import '../../user_profile/dto/user_profile_entity.dart';

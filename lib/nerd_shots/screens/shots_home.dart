@@ -29,7 +29,7 @@ class _NerdShotsHomeState extends State<NerdShotsHome> {
   }
 
   startShots() {
-    Styles.showGlobalSnackbarMessageAndIcon('Swipe Right for the next shot!', Icons.swipe);
+    Styles.showGlobalSnackbarMessageAndIcon('Swipe Right for the next shot!', Icons.swipe, Colors.black);
     print('Start Shots home');
     Navigator.push(
       context,

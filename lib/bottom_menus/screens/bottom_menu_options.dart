@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../home_page/screens/home_page.dart';
 import '../../quiz/home/screens/quiz_home_page.dart';
+import '../../user_home_page/screens/home_page.dart';
 import '../../user_profile/dto/user_profile_entity.dart';
 import '../../utilities/colors.dart';
 import '../../challenges/screens/main_challenge_page.dart';

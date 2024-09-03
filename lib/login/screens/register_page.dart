@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:nerd_nudge/login/screens/login_or_register.dart';
 
-import '../../home_page/screens/home_page.dart';
+import '../../user_home_page/screens/home_page.dart';
 import '../../utilities/colors.dart';
 import '../../utilities/styles.dart';
 

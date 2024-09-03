@@ -17,6 +17,17 @@ class UserHomeStats {
   late String _quoteId = '';
   late int _numPeopleUsedNerdNudge = 0;
   late double _lastFetchTime = 0.0;
+  late int _adsFrequencyQuizFlex = 7;
+  late int _adsFrequencyShots = 9;
+  late int _quizflexQuota = 12;
+
+  int get quizflexQuota => _quizflexQuota;
+
+  set quizflexQuota(int value) {
+    _quizflexQuota = value;
+  }
+
+  late int _shotsQuota = 15;
 
   static final UserHomeStats _instance = UserHomeStats._internal();
 
@@ -48,6 +59,10 @@ class UserHomeStats {
     instance._quoteAuthor = jsonData['quoteAuthor'] ?? '';
     instance._quoteId = jsonData['quoteId'] ?? '';
     instance._numPeopleUsedNerdNudge = jsonData['numPeopleUsedNerdNudgeToday'] ?? 0;
+    instance._adsFrequencyQuizFlex = jsonData['adsFrequencyQuizFlex'] ?? 7;
+    instance._adsFrequencyShots = jsonData['adsFrequencyShots'] ?? 7;
+    instance._quizflexQuota = jsonData['quizflexQuota'] ?? 12;
+    instance._shotsQuota = jsonData['shotsQuota'] ?? 15;
 
     return instance;
   }
@@ -56,9 +71,9 @@ class UserHomeStats {
     switch (accountType.toLowerCase()) {
       case 'freemium':
         return AccountType.FREEMIUM;
-      case 'nerd_nudge_pro':
+      case 'nerdNudgePro':
         return AccountType.NERD_NUDGE_PRO;
-      case 'nerd_nudge_max':
+      case 'nerdNudgeMax':
         return AccountType.NERD_NUDGE_MAX;
       default:
         return AccountType.FREEMIUM; // Default case
@@ -120,33 +135,19 @@ class UserHomeStats {
   }
 
   getDailyQuizRemaining() {
-    return _getTotalNerdQuizQuota(_accountType) - _quizCountToday;
+    return _getTotalNerdQuizQuota() - _quizCountToday;
   }
 
   getDailyShotsRemaining() {
-    return _getTotalNerdShotsQuota(_accountType) - _shotsCountToday;
+    return _getTotalNerdShotsQuota() - _shotsCountToday;
   }
 
-  _getTotalNerdShotsQuota(AccountType accountType) {
-    switch (accountType) {
-      case AccountType.FREEMIUM:
-        return 12;
-      case AccountType.NERD_NUDGE_PRO:
-        return 50;
-      case AccountType.NERD_NUDGE_MAX:
-        return 10000;
-    }
+  _getTotalNerdQuizQuota() {
+    return _quizflexQuota;
   }
 
-  _getTotalNerdQuizQuota(AccountType accountType) {
-    switch (accountType) {
-      case AccountType.FREEMIUM:
-        return 120;
-      case AccountType.NERD_NUDGE_PRO:
-        return 40;
-      case AccountType.NERD_NUDGE_MAX:
-        return 10000;
-    }
+  _getTotalNerdShotsQuota() {
+    return _shotsQuota;
   }
 
   void incrementQuizCount() {
@@ -158,11 +159,11 @@ class UserHomeStats {
   }
 
   bool hasUserExhaustedNerdShots() {
-    return _shotsCountToday >= _getTotalNerdShotsQuota(_accountType);
+    return _shotsCountToday >= _getTotalNerdShotsQuota();
   }
 
   bool hasUserExhaustedNerdQuiz() {
-    return _quizCountToday >= _getTotalNerdQuizQuota(_accountType);
+    return _quizCountToday >= _getTotalNerdQuizQuota();
   }
 
   AccountType get accountType => _accountType;
@@ -225,6 +226,18 @@ class UserHomeStats {
     _numPeopleUsedNerdNudge = value;
   }
 
+  int get adsFrequencyQuizFlex => _adsFrequencyQuizFlex;
+
+  set adsFrequencyQuizFlex(int value) {
+    _adsFrequencyQuizFlex = value;
+  }
+
+  int get adsFrequencyShots => _adsFrequencyShots;
+
+  set adsFrequencyShots(int value) {
+    _adsFrequencyShots = value;
+  }
+
   double get lastFetchTime => _lastFetchTime;
 
   set lastFetchTime(double value) {
@@ -241,5 +254,11 @@ class UserHomeStats {
 
   set quoteId(String value) {
     _quoteId = value;
+  }
+
+  int get shotsQuota => _shotsQuota;
+
+  set shotsQuota(int value) {
+    _shotsQuota = value;
   }
 }

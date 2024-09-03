@@ -495,18 +495,18 @@ class Styles {
     );
   }
 
-  static void showGlobalSnackbarMessageAndIcon(String message, IconData icon) {
+  static void showGlobalSnackbarMessageAndIcon(String message, IconData icon, Color color) {
     scaffoldMessengerKey.currentState?.showSnackBar(
       SnackBar(
         content: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: Colors.black),
+            Icon(icon, color: color),
             SizedBox(width: 8.0),
             Text(
               message,
               style: TextStyle(
-                color: Colors.black,
+                color: color,
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
               ),

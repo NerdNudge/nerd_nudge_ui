@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:linear_timer/linear_timer.dart';
 import 'package:nerd_nudge/quiz/quiz_question/screens/question_utils.dart';
+import 'package:nerd_nudge/utilities/styles.dart';
 
 import '../../../user/rankings.dart';
 import '../../../user/scores.dart';
@@ -24,6 +26,7 @@ class QuestionTimer extends StatelessWidget {
         UserScores.updateUserScore(completeQuiz['difficulty_level'], isAnswerCorrect);
         UserRankings.updateUserRank(completeQuiz['difficulty_level'], isAnswerCorrect);
 
+        Styles.showGlobalSnackbarMessageAndIcon('** Time Out **', FontAwesomeIcons.hourglassHalf, Colors.black);
         Navigator.push(
           context,
           MaterialPageRoute(

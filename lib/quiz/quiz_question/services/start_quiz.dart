@@ -8,9 +8,9 @@ import '../../../../utilities/styles.dart';
 import '../../../cache_and_lock_manager/cache_locks_keys.dart';
 import '../../../menus/screens/menu_options.dart';
 import '../../../subscriptions/upgrade_page.dart';
+import '../../../user_home_page/dto/user_home_stats.dart';
 import '../../../user_profile/screens/user_account_types.dart';
 import '../screens/question_complete_screen.dart';
-import '../../../home_page/dto/user_home_stats.dart';
 
 class QuizService extends StatefulWidget {
   const QuizService({super.key});
@@ -82,12 +82,11 @@ class _QuizServiceState extends State<QuizService> {
       }
       return null;
     } else {
-      if (NerdAdManager.lastShownQuizCount !=
-              UserHomeStats().getUserQuizCountToday() &&
-          (UserHomeStats().getUserQuizCountToday() == 4 ||
-              UserHomeStats().getUserQuizCountToday() == 8)) {
-        NerdAdManager.lastShownQuizCount =
-            UserHomeStats().getUserQuizCountToday();
+      print('Last shown Quiz count: ${NerdAdManager.lastShownQuizCount}, Quiz count today: ${UserHomeStats().getUserQuizCountToday()}');
+      if (NerdAdManager.lastShownQuizCount != UserHomeStats().getUserQuizCountToday() &&
+          UserHomeStats().adsFrequencyQuizFlex != 0 &&
+          (UserHomeStats().getUserQuizCountToday() % UserHomeStats().adsFrequencyQuizFlex == 0)) {
+        NerdAdManager.lastShownQuizCount = UserHomeStats().getUserQuizCountToday();
         return NerdAdManager(
           onAdClosed: () {
             setState(() {
@@ -152,7 +151,7 @@ class _QuizServiceState extends State<QuizService> {
     } else {
       print('Fetching the next quizzes set.');
       var nextQuestions = await NerdQuizflexService().getNextQuizflexes(
-          TopicSelection.selectedTopic, TopicSelection.selectedSubtopic, 6);
+          TopicSelection.selectedTopic, TopicSelection.selectedSubtopic, 10);
       print('Fetched Quizzes: $nextQuestions');
       return nextQuestions['data'] ?? [];
     }
