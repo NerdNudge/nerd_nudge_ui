@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:nerd_nudge/quiz/quiz_question/services/start_quiz.dart';
 import 'package:nerd_nudge/topics/screens/subtopic_selection.dart';
 import 'package:nerd_nudge/topics/services/topics_service.dart';
-import 'package:nerd_nudge/utilities/percentage_gauge.dart';
 import 'package:nerd_nudge/utilities/quiz_topics.dart';
 import '../../../../utilities/styles.dart';
 import '../../../bottom_menus/screens/bottom_menu_options.dart';
@@ -55,8 +54,27 @@ class _TopicSelectionHomePageState extends State<TopicSelectionHomePage> {
     try {
       final result = await TopicsService().getTopics();
       if (result is Map<String, dynamic> && result.containsKey('data')) {
+        final data = result['data'];
+        final topicsData = data['topics'] as Map<String, dynamic>;
+        final userStats = data['userStats'] as Map<String, dynamic>;
+
         setState(() {
-          topics = result['data'];
+          topics = topicsData.entries.map((entry) {
+            final topicCode = entry.key;
+            final topicDetails = entry.value;
+            final topicName = topicDetails['topicName'];
+            final numPeopleTaken = topicDetails['numPeopleTaken'];
+            final userScoreIndicator = userStats[topicCode]?['personalScoreIndicator'] ?? 0.0;
+            final lastTakenByUser = userStats[topicCode]?['lastTaken'] ?? 'Never';
+
+            return {
+              'topicCode': topicCode,
+              'topicName': topicName,
+              'numPeopleTaken': numPeopleTaken,
+              'userScoreIndicator': userScoreIndicator,
+              'lastTakenByUser': lastTakenByUser,
+            };
+          }).toList();
         });
       }
     } catch (e) {
@@ -91,18 +109,18 @@ class _TopicSelectionHomePageState extends State<TopicSelectionHomePage> {
                     child: ListView.builder(
                       itemCount: topics.length,
                       itemBuilder: (BuildContext context, int index) {
-                        final option = topics[index]['topicName'];
-                        final numPeople = topics[index]['numPeopleTaken'];
-                        final scoreIndicator = topics[index]['userScoreIndicator'];
-                        final lastTakenByUser = topics[index]['lastTakenByUser'];
+                        final topic = topics[index];
+                        final topicName = topic['topicName'];
+                        final numPeople = topic['numPeopleTaken'];
+                        final scoreIndicator = topic['userScoreIndicator'];
+                        final lastTakenByUser = topic['lastTakenByUser'];
                         return GestureDetector(
                           onTap: () {
                             setState(() {
-                              print('selected topic: $option');
-                              TopicSelection.selectedTopic = option;
+                              print('selected topic: $topicName');
+                              TopicSelection.selectedTopic = topicName;
                               QuizService.resetCurrentQuizzes();
                             });
-                            //startQuiz(context);
                             showSubtopics(context);
                           },
                           child: Card(
@@ -120,7 +138,7 @@ class _TopicSelectionHomePageState extends State<TopicSelectionHomePage> {
                                 children: [
                                   const SizedBox(width: 5),
                                   Icon(
-                                    Topics.getIconForTopics(option),
+                                    Topics.getIconForTopics(topicName),
                                     size: 40,
                                     color: const Color(0xFF6A69EB),
                                   ),
@@ -130,7 +148,7 @@ class _TopicSelectionHomePageState extends State<TopicSelectionHomePage> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          option,
+                                          topicName,
                                           style: const TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.bold,
@@ -182,11 +200,11 @@ class _TopicSelectionHomePageState extends State<TopicSelectionHomePage> {
     );
   }
 
-  _getNumPeopleText(int num) {
+  String _getNumPeopleText(int num) {
     return (num == 1) ? '$num person took this.' : '$num people took this.';
   }
 
-  showSubtopics(BuildContext context) {
+  void showSubtopics(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -195,7 +213,7 @@ class _TopicSelectionHomePageState extends State<TopicSelectionHomePage> {
     );
   }
 
-  startQuiz(BuildContext ctx) {
+  void startQuiz(BuildContext ctx) {
     if (TopicSelection.selectedTopic.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

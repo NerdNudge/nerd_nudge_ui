@@ -13,7 +13,7 @@ class TopicsService {
     return _instance;
   }
 
-  dynamic _result;
+  dynamic _topicsResult;
   DateTime? _lastFetchedTime;
   static final ApiService _apiService = ApiService();
   final Duration _cacheDuration = const Duration(minutes: 10);
@@ -24,25 +24,25 @@ class TopicsService {
 
   Future<dynamic> getTopics() async {
     print('getting Topics now..');
-    if(_result == null || ! isWithinRetentionTime()) {
+    if(_topicsResult == null || ! isWithinRetentionTime()) {
       await _updateTopicCache();
     }
 
-    return _result;
+    return _topicsResult;
   }
 
 
   Future<void> _updateTopicCache() async {
     try {
       print(APIEndpoints.CONTENT_MANAGER_BASE_URL + APIEndpoints.TOPICS + "/" + UserProfileEntity().getUserEmail());
-      _result = await _apiService.getRequest(APIEndpoints.CONTENT_MANAGER_BASE_URL, APIEndpoints.TOPICS + "/" + UserProfileEntity().getUserEmail());
+      _topicsResult = await _apiService.getRequest(APIEndpoints.CONTENT_MANAGER_BASE_URL, APIEndpoints.TOPICS + "/" + UserProfileEntity().getUserEmail());
       _lastFetchedTime = DateTime.now();
-      print('API Result: $_result');
+      print('API Result: $_topicsResult');
 
-      if (_result is Map<String, dynamic>) {
+      if (_topicsResult is Map<String, dynamic>) {
         _updateTopicCodesAndNamesMapping();
-      } else if (_result is String) {
-        _result = json.decode(_result);
+      } else if (_topicsResult is String) {
+        _topicsResult = json.decode(_topicsResult);
         _updateTopicCodesAndNamesMapping();
       } else {
         throw const FormatException("Unexpected response format");
@@ -61,17 +61,22 @@ class TopicsService {
   }
 
   void _updateTopicCodesAndNamesMapping() {
-    if (_result != null && _result is Map<String, dynamic> && _result.containsKey('data')) {
-      List<dynamic> topicsList = _result['data'];
+    if (_topicsResult != null && _topicsResult is Map<String, dynamic> && _topicsResult.containsKey('data') && _topicsResult['data'] is Map<String, dynamic> && _topicsResult['data'].containsKey('topics')) {
+
+      Map<String, dynamic> topicsMap = _topicsResult['data']['topics'];
       _topicNameToCodesMapping['global'] = 'global';
-      _topicNameToCodesMapping['global'] = 'global';
-      for (var topic in topicsList) {
-        if (topic.containsKey('topicCode') && topic.containsKey('topicName')) {
-          _topicCodeToNamesMapping[topic['topicCode']] = topic['topicName'];
-          _topicNameToCodesMapping[topic['topicName']] = topic['topicCode'];
+      _topicCodeToNamesMapping['global'] = 'global';
+
+      topicsMap.forEach((topicCode, topicDetails) {
+        if (topicDetails is Map<String, dynamic> &&
+            topicDetails.containsKey('topicName')) {
+          String topicName = topicDetails['topicName'];
+          _topicCodeToNamesMapping[topicCode] = topicName;
+          _topicNameToCodesMapping[topicName] = topicCode;
         }
-      }
+      });
     }
+
     print(_topicNameToCodesMapping);
     print(_topicCodeToNamesMapping);
   }
@@ -120,6 +125,6 @@ class TopicsService {
   }
 
   int getNumberOfTopics() {
-    return _result != null ? (_result['data'] as List).length : 0;
+    return _topicsResult != null ? (_topicsResult['data'] as List).length : 0;
   }
 }
