@@ -1,7 +1,7 @@
 class APIEndpoints {
-  static const String USER_INSIGHTS_BASE_URL = 'http://localhost:9095';
-  static const String CONTENT_MANAGER_BASE_URL = 'http://localhost:9093';
-  static const String USER_ACTIVITY_BASE_URL = 'http://localhost:9092';
+  static const String USER_INSIGHTS_BASE_URL = 'http://NerdNudge-ALB-Public-437225434.ap-southeast-1.elb.amazonaws.com';
+  static const String CONTENT_MANAGER_BASE_URL = 'http://NerdNudge-ALB-Public-437225434.ap-southeast-1.elb.amazonaws.com';
+  static const String USER_ACTIVITY_BASE_URL = 'http://NerdNudge-ALB-Public-437225434.ap-southeast-1.elb.amazonaws.com';
 
   static const String USER_HOME_STATS = '/api/nerdnudge/userinsights/getUserHomePageStats';
   static const String USER_INSIGHTS = '/api/nerdnudge/userinsights/getuserinsights';

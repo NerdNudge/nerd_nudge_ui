@@ -9,6 +9,7 @@ import '../../../bottom_menus/screens/bottom_menu_options.dart';
 import '../../cache_and_lock_manager/cache_locks_keys.dart';
 import '../../cache_and_lock_manager/user_home_page_cache_manager.dart';
 import '../../insights/screens/user_insights_main_page.dart';
+import '../../login/screens/login_or_register.dart';
 import '../../menus/screens/menu_options.dart';
 import '../../nerd_shots/screens/shots_home.dart';
 import '../../quiz/home/screens/quiz_home_page.dart';
@@ -39,7 +40,16 @@ class _HomePageState extends State<HomePage> {
 
     print('Home page: User fullName: ${userProfileEntity.getUserFullName()}, User Email: ${userProfileEntity.getUserEmail()}');
     //_futureUserHomeStats = HomePageService().getUserHomePageStats();
+    _checkEmailAndNavigate();
     _futureUserHomeStats = _fetchUserHomeStats();
+  }
+
+  void _checkEmailAndNavigate() {
+    if (widget.userEmail.isEmpty || widget.userEmail == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacementNamed(context, '/startpage');
+      });
+    }
   }
 
   Future<UserHomeStats> _fetchUserHomeStats() async {
