@@ -17,15 +17,20 @@ class SubtopicSelectionPage extends StatefulWidget {
 
 class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
   late List<Map<String, String>> subtopics = [];
+  bool isLoading = true; // Add a loading state flag
 
   _getSubtopics() async {
     try {
       final result = await TopicsService().getSubtopics(TopicSelection.selectedTopic);
       setState(() {
         subtopics = result;
+        isLoading = false; // Set loading to false once data is fetched
       });
     } catch (e) {
       print('Error loading topics: $e');
+      setState(() {
+        isLoading = false; // Ensure loading is set to false even on error
+      });
     }
   }
 
@@ -52,6 +57,11 @@ class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
   }
 
   Widget _getBody() {
+    if (isLoading) {
+      // Show a CircularProgressIndicator while loading
+      return Center(child: CircularProgressIndicator());
+    }
+
     if (subtopics.isEmpty) {
       return Center(child: Text('No subtopics available.'));
     }

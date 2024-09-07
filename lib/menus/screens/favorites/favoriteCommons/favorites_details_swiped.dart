@@ -100,6 +100,10 @@ class _FavoritesDetailsSwipedState extends State<FavoritesDetailsSwiped> {
   }
 
   int _getFavoritesCount(dynamic quiz, String id) {
+    if(_favoriteUserActivityEntity.isFavoriteRemovedByUser(quiz['topic_name'], quiz['sub_topic'], quiz['id'])) {
+      return quiz['favorites'] - 1;
+    }
+
     return quiz['favorites'];
   }
 
@@ -150,13 +154,16 @@ class _FavoritesDetailsSwipedState extends State<FavoritesDetailsSwiped> {
 
   void _updateFavorite(dynamic quiz) {
     setState(() {
+      print('updating favorites');
       if (_favoriteIcon == Icons.favorite_border_outlined) {
         _favoriteIcon = Icons.favorite;
-        _favoriteCount++;
+        _favoriteCount = _favoriteCount + 1;
+        print('fav count ++: $_favoriteCount');
         _favoriteUserActivityEntity.undoDeleteFavorite(quiz['topic_name'], quiz['sub_topic'], quiz['id']);
       } else {
         _favoriteIcon = Icons.favorite_border_outlined;
-        _favoriteCount--;
+        _favoriteCount = _favoriteCount - 1;
+        print('fav count --: $_favoriteCount');
         _favoriteUserActivityEntity.addToDeleteFavorites(quiz['topic_name'], quiz['sub_topic'], quiz['id']);
       }
     });
@@ -171,7 +178,8 @@ class _FavoritesDetailsSwipedState extends State<FavoritesDetailsSwiped> {
       _favoriteUserActivityEntity.addShare(id);
     });
 
-    _shareContent();
+    Styles.shareCardContent(_repaintBoundaryKey);
+    //_shareContent();
   }
 
   Future<void> _shareContent() async {
@@ -261,106 +269,107 @@ class _FavoritesDetailsSwipedState extends State<FavoritesDetailsSwiped> {
   _getCard() {
     String quizId = widget.favorites[widget.index]['id'];
     _resetIconsAndCounts(widget.favorites[widget.index]);
-    return Container(
-      alignment: Alignment.center,
-      child: Column(
-        children: [
-          Card(
-            color: CustomColors.mainThemeColor,
-            margin:
-            const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
-            child: ListTile(
-              title: Center(
-                child: Text(
-                  widget.favorites[widget.index]['title'],
-                  style: const TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+    return RepaintBoundary(  // Wrapping the content you want to capture
+      key: _repaintBoundaryKey,  // Attach the GlobalKey
+      child: Container(
+        alignment: Alignment.center,
+        child: Column(
+          children: [
+            Card(
+              color: CustomColors.mainThemeColor,
+              margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+              child: ListTile(
+                title: Center(
+                  child: Text(
+                    widget.favorites[widget.index]['title'],
+                    style: const TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
                 ),
               ),
             ),
-          ),
-          Container(
-            padding: EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Colors.white, Colors.white70],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
+            Container(
+              padding: EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Colors.white, Colors.white70],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+                borderRadius: BorderRadius.circular(15),
               ),
-              borderRadius: BorderRadius.circular(15),
+              margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Styles.getTitleDescriptionWidget(
+                    'Description: ',
+                    widget.favorites[widget.index]['description_and_explanation'],
+                    Colors.black,
+                    Colors.black,
+                    18,
+                    17,
+                  ),
+                  const SizedBox(height: 30.0),
+                  Styles.getTitleDescriptionWidget(
+                    'Pro Tip: ',
+                    widget.favorites[widget.index]['pro_tip'],
+                    Colors.black,
+                    Colors.black,
+                    18,
+                    17,
+                  ),
+                  const SizedBox(height: 30.0),
+                  Styles.getTitleDescriptionWidget(
+                    'Fun Fact: ',
+                    widget.favorites[widget.index]['fun_fact'],
+                    Colors.black,
+                    Colors.black,
+                    18,
+                    17,
+                  ),
+                  const SizedBox(height: 10.0),
+                  Styles.getDivider(),
+                  const SizedBox(height: 10.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Styles.buildIconButtonWithCounter(
+                        icon: _likesIcon,
+                        color: Colors.green,
+                        count: _likeCount,
+                        onPressed: () => _updateLike(quizId),
+                      ),
+                      Styles.buildIconButtonWithCounter(
+                        icon: _dislikesIcon,
+                        color: Colors.red,
+                        count: _dislikeCount,
+                        onPressed: () => _updateDislike(quizId),
+                      ),
+                      Styles.buildIconButtonWithCounter(
+                        icon: _favoriteIcon,
+                        color: Colors.pink,
+                        count: _favoriteCount,
+                        onPressed: () => _updateFavorite(widget.favorites[widget.index]),
+                      ),
+                      Styles.buildIconButtonWithCounter(
+                        icon: _shareIcon,
+                        color: Colors.blue,
+                        count: _shareCount,
+                        onPressed: () => _updateShare(quizId),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                ],
+              ),
             ),
-            margin:
-            const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Styles.getTitleDescriptionWidget(
-                  'Description: ',
-                  widget.favorites[widget.index]['description_and_explanation'],
-                  Colors.black,
-                  Colors.black,
-                  18,
-                  17,
-                ),
-                const SizedBox(height: 30.0),
-                Styles.getTitleDescriptionWidget(
-                  'Pro Tip: ',
-                  widget.favorites[widget.index]['pro_tip'],
-                  Colors.black,
-                  Colors.black,
-                  18,
-                  17,
-                ),
-                const SizedBox(height: 30.0),
-                Styles.getTitleDescriptionWidget(
-                  'Fun Fact: ',
-                  widget.favorites[widget.index]['fun_fact'],
-                  Colors.black,
-                  Colors.black,
-                  18,
-                  17,
-                ),
-                const SizedBox(height: 10.0),
-                Styles.getDivider(),
-                const SizedBox(height: 10.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Styles.buildIconButtonWithCounter(
-                      icon: _likesIcon,
-                      color: Colors.green,
-                      count: _likeCount,
-                      onPressed: () => _updateLike(quizId),
-                    ),
-                    Styles.buildIconButtonWithCounter(
-                      icon: _dislikesIcon,
-                      color: Colors.red,
-                      count: _dislikeCount,
-                      onPressed: () => _updateDislike(quizId),
-                    ),
-                    Styles.buildIconButtonWithCounter(
-                      icon: _favoriteIcon,
-                      color: Colors.pink,
-                      count: _favoriteCount,
-                      onPressed: () => _updateFavorite(widget.favorites[widget.index]),
-                    ),
-                    Styles.buildIconButtonWithCounter(
-                      icon: _shareIcon,
-                      color: Colors.blue,
-                      count: _shareCount,
-                      onPressed: () => _updateShare(quizId),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 5),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

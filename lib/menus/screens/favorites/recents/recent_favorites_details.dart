@@ -71,12 +71,15 @@ class _RecentFavoritesDetailsState extends State<RecentFavoritesDetails> {
 
   void _updateFavorite() {
     setState(() {
+      print('updating favorite count');
       if (_favoriteIcon == Icons.favorite_border_outlined) {
         _favoriteIcon = Icons.favorite;
-        _favoriteCount++;
+        _favoriteCount = _favoriteCount + 1;
+        print('count fav ++: $_favoriteCount');
       } else {
         _favoriteIcon = Icons.favorite_border_outlined;
-        _favoriteCount--;
+        _favoriteCount = _favoriteCount - 1;
+        print('count fav --: $_favoriteCount');
       }
     });
   }

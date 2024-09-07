@@ -529,10 +529,14 @@ class Styles {
   static Future<void> shareCardContent(GlobalKey key) async {
     try {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
-        await Future.delayed(Duration(milliseconds: 100));
+        await Future.delayed(Duration(milliseconds: 300)); // Delay to ensure rendering
 
-        RenderRepaintBoundary? boundary =
-        key.currentContext!.findRenderObject() as RenderRepaintBoundary?;
+        if (key.currentContext == null) {
+          print('Error: key.currentContext is still null after waiting.');
+          return;
+        }
+
+        RenderRepaintBoundary? boundary = key.currentContext!.findRenderObject() as RenderRepaintBoundary?;
 
         if (boundary == null) {
           print('Error: RenderRepaintBoundary is null');
@@ -540,8 +544,7 @@ class Styles {
         }
 
         ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-        ByteData? byteData =
-        await image.toByteData(format: ui.ImageByteFormat.png);
+        ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
 
         if (byteData == null) {
           print('Error: byteData is null');

@@ -6,6 +6,7 @@ import 'package:nerd_nudge/insights/screens/topics_insights/topics_summary_insig
 import '../../../../utilities/styles.dart';
 import '../../../topics/services/topics_service.dart';
 import '../../../utilities/colors.dart';
+import '../../services/insights_duration_state.dart';
 import '../Utilities/PeerComparisonInsights.dart';
 
 class TopicsInsights extends StatefulWidget {
@@ -19,54 +20,36 @@ class TopicsInsights extends StatefulWidget {
   static Map<String, dynamic> userTopicsInsightsObject = {};
 
   static late String selectedTopic;
-  static late var lifetimeSummary;
-  static late var last30DaysSummary;
+  static late var summaryToDisplay;
+
   static late Map<String, String> topicCodesToNamesMap;
   static late Map<String, String> topicNamesToCodesMap;
 
-  static late List<String> lifetimeTopics;
-  static late List<String> last30DaysTopics;
+  static late List<String> topicsToDisplay;
 
   static Future<void> updateTopics(Map<String, dynamic> userInsights) async {
     userTopicsInsightsObject = userInsights['topicSummary'];
     if (userTopicsInsightsObject == null) {
       print('userTopicsInsightsObject is null');
     } else {
-      lifetimeSummary = userTopicsInsightsObject['lifetime'];
-      if (lifetimeSummary == null) {
-        print('lifetimeSummary is null');
-      }
-      last30DaysSummary = userTopicsInsightsObject['last30Days'];
 
       print('user insights: $userInsights');
       print('user topics insights: $userTopicsInsightsObject');
 
-      lifetimeTopics = [];
-      last30DaysTopics = [];
-
+      topicsToDisplay = [];
       topicCodesToNamesMap = await _getTopicCodesToNamesMap();
       topicNamesToCodesMap = await _getTopicNamesToCodesMap();
 
       print('topic codes to names mapping: $topicCodesToNamesMap');
       print('topic names to codes mapping: $topicNamesToCodesMap');
 
-      if (lifetimeSummary != null) {
-        lifetimeSummary.forEach((topicName, topicDetails) {
-          lifetimeTopics.add(topicCodesToNamesMap[topicName] ?? topicName);
+      summaryToDisplay = InsightsDurationState.last30DaysFlag ? userTopicsInsightsObject['last30Days'] : userTopicsInsightsObject['lifetime'];
+
+      if (summaryToDisplay != null) {
+        summaryToDisplay.forEach((topicName, topicDetails) {
+          topicsToDisplay.add(topicCodesToNamesMap[topicName] ?? topicName);
         });
       }
-
-      if (last30DaysSummary != null) {
-        last30DaysSummary.forEach((topicName, topicDetails) {
-          last30DaysTopics.add(topicCodesToNamesMap[topicName] ?? topicName);
-        });
-      }
-
-      print('lifetime: $lifetimeSummary');
-      print('last 30: $last30DaysSummary');
-
-      print('lifetime topics: $lifetimeTopics');
-      print('last 30 topics: $last30DaysTopics');
     }
   }
 
@@ -120,8 +103,8 @@ class _TopicsInsightsState extends State<TopicsInsights> {
   }
 
   _getUserTopicsSummary() {
-    print('Topics under summary(): ${TopicsInsights.lifetimeTopics}');
-    print('Topics summary under summary(): ${TopicsInsights.lifetimeSummary}');
+    print('Topics under summary(): ${TopicsInsights.topicsToDisplay}');
+    print('Topics summary under summary(): ${TopicsInsights.summaryToDisplay}');
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -168,7 +151,7 @@ class _TopicsInsightsState extends State<TopicsInsights> {
         Wrap(
           spacing: 8.0,
           runSpacing: 4.0,
-          children: TopicsInsights.lifetimeTopics.map((String option) {
+          children: TopicsInsights.topicsToDisplay.map((String option) {
             print('topic in card: $option');
             return FilterChip(
               label: Text(option),
@@ -183,7 +166,7 @@ class _TopicsInsightsState extends State<TopicsInsights> {
                   String? topicCode = TopicsInsights.topicNamesToCodesMap[option];
                   int topicRank = widget.userInsights['rankings'][topicCode];
                   print('Topic rank: $topicRank');
-                  _currentTopicScreen = TopicSummaryInsights.getSelectedTopicSummary(context, TopicsInsights.lifetimeSummary[topicCode], TopicsInsights.selectedTopic, topicsDrillDown, getPeerComparison, closeButtonToTopicInsightsMainPage, topicRank);
+                  _currentTopicScreen = TopicSummaryInsights.getSelectedTopicSummary(context, TopicsInsights.summaryToDisplay[topicCode], TopicsInsights.selectedTopic, topicsDrillDown, getPeerComparison, closeButtonToTopicInsightsMainPage, topicRank);
                 });
               },
               selectedColor: CustomColors.mainThemeColor,
@@ -203,7 +186,7 @@ class _TopicsInsightsState extends State<TopicsInsights> {
   getPeerComparison() async {
     String? topicCode = TopicsInsights.topicNamesToCodesMap[TopicsInsights.selectedTopic];
     print('Selected topic: ${TopicsInsights.selectedTopic}, topic code: $topicCode');
-    var topicSummary = TopicsInsights.lifetimeSummary[topicCode];
+    var topicSummary = TopicsInsights.summaryToDisplay[topicCode];
 
     if (topicSummary == null) {
       print('No data available for the selected topic.');
@@ -233,7 +216,7 @@ class _TopicsInsightsState extends State<TopicsInsights> {
     print('details clicked.');
     setState(() {
       String? topicCode = TopicsInsights.topicNamesToCodesMap[TopicsInsights.selectedTopic];
-      _currentTopicScreen = TopicDrillDown.getTopicDrillDown(TopicsInsights.lifetimeSummary, topicCode, closeButtonToTopicInsightsSummaryPage);
+      _currentTopicScreen = TopicDrillDown.getTopicDrillDown(TopicsInsights.summaryToDisplay, topicCode, closeButtonToTopicInsightsSummaryPage);
     });
   }
 
@@ -249,7 +232,7 @@ class _TopicsInsightsState extends State<TopicsInsights> {
       String? topicCode = TopicsInsights.topicNamesToCodesMap[TopicsInsights.selectedTopic];
       int topicRank = widget.userInsights['rankings'][topicCode];
       print('Topic rank: $topicRank');
-      _currentTopicScreen = TopicSummaryInsights.getSelectedTopicSummary(context, TopicsInsights.lifetimeSummary[topicCode], TopicsInsights.selectedTopic, topicsDrillDown, getPeerComparison, closeButtonToTopicInsightsMainPage, topicRank);
+      _currentTopicScreen = TopicSummaryInsights.getSelectedTopicSummary(context, TopicsInsights.summaryToDisplay[topicCode], TopicsInsights.selectedTopic, topicsDrillDown, getPeerComparison, closeButtonToTopicInsightsMainPage, topicRank);
     });
   }
 }
