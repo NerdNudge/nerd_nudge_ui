@@ -1,6 +1,9 @@
+import '../screens/user_account_types.dart';
+
 class UserProfileEntity {
   String _userFullName = '';
   String _userEmail = '';
+  AccountType _accountType = AccountType.FREEMIUM;
 
   UserProfileEntity._privateConstructor();
   static final UserProfileEntity _instance = UserProfileEntity._privateConstructor();
@@ -23,5 +26,13 @@ class UserProfileEntity {
 
   setUserEmail(String userEmail) {
     _userEmail = userEmail;
+  }
+
+  setUserAccountType(AccountType accountType) {
+    _accountType = accountType;
+  }
+
+  getUserAccountType() {
+    return _accountType;
   }
 }

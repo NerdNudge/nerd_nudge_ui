@@ -1,10 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:nerd_nudge/user_profile/dto/user_profile_entity.dart';
 
 import '../../../../utilities/colors.dart';
 
 class MenuOptions {
   static Drawer getMenuDrawer(BuildContext context) {
+    final userName = UserProfileEntity().getUserFullName();
+    print('Under menu: $userName');
+    final title = 'Nerd Menu';
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -15,24 +19,22 @@ class MenuOptions {
               decoration: BoxDecoration(
                 color: CustomColors.mainThemeColor,
               ),
-              child: const Text(
-                'Nerd Menu',
+              child: Text(
+                title,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 18,
+                  fontSize: 21,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
           ),
-          _getMenuListTile(context, Icons.person, 'Profile', '/share'),
+          _getMenuListTile(context, Icons.person, 'Profile', '/profile'),
           _getMenuListTile(context, Icons.favorite, 'Favorites', '/favorites'),
           _getMenuListTile(context, Icons.subscriptions, 'Subscription', '/subscription'),
           _getMenuListTile(context, Icons.feedback, 'Feedback', '/feedback'),
-          _getMenuListTile(context, Icons.group_add, 'Invite Nerds', '/inviteNerds'),
-          _getMenuListTile(context, Icons.notifications_active, 'Nudger', '/gaugetest'),
-          _getMenuListTile(context, Icons.delete_forever, 'Delete Account', ''),
-          //_getMenuListTile(context, Icons.exit_to_app, 'Sign Out', '/signout'),
+          //_getMenuListTile(context, Icons.group_add, 'Invite Nerds', '/inviteNerds'),
+          //_getMenuListTile(context, Icons.notifications_active, 'Nudger', '/gaugetest'),
           _getSignOutTile(context),
         ],
       ),

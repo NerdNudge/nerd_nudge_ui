@@ -29,11 +29,17 @@ class ApiService {
 
   Future<dynamic> putRequest(String endpoint, Map<String, dynamic> data) async {
     try {
+      print('PUT Request Endpoint: $endpoint');
+      print('PUT Request Data: $data');
+
       final response = await http.put(
         Uri.parse(endpoint),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(data),
       );
+      print('Response Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         return json.decode(response.body);
       } else {

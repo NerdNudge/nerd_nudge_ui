@@ -22,4 +22,5 @@ class APIEndpoints {
   static const String SUB_TOPICS = '/api/nerdnudge/topics/getsubtopics';
 
   static const String USER_FEEDBACK_SUBMISSION = '/api/nerdnudge/useractivity/userFeedbackSubmission';
+  static const String USER_TERMINATION = '/api/nerdnudge/useractivity/deleteUserAccount';
 }

@@ -6,8 +6,7 @@ import '../../../utilities/api_service.dart';
 
 class UserFeedbackService {
   UserFeedbackService._privateConstructor();
-  static final UserFeedbackService _instance =
-  UserFeedbackService._privateConstructor();
+  static final UserFeedbackService _instance = UserFeedbackService._privateConstructor();
 
   factory UserFeedbackService() {
     return _instance;

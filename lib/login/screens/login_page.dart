@@ -220,44 +220,50 @@ class _LoginPageState extends State<LoginPage> {
           );
         });
 
-    if(usernameController.text == '' || passwordController.text == '') {
+    if (usernameController.text == '' || passwordController.text == '') {
       Styles.showGlobalSnackbarMessage('Username or password empty.');
       Navigator.pop(context);
       return;
     }
 
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null && !user.emailVerified) {
-      Styles.showGlobalSnackbarMessage('Please verify your email.');
-      Navigator.pop(context);
-      return;
-    }
-
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      // Sign in with email and password
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
         email: usernameController.text,
         password: passwordController.text,
       );
+
+      // Reload the user's data to ensure the latest email verification status is fetched
+      User? user = userCredential.user;
+      await user?.reload();
+      user = FirebaseAuth.instance.currentUser;
+
+      if (user != null && !user.emailVerified) {
+        Styles.showGlobalSnackbarMessage('Please verify your email.');
+        Navigator.pop(context);
+        return;
+      }
+
       Navigator.pop(context);
 
       String userFullName = user?.displayName ?? usernameController.text ?? '';
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => HomePage(userFullName: userFullName, userEmail: usernameController.text,),
+          builder: (context) =>
+              HomePage(userFullName: userFullName, userEmail: usernameController.text),
         ),
       );
     } on FirebaseAuthException catch (e) {
       print('Error: $e');
-      print(e.code);
       Navigator.pop(context);
+
       if (e.code == 'user-not-found') {
-        print('User not found !');
         Styles.showGlobalSnackbarMessage('Invalid email and password!');
       } else if (e.code == 'invalid-credential') {
-        print('Invalid username and password !');
         Styles.showGlobalSnackbarMessage('Invalid email and password!');
-      } else if(e.code == 'invalid-email'){
+      } else if (e.code == 'invalid-email') {
         Styles.showGlobalSnackbarMessage('Invalid email!');
       }
     }

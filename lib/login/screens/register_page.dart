@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:nerd_nudge/login/screens/login_or_register.dart';
+import 'package:nerd_nudge/login/services/auth_page.dart';
 
 import '../../cache_and_lock_manager/cache_locks_keys.dart';
 import '../../user_home_page/screens/home_page.dart';
@@ -171,7 +172,7 @@ class _RegisterPageState extends State<RegisterPage> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => LoginOrRegister(),
+            builder: (context) => Authpage(),
           ),
         );
       }

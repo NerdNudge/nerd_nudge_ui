@@ -36,10 +36,9 @@ class _HomePageState extends State<HomePage> {
     print('uname: ${widget.userFullName}, email: ${widget.userEmail}');
     UserProfileEntity userProfileEntity = UserProfileEntity();
     userProfileEntity.setUserFullName(widget.userFullName);
-    userProfileEntity.setUserEmail(widget.userEmail);
+    userProfileEntity.setUserEmail(widget.userEmail.toLowerCase());
 
     print('Home page: User fullName: ${userProfileEntity.getUserFullName()}, User Email: ${userProfileEntity.getUserEmail()}');
-    //_futureUserHomeStats = HomePageService().getUserHomePageStats();
     _checkEmailAndNavigate();
     _futureUserHomeStats = _fetchUserHomeStats();
   }
@@ -100,6 +99,7 @@ class _HomePageState extends State<HomePage> {
     String quoteOfTheDay = userHomeStats.quoteOfTheDay;
     String quoteAuthor = userHomeStats.quoteAuthor;
     String quoteId = userHomeStats.quoteId;
+    UserProfileEntity().setUserAccountType(userHomeStats.getUserAccountType());
 
     return Stack(
       children: [
