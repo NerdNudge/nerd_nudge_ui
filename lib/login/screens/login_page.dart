@@ -2,8 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:nerd_nudge/utilities/styles.dart';
 
+import '../../cache_and_lock_manager/cache_locks_keys.dart';
 import '../../user_home_page/screens/home_page.dart';
 import '../services/auth_service.dart';
+import 'forgot_password_page.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({super.key, required this.onRegisterNowTap});
@@ -20,6 +22,9 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    CacheLockKeys cacheLockKeys = CacheLockKeys();
+    cacheLockKeys.updateQuizFlexShotsKey();
+
     return Scaffold(
       body: Stack(
         children: [
@@ -72,12 +77,20 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(
                       height: 8,
                     ),
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Text(
-                          'Forgot Password ?',
-                          style: TextStyle(color: Colors.white),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
+                            );
+                          },
+                          child: Text(
+                            'Forgot Password?',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ],
                     ),

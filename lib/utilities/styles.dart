@@ -13,6 +13,7 @@ import 'api_end_points.dart';
 import 'api_service.dart';
 import 'colors.dart';
 import 'dart:ui' as ui;
+import 'package:cross_file/cross_file.dart';
 
 class Styles {
   static final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
@@ -531,7 +532,7 @@ class Styles {
         await Future.delayed(Duration(milliseconds: 100));
 
         RenderRepaintBoundary? boundary =
-            key.currentContext!.findRenderObject() as RenderRepaintBoundary?;
+        key.currentContext!.findRenderObject() as RenderRepaintBoundary?;
 
         if (boundary == null) {
           print('Error: RenderRepaintBoundary is null');
@@ -540,7 +541,7 @@ class Styles {
 
         ui.Image image = await boundary.toImage(pixelRatio: 3.0);
         ByteData? byteData =
-            await image.toByteData(format: ui.ImageByteFormat.png);
+        await image.toByteData(format: ui.ImageByteFormat.png);
 
         if (byteData == null) {
           print('Error: byteData is null');
@@ -554,7 +555,9 @@ class Styles {
         await imagePath.writeAsBytes(pngBytes);
 
         const String shareMessage = Constants.shareQuoteMessage;
-        Share.shareFiles([imagePath.path], text: '\n\n$shareMessage');
+
+        final xFile = XFile(imagePath.path);
+        Share.shareXFiles([xFile], text: '\n\n$shareMessage');
       });
     } catch (e) {
       print('Error capturing screenshot: $e');

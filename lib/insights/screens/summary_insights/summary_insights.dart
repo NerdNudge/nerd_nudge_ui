@@ -3,10 +3,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mrx_charts/mrx_charts.dart';
 import 'package:nerd_nudge/insights/screens/summary_insights/summary_details.dart';
+import 'package:nerd_nudge/insights/screens/user_insights_main_page.dart';
+import 'package:nerd_nudge/utilities/leaderboard_page.dart';
 
 import '../../../../utilities/colors.dart';
 import '../../../../utilities/styles.dart';
+import '../../../cache_and_lock_manager/cache_locks_keys.dart';
 import '../../services/insights_duration_state.dart';
+import '../../services/user_insights_service.dart';
 import '../Utilities/PeerComparisonInsights.dart';
 
 class SummaryInsights extends StatefulWidget {
@@ -180,7 +184,7 @@ class _SummaryInsightsState extends State<SummaryInsights> {
               ),
               child: IconButton(
                 icon: Icon(Icons.leaderboard),
-                onPressed: () => getSummaryDetails(),
+                onPressed: () => getLeaderBoardPage(),
                 color: Colors.white,
               ),
             ),
@@ -188,6 +192,30 @@ class _SummaryInsightsState extends State<SummaryInsights> {
         ),
       ],
     );
+  }
+
+  void getLeaderBoardPage() async {
+    print('Summary Insights: Leaderboard details clicked.');
+    try {
+      List<dynamic> leaderboardList = await _fetchLeaderBoard('global', 100);
+      Navigator.push(context, MaterialPageRoute(
+        builder: (context) => LeaderboardPage(leaderBoardList: leaderboardList, buttonClick: getLeaderPageCloseButtonClick, topic: 'Global',),
+      ),);
+    } catch (e) {
+      print('Error fetching leaderboard data: $e');
+      setState(() {
+        cardDetails = Center(child: Text('Failed to load leaderboard data.'));
+      });
+    }
+  }
+
+  Future<List<dynamic>> _fetchLeaderBoard(String topic, int limit) async {
+    try {
+      return await UserInsightsService().getLeaderBoard(topic, limit);
+    } catch (e) {
+      print('Error fetching user insights: $e');
+      return [];
+    }
   }
 
   void getSummaryDetails() {
@@ -207,6 +235,16 @@ class _SummaryInsightsState extends State<SummaryInsights> {
         topic: 'Overall',
       );
     });
+  }
+
+  void getLeaderPageCloseButtonClick() {
+    print('Close button clicked. under leader page');
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => UserInsights(),
+      ),
+    );
   }
 
   void getCloseButtonClick() {

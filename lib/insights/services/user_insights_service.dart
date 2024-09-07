@@ -34,4 +34,26 @@ class UserInsightsService {
       return {};
     }
   }
+
+  Future<List<dynamic>> getLeaderBoard(String topic, int limit) async {
+    print('getting Leaderboard for topic: $topic');
+    final ApiService apiService = ApiService();
+    dynamic result;
+    try {
+      print(APIEndpoints.USER_RANK_SERVICE_BASE_URL + APIEndpoints.LEADERBOARD + "?topic=" + topic + "&limit=" + limit.toString());
+      result = await apiService.getRequest(APIEndpoints.USER_RANK_SERVICE_BASE_URL, APIEndpoints.LEADERBOARD + "?topic=" + topic + "&limit=" + limit.toString());
+      print('API Result: $result');
+
+      if (result is Map<String, dynamic>) {
+        return result['data'];
+      } else if (result is String) {
+        return json.decode(result);
+      } else {
+        throw const FormatException("Unexpected response format");
+      }
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
 }

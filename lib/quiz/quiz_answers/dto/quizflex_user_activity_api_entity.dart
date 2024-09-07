@@ -2,6 +2,7 @@ import 'package:nerd_nudge/user_profile/dto/user_profile_entity.dart';
 
 class QuizflexUserActivityAPIEntity {
   final String _id = UserProfileEntity().getUserEmail();
+  final String _fullName = UserProfileEntity().getUserFullName();
   int _timestamp = 0;
   static Map<String, Map<String, List<String>>> _quizflex = {};
   static List<String> _likes = [];
@@ -15,7 +16,7 @@ class QuizflexUserActivityAPIEntity {
     _dislikes.clear();
     _shares.clear();
     _favorites.clear();
-    _timestamp = 0;  // Resetting timestamp as well
+    _timestamp = 0;
     print('Data cleared: $this');
   }
 
@@ -113,6 +114,7 @@ class QuizflexUserActivityAPIEntity {
   Map<String, dynamic> toJson() {
     return {
       'userId': _id,
+      'userFullName': _fullName,
       'timestamp': _timestamp,
       'quizflex': _quizflex,
       'favorites': _favorites,
@@ -127,6 +129,7 @@ class QuizflexUserActivityAPIEntity {
     return '''
 QuizflexUserActivityAPIEntity {
   userId: $_id,
+  userFullName: $_fullName,
   timestamp: $_timestamp,
   quizflex: $_quizflex,
   likes: $_likes,

@@ -40,9 +40,7 @@ class NerdShotsService {
     final ApiService apiService = ApiService();
     dynamic result;
     try {
-      final String url = APIEndpoints.USER_ACTIVITY_BASE_URL +
-          APIEndpoints.SHOTS_SUBMISSION;
-
+      final String url = APIEndpoints.USER_ACTIVITY_BASE_URL + APIEndpoints.SHOTS_SUBMISSION;
       final Map<String, dynamic> jsonBody = entity.toJson();
 
       print('Sending PUT request to: $url');

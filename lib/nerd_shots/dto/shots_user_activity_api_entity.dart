@@ -13,6 +13,7 @@ class ShotsUserActivityAPIEntity {
   }
 
   final String _id = UserProfileEntity().getUserEmail();
+  final String _fullName = UserProfileEntity().getUserFullName();
   int _timestamp = 0;
   Map<String, Map<String, int>> _shots = {};
   List<String> _likes = [];
@@ -142,6 +143,7 @@ class ShotsUserActivityAPIEntity {
   Map<String, dynamic> toJson() {
     return {
       'userId': _id,
+      'userFullName': _fullName,
       'timestamp': _timestamp,
       'shots': _shots,
       'favorites': _favorites,
@@ -156,6 +158,7 @@ class ShotsUserActivityAPIEntity {
     return '''
 ShotsUserActivityAPIEntity {
   userId: $_id,
+  userFullName: $_fullName,
   timestamp: $_timestamp,
   shots: $_shots,
   likes: $_likes,

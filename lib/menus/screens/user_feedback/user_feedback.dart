@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:nerd_nudge/menus/services/user_feedback_service/user_feedback_service.dart';
+import 'package:nerd_nudge/utilities/styles.dart';
 
 import '../../../../utilities/colors.dart';
 import '../../../bottom_menus/screens/bottom_menu_options.dart';
@@ -85,15 +87,15 @@ class _FeedbackPageState extends State<FeedbackPage> {
                 child: ElevatedButton.icon(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Feedback submitted')),
-                      );
+                      Styles.showGlobalSnackbarMessageAndIcon('Feedback submitted', Icons.thumb_up, Colors.black);
+                      UserFeedbackService().submitUserFeedBack(_selectedFeedbackType, _commentsController.text);
+                      _commentsController.clear();
                     }
                   },
                   label: Text(
-                    'Submit',
+                    'Submit Feedback',
                     style: TextStyle(
-                        color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
+                        color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: CustomColors.purpleButtonColor,

@@ -23,6 +23,8 @@ class Authpage extends StatelessWidget {
           return HomePage(userFullName: userProfileEntity.getUserFullName(), userEmail: userProfileEntity.getUserEmail(),);
         } else {
           print('no user data present');
+          CacheLockKeys cacheLockKeys = CacheLockKeys();
+          cacheLockKeys.updateQuizFlexShotsKey();
           return const LoginOrRegister();
         }
       },

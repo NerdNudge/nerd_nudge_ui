@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:nerd_nudge/login/screens/login_or_register.dart';
 
+import '../../cache_and_lock_manager/cache_locks_keys.dart';
 import '../../user_home_page/screens/home_page.dart';
 import '../../utilities/colors.dart';
 import '../../utilities/styles.dart';
@@ -14,6 +15,15 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+
+  @override
+  void initState() {
+    super.initState();
+    print('Clearing cache now.');
+    CacheLockKeys cacheLockKeys = CacheLockKeys();
+    cacheLockKeys.updateQuizFlexShotsKey();
+  }
+
   final fullNameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -120,38 +130,6 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  /*Future<void> createNewAccount() async {
-    if (passwordController.text != confirmPasswordController.text) {
-      showErrorMessage('Password does not match!');
-      return;
-    }
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
-
-    try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: usernameController.text,
-        password: passwordController.text,
-      );
-      Navigator.pop(context);
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomePage(),
-        ),
-      );
-    } on FirebaseAuthException catch (e) {
-      Navigator.pop(context);
-      showErrorMessage(e.message!);
-    }
-  }*/
 
   Future<void> createNewAccount() async {
     if(fullNameController.text == '' || emailController.text == '' || passwordController.text == '' || confirmPasswordController.text == '') {
@@ -188,11 +166,12 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           );
         }
-      } else {
-        Navigator.push(
+      }
+      else {
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => HomePage(userFullName: fullNameController.text, userEmail: emailController.text,),
+            builder: (context) => LoginOrRegister(),
           ),
         );
       }

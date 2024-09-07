@@ -3,11 +3,19 @@ import 'package:mrx_charts/mrx_charts.dart';
 
 import '../../../utilities/colors.dart';
 import '../../../utilities/styles.dart';
+import '../../services/user_insights_service.dart';
+import 'package:nerd_nudge/utilities/leaderboard_page.dart';
+
+import '../user_insights_main_page.dart';
 
 class TopicSummaryInsights {
+
+  static late BuildContext context;
+
   static getSelectedTopicSummary(BuildContext context, dynamic topicObject, String selectedTopic,
       Function getDetails, Function getPeerComparison, Function getCloseButtonClick, int topicRank) {
     print('Under topic summary details: $topicObject');
+    TopicSummaryInsights.context = context;
     return Column(
       children: [
         Text(
@@ -164,7 +172,7 @@ class TopicSummaryInsights {
               child: IconButton(
                 icon: Icon(Icons.leaderboard),
                 onPressed: () =>
-                    topicsDrillDown(), // Ensure the buttonClick function accepts BuildContext as a parameter
+                    getLeaderBoardPage(title),
                 color: Colors.white, // Foreground color of the X icon
               ),
             ),
@@ -189,6 +197,37 @@ class TopicSummaryInsights {
         ),
       ],
     );
+  }
+
+  static void getLeaderBoardPage(String topic) async {
+    print('Topic Insights: Leaderboard details clicked.');
+    try {
+      List<dynamic> leaderboardList = await _fetchLeaderBoard(topic, 100);
+      Navigator.push(context, MaterialPageRoute(
+        builder: (context) => LeaderboardPage(leaderBoardList: leaderboardList, buttonClick: getLeaderPageCloseButtonClick, topic: topic,),
+      ),);
+    } catch (e) {
+      print('Error fetching leaderboard data: $e');
+    }
+  }
+
+  static void getLeaderPageCloseButtonClick() {
+    print('Close button clicked. under leader page');
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => UserInsights(),
+      ),
+    );
+  }
+
+  static Future<List<dynamic>> _fetchLeaderBoard(String topic, int limit) async {
+    try {
+      return await UserInsightsService().getLeaderBoard(topic, limit);
+    } catch (e) {
+      print('Error fetching user insights: $e');
+      return [];
+    }
   }
 
   static _getSummaryChart(
