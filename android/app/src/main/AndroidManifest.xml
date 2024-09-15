@@ -1,6 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Add Google Play Services Permissions (if required by Firebase or Google APIs) -->
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="com.android.vending.BILLING" />
+
     <application
-        android:label="nerd_nudge"
+        android:label="Nerd Nudge"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

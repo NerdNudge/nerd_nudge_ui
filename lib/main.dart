@@ -9,6 +9,7 @@ import 'package:nerd_nudge/menus/screens/favorites/favorites_main_page.dart';
 import 'package:nerd_nudge/menus/screens/sign_out/sign_out.dart';
 import 'package:nerd_nudge/menus/screens/user_feedback/user_feedback.dart';
 import 'package:nerd_nudge/menus/screens/user_profile/user_profile.dart';
+import 'package:nerd_nudge/subscriptions/services/purchase_api.dart';
 import 'package:nerd_nudge/subscriptions/subscription_comparison_page.dart';
 import 'package:nerd_nudge/subscriptions/subscription_page.dart';
 import 'package:nerd_nudge/subscriptions/subscription_page_tabs.dart';
@@ -28,6 +29,7 @@ main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   MobileAds.instance.initialize();
+  await PurchaseAPI.init();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,

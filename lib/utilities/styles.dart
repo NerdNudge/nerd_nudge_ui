@@ -445,6 +445,20 @@ class Styles {
     );
   }
 
+  static getBoxDecorationForPaywall() {
+    return const BoxDecoration(
+      gradient: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [Color(0xFF6A69EB), Color(0xFF0b0521)],
+      ),
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(20.0),
+        topRight: Radius.circular(20.0),
+      ),
+    );
+  }
+
   static Widget getColoredDivider(Color dividerColor) {
     return Divider(
       color: dividerColor,

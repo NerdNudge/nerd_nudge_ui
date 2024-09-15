@@ -169,12 +169,34 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  void _showMessageDialog(BuildContext context, String title, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   _signInWithGoogle() async {
     AuthService authService = AuthService();
     User? user = await authService.signInWithGoogle();
+    _showMessageDialog(context, 'Google sign in check', 'User: $user');
     Navigator.pop(context);
 
     if (user != null) {
+      _showMessageDialog(context, 'Google sign in check', 'Sign-in successful: ${user.displayName}');
       print('Sign-in successful: ${user.displayName}');
       String userFullName = user.displayName ?? user.email ?? '';
       String email = user.email ?? '';
@@ -185,6 +207,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
     } else {
+      _showMessageDialog(context, 'Google sign in check', 'Sign-in failed or canceled.');
       print('Sign-in failed or canceled');
       Navigator.pushNamed(context, '/startpage');
     }

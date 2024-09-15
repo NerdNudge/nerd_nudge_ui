@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0+1
+version: 1.0.3+4
 
 environment:
   sdk: '>=3.4.4 <4.0.0'
@@ -33,12 +33,17 @@ dependencies:
   flutter_card_swiper: ^7.0.1
   http: ^0.13.3
   syncfusion_flutter_gauges: ^20.2.41
+  rename: ^3.0.2
+  purchases_flutter: ^8.1.1
+  sliding_up_panel: ^2.0.0+1
+  url_launcher: ^6.0.9
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^3.0.0
+  flutter_launcher_icons: ^0.13.1
 
 
 flutter:
@@ -52,3 +57,12 @@ flutter_icons:
   android: true
   ios: true
   image_path: "images/NN_icon_2.png"
+
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "images/app_logo_1024.png"
+  android_adaptive_icon_background: "#000000"
+  android_adaptive_icon_foreground: "images/app_logo_512.png"
+  min_sdk_android: 21

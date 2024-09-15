@@ -1,10 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:nerd_nudge/login/screens/login_or_register.dart';
-import 'package:nerd_nudge/login/services/auth_page.dart';
 
 import '../../cache_and_lock_manager/cache_locks_keys.dart';
-import '../../user_home_page/screens/home_page.dart';
 import '../../utilities/colors.dart';
 import '../../utilities/styles.dart';
 
@@ -133,6 +131,13 @@ class _RegisterPageState extends State<RegisterPage> {
 
 
   Future<void> createNewAccount() async {
+    print('creating new account now.');
+    User? user = FirebaseAuth.instance.currentUser;
+    if(user != null) {
+      print('singning out now: ${user.email}');
+      FirebaseAuth.instance.signOut();
+    }
+
     if(fullNameController.text == '' || emailController.text == '' || passwordController.text == '' || confirmPasswordController.text == '') {
       Styles.showGlobalSnackbarMessage('Please fill all the details!');
       return;
@@ -144,6 +149,7 @@ class _RegisterPageState extends State<RegisterPage> {
     }
 
     try {
+      print('starting to create account in firebase now');
       UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
@@ -151,14 +157,17 @@ class _RegisterPageState extends State<RegisterPage> {
 
       User? user = userCredential.user;
       if(user == null) {
+        print('user is null');
+        Styles.showGlobalSnackbarMessage('User is null. Please try again.');
         return;
       }
 
       if (!user.emailVerified) {
+        print('user is not verified already');
         await user.sendEmailVerification();
         Styles.showGlobalSnackbarMessage('A verification link has been sent to your email.');
 
-        await Future.delayed(const Duration(seconds: 3)); // Wait for 3 seconds
+        await Future.delayed(const Duration(seconds: 3));
         if (mounted) {
           Navigator.pushReplacement(
             context,
@@ -168,17 +177,17 @@ class _RegisterPageState extends State<RegisterPage> {
           );
         }
       }
-      else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Authpage(),
-          ),
-        );
-      }
     } on FirebaseAuthException catch (e) {
-      Navigator.pop(context);
-      Styles.showGlobalSnackbarMessage(e.message!);
+      if (e.code == 'email-already-in-use') {
+        print('Email is already in use');
+        Styles.showGlobalSnackbarMessage('Email is already in use. Please try logging in.');
+      } else {
+        print('FirebaseAuthException: ${e.message}');
+        Styles.showGlobalSnackbarMessage(e.message!);
+      }
+    } catch (e) {
+      print('Error: $e');
+      Styles.showGlobalSnackbarMessage('An error occurred. Please try again.');
     }
   }
 
