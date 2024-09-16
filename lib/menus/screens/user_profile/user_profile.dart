@@ -189,22 +189,6 @@ class _ProfilePageState extends State<ProfilePage> {
             if (offerings == null || offerings.isEmpty) {
               Styles.showGlobalSnackbarMessage('No Offers found!');
             } else {
-              setState(() {
-                try {
-                  _packages = offerings.map((offering) {
-                        return offering.availablePackages!;
-                      })
-                      .expand((pkgList) => pkgList is Iterable
-                          ? pkgList
-                          : <Package>[]) // Flatten the list, handle type safely
-                      .toList();
-                  PurchaseAPI.updateNerdNudgeOfferings();
-                  PurchaseAPI.updateCurrentOffer();
-                } catch (e) {
-                  print('Error during mapping and expanding packages: $e');
-                }
-              });
-
               _panelController.open(); // Open the sliding panel
             }
           },

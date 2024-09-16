@@ -1,6 +1,9 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:nerd_nudge/subscriptions/services/purchase_api.dart';
 import 'package:nerd_nudge/user_profile/dto/user_profile_entity.dart';
+import 'package:nerd_nudge/utilities/constants.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../../utilities/colors.dart';
 import '../../../utilities/startup_welcome_messages.dart';
@@ -13,6 +16,7 @@ import '../../login/screens/login_or_register.dart';
 import '../../menus/screens/menu_options.dart';
 import '../../nerd_shots/screens/shots_home.dart';
 import '../../quiz/home/screens/quiz_home_page.dart';
+import '../../subscriptions/screens/paywall_panel_screen.dart';
 import '../../subscriptions/subscription_page_tabs.dart';
 import '../dto/user_home_stats.dart';
 
@@ -29,6 +33,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late Future<UserHomeStats> _futureUserHomeStats;
   static String _currentLockKey = '';
+  final PanelController _panelController = PanelController();
 
   @override
   void initState() {
@@ -38,7 +43,8 @@ class _HomePageState extends State<HomePage> {
     userProfileEntity.setUserFullName(widget.userFullName);
     userProfileEntity.setUserEmail(widget.userEmail.toLowerCase());
 
-    print('Home page: User fullName: ${userProfileEntity.getUserFullName()}, User Email: ${userProfileEntity.getUserEmail()}');
+    print(
+        'Home page: User fullName: ${userProfileEntity.getUserFullName()}, User Email: ${userProfileEntity.getUserEmail()}');
     _checkEmailAndNavigate();
     _futureUserHomeStats = _fetchUserHomeStats();
   }
@@ -55,7 +61,8 @@ class _HomePageState extends State<HomePage> {
     UserHomePageCacheManager cacheManager = UserHomePageCacheManager();
     print('Current local key: $_currentLockKey');
     print('cache key: ${CacheLockKeys().getCurrentKey()}');
-    Future<UserHomeStats> homeStats = cacheManager.fetchUserHomePageStats(_currentLockKey);
+    Future<UserHomeStats> homeStats =
+        cacheManager.fetchUserHomePageStats(_currentLockKey);
     setState(() {
       _currentLockKey = CacheLockKeys().getCurrentKey();
     });
@@ -180,7 +187,8 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 20),
 
                     _buildSectionTitle('Quote of the day'),
-                    Styles.buildQuoteCard(context, quoteOfTheDay, quoteAuthor, quoteId),
+                    Styles.buildQuoteCard(
+                        context, quoteOfTheDay, quoteAuthor, quoteId),
                     _getPurpleDivider(),
                     const SizedBox(height: 20),
                     _buildNumPeopleCard(userHomeStats),
@@ -190,6 +198,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
+        PaywallPanel.getSlidingPanel(context, _panelController),
       ],
     );
   }
@@ -268,18 +277,31 @@ class _HomePageState extends State<HomePage> {
                   _buildStatsRow(
                       'Quizzes Remaining',
                       'Shots Remaining',
-                      userHomeStats.getDailyQuizRemaining().toString(),
-                      userHomeStats.getDailyShotsRemaining().toString()),
+                      _getTotalQuizflexQuota(userHomeStats),
+                      _getTotalShotsQuota(userHomeStats)),
                 ],
               ),
             ),
           ),
           const SizedBox(height: 20.0),
-          Styles.buildNextActionButton(
-              context, 'UPGRADE', 0, SubscriptionPageTabsBased()),
+          if (PurchaseAPI.userCurrentOffering == Constants.FREEMIUM)
+            Styles.buildNextActionButtonWithPaywall(context, 'UPGRADE', 0, _panelController),
+            //Styles.buildNextActionButton(context, 'UPGRADE', 0, SubscriptionPageTabsBased()),
         ],
       ),
     );
+  }
+
+  _getTotalQuizflexQuota(UserHomeStats userHomeStats) {
+    return PurchaseAPI.userCurrentOffering == Constants.FREEMIUM
+        ? userHomeStats.getDailyQuizRemaining().toString()
+        : '∞';
+  }
+
+  _getTotalShotsQuota(UserHomeStats userHomeStats) {
+    return PurchaseAPI.userCurrentOffering == Constants.FREEMIUM
+        ? userHomeStats.getDailyShotsRemaining().toString()
+        : '∞';
   }
 
   Widget _buildNerdStatsCard(UserHomeStats userHomeStats) {

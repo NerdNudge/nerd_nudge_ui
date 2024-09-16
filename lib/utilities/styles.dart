@@ -6,8 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:nerd_nudge/utilities/constants.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:purchases_flutter/models/offering_wrapper.dart';
+import 'package:purchases_flutter/models/package_wrapper.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 import '../bottom_menus/screens/bottom_menu_options.dart';
+import '../subscriptions/services/purchase_api.dart';
 import '../user_profile/dto/user_profile_entity.dart';
 import 'api_end_points.dart';
 import 'api_service.dart';
@@ -278,8 +282,7 @@ class Styles {
     );
   }
 
-  static Widget buildNextActionButton(
-      BuildContext context, String textMessage, int index, Widget screen) {
+  static Widget buildNextActionButton(BuildContext context, String textMessage, int index, Widget screen) {
     return Align(
       alignment: Alignment.center,
       child: ElevatedButton(
@@ -310,6 +313,36 @@ class Styles {
       ),
     );
   }
+
+
+  static Widget buildNextActionButtonWithPaywall(BuildContext context, String textMessage, int index, PanelController panelController) {
+    return Align(
+      alignment: Alignment.center,
+      child: ElevatedButton(
+        onPressed: () async {
+          final List<Offering> offerings = PurchaseAPI.offerings;
+          print('Offerings: $offerings');
+
+          if (offerings.isEmpty) {
+            Styles.showGlobalSnackbarMessage('No Offers found!');
+          } else {
+            panelController.open(); // Open the sliding panel
+          }
+        },
+        style: ElevatedButton.styleFrom(
+          foregroundColor: CustomColors.purpleButtonColor,
+          backgroundColor: Colors.white, // Text color
+          minimumSize: const Size(300, 40),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
+        child: Text('UPGRADE', style: TextStyle(color: CustomColors.purpleButtonColor, fontWeight: FontWeight.bold)),
+      ),
+    );
+  }
+
+
 
   static Widget buildQuoteCard(BuildContext context, String quoteOfTheDay,
       String author, String quoteId) {

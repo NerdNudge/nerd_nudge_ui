@@ -9,7 +9,6 @@ import '../../../cache_and_lock_manager/cache_locks_keys.dart';
 import '../../../menus/screens/menu_options.dart';
 import '../../../subscriptions/upgrade_page.dart';
 import '../../../user_home_page/dto/user_home_stats.dart';
-import '../../../user_profile/screens/user_account_types.dart';
 import '../screens/question_complete_screen.dart';
 
 class QuizService extends StatefulWidget {
@@ -69,7 +68,7 @@ class _QuizServiceState extends State<QuizService> {
   dynamic _getNextQuiz() {
     if (UserHomeStats().hasUserExhaustedNerdQuiz()) {
       print('User has exhausted the quiz counts.');
-      if (UserHomeStats().getUserAccountType() == AccountType.FREEMIUM) {
+      if (UserHomeStats().getUserAccountType() == Constants.FREEMIUM) {
         print('Freemium user.');
         WidgetsBinding.instance.addPostFrameCallback((_) {
           Navigator.push(

@@ -1,6 +1,8 @@
 import 'package:flutter/services.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
+import '../../utilities/constants.dart';
+
 class PurchaseAPI {
   static const _apikey = 'goog_bcIotbsIPCTidmmXUaBxzGKHFYu';
   static List<Offering> _offerings = [];
@@ -32,12 +34,12 @@ class PurchaseAPI {
         EntitlementInfo activeEntitlement = customerInfo.entitlements.active.values.first;
         _userCurrentOffering = activeEntitlement.identifier;
       } else {
-        _userCurrentOffering = 'Freemium';
+        _userCurrentOffering = Constants.FREEMIUM;
         //_userCurrentOffering = 'Nerd Nudge Pro';
       }
     } catch (e) {
       print('Error fetching customer info: $e');
-      _userCurrentOffering = 'Freemium';
+      _userCurrentOffering = Constants.FREEMIUM;
     }
   }
 }

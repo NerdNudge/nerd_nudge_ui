@@ -1,9 +1,10 @@
-import '../screens/user_account_types.dart';
+import 'package:nerd_nudge/utilities/constants.dart';
+
 
 class UserProfileEntity {
   String _userFullName = '';
   String _userEmail = '';
-  AccountType _accountType = AccountType.FREEMIUM;
+  String _accountType = Constants.FREEMIUM;
 
   UserProfileEntity._privateConstructor();
   static final UserProfileEntity _instance = UserProfileEntity._privateConstructor();
@@ -28,7 +29,7 @@ class UserProfileEntity {
     _userEmail = userEmail;
   }
 
-  setUserAccountType(AccountType accountType) {
+  setUserAccountType(String accountType) {
     _accountType = accountType;
   }
 

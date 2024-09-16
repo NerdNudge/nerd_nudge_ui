@@ -119,6 +119,8 @@ class PaywallPanel {
           const SnackBar(
               content: Text('Purchase successful! You are now a pro user.')),
         );
+        PurchaseAPI.updateNerdNudgeOfferings();
+        PurchaseAPI.updateCurrentOffer();
         Navigator.pop(context);
       }
     } catch (e) {

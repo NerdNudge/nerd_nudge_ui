@@ -1,8 +1,9 @@
-import 'package:nerd_nudge/user_profile/screens/user_account_types.dart';
+import 'package:nerd_nudge/subscriptions/services/purchase_api.dart';
+import 'package:nerd_nudge/utilities/constants.dart';
 
 class UserHomeStats {
   late Map<String, dynamic> _userData;
-  late AccountType _accountType = AccountType.FREEMIUM;
+  late String _accountType = Constants.FREEMIUM;
   late int _totalQuizzesAttempted = 0;
   late double _totalPercentageCorrect = 0.0;
   late int _highestInADay = 0;
@@ -43,9 +44,7 @@ class UserHomeStats {
     instance._userData = userData;
     var jsonData = userData['data'];
 
-    instance._accountType = jsonData.containsKey('accountType')
-        ? _getFromAccountTypeEnum(jsonData['accountType'])
-        : AccountType.FREEMIUM;
+    instance._accountType = PurchaseAPI.userCurrentOffering;
 
     instance._totalQuizzesAttempted = jsonData['totalQuizzes'] ?? 0;
     instance._totalPercentageCorrect = jsonData['correctPercentage']?.toDouble() ?? 0.0;
@@ -61,23 +60,10 @@ class UserHomeStats {
     instance._numPeopleUsedNerdNudge = jsonData['numPeopleUsedNerdNudgeToday'] ?? 0;
     instance._adsFrequencyQuizFlex = jsonData['adsFrequencyQuizFlex'] ?? 7;
     instance._adsFrequencyShots = jsonData['adsFrequencyShots'] ?? 7;
-    instance._quizflexQuota = jsonData['quizflexQuota'] ?? 12;
-    instance._shotsQuota = jsonData['shotsQuota'] ?? 15;
+    instance._quizflexQuota = (instance._accountType == Constants.FREEMIUM) ? jsonData['quizflexQuota'] ?? 12 : 10000;
+    instance._shotsQuota = (instance._accountType == Constants.FREEMIUM) ? jsonData['shotsQuota'] ?? 15 : 10000;
 
     return instance;
-  }
-
-  static AccountType _getFromAccountTypeEnum(String accountType) {
-    switch (accountType.toLowerCase()) {
-      case 'freemium':
-        return AccountType.FREEMIUM;
-      case 'nerdNudgePro':
-        return AccountType.NERD_NUDGE_PRO;
-      case 'nerdNudgeMax':
-        return AccountType.NERD_NUDGE_MAX;
-      default:
-        return AccountType.FREEMIUM; // Default case
-    }
   }
 
   Map<String, dynamic> get userData => _userData;
@@ -106,7 +92,7 @@ class UserHomeStats {
     return _averagePerDay;
   }
 
-  AccountType getUserAccountType() {
+  String getUserAccountType() {
     return _accountType;
   }
 
@@ -166,9 +152,7 @@ class UserHomeStats {
     return _quizCountToday >= _getTotalNerdQuizQuota();
   }
 
-  AccountType get accountType => _accountType;
-
-  set accountType(AccountType value) {
+  set accountType(String value) {
     _accountType = value;
   }
 
