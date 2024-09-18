@@ -1,6 +1,17 @@
 import 'package:nerd_nudge/user_profile/dto/user_profile_entity.dart';
 
 class QuizflexUserActivityAPIEntity {
+
+  static final QuizflexUserActivityAPIEntity _instance = QuizflexUserActivityAPIEntity._internal();
+
+  factory QuizflexUserActivityAPIEntity() {
+    return _instance;
+  }
+
+  QuizflexUserActivityAPIEntity._internal() {
+    _initialize();
+  }
+
   final String _id = UserProfileEntity().getUserEmail();
   final String _fullName = UserProfileEntity().getUserFullName();
   int _timestamp = 0;
@@ -10,13 +21,17 @@ class QuizflexUserActivityAPIEntity {
   static List<String> _shares = [];
   static Map<String, Map<String, List<String>>> _favorites = {};
 
-  void clearData() {
+  void _initialize() {
     _quizflex.clear();
     _likes.clear();
     _dislikes.clear();
     _shares.clear();
     _favorites.clear();
     _timestamp = 0;
+  }
+
+  void clearData() {
+    _initialize();
     print('Data cleared: $this');
   }
 
@@ -109,6 +124,10 @@ class QuizflexUserActivityAPIEntity {
     if (!array.contains(id)) {
       array.add(id);
     }
+  }
+
+  bool isQuizflexEmpty() {
+    return _quizflex.isEmpty;
   }
 
   Map<String, dynamic> toJson() {

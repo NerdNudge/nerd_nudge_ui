@@ -56,11 +56,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Column(
                       children: [
                         const SizedBox(height: 20),
-                        _buildProfileHeader(
-                            context), // Profile Picture and Name
+                        _buildProfileHeader(context),
                         const SizedBox(height: 40),
-                        _buildProfileActions(
-                            context), // Change Password, Account Options, Logout
+                        _buildProfileActions(context),
                       ],
                     ),
                   ),
@@ -68,7 +66,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
           ),
-          PaywallPanel.getSlidingPanel(context, _panelController),
+          PaywallPanel.getSlidingPanel(context, _panelController, 'Profile'),
         ],
       ),
     );

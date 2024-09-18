@@ -22,10 +22,7 @@ class NerdShotsHome extends StatefulWidget {
 class _NerdShotsHomeState extends State<NerdShotsHome> {
   @override
   Widget build(BuildContext context) {
-    return TopicSelectionHomePage(
-      title: 'Nerd Shots',
-      showShotsOrQuiz: startShots,
-    );
+    return TopicSelectionHomePage(title: 'Nerd Shots', showShotsOrQuiz: startShots, page: 'Shots');
   }
 
   startShots() {

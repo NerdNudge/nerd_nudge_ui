@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:nerd_nudge/topics/screens/topic_selection_home_page.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../../../utilities/styles.dart';
 import '../../../bottom_menus/screens/bottom_menu_options.dart';
 import '../../../menus/screens/menu_options.dart';
+import '../../subscriptions/screens/paywall_panel_screen.dart';
 import '../services/topics_service.dart';
 
 class SubtopicSelectionPage extends StatefulWidget {
-  const SubtopicSelectionPage({super.key, required this.title, required this.showShotsOrQuiz});
+  SubtopicSelectionPage({super.key, required this.title, required this.showShotsOrQuiz, required this.isPaywallOpen, required this.page});
   final String title;
   final Function showShotsOrQuiz;
+  bool isPaywallOpen;
+  final String page;
 
   @override
   State<SubtopicSelectionPage> createState() => _SubtopicSelectionPageState();
@@ -17,19 +21,20 @@ class SubtopicSelectionPage extends StatefulWidget {
 
 class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
   late List<Map<String, String>> subtopics = [];
-  bool isLoading = true; // Add a loading state flag
+  bool isLoading = true;
+  final PanelController _panelController = PanelController();
 
   _getSubtopics() async {
     try {
       final result = await TopicsService().getSubtopics(TopicSelection.selectedTopic);
       setState(() {
         subtopics = result;
-        isLoading = false; // Set loading to false once data is fetched
+        isLoading = false;
       });
     } catch (e) {
       print('Error loading topics: $e');
       setState(() {
-        isLoading = false; // Ensure loading is set to false even on error
+        isLoading = false;
       });
     }
   }
@@ -45,6 +50,16 @@ class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
     String topicsel = TopicSelection.selectedTopic;
     print('Subtopics called for topic: $topicsel');
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_panelController.isAttached) {
+        if (widget.isPaywallOpen) {
+          _panelController.open(); // Open paywall
+        } else {
+          _panelController.close(); // Close paywall
+        }
+      }
+    });
+
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -58,7 +73,6 @@ class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
 
   Widget _getBody() {
     if (isLoading) {
-      // Show a CircularProgressIndicator while loading
       return Center(child: CircularProgressIndicator());
     }
 
@@ -199,6 +213,7 @@ class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
             ),
           ),
         ),
+        PaywallPanel.getSlidingPanel(context, _panelController, widget.page),
       ],
     );
   }

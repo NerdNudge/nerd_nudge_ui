@@ -3,21 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:nerd_nudge/login/screens/login_or_register.dart';
-import 'package:nerd_nudge/login/screens/login_page.dart';
 import 'package:nerd_nudge/login/services/auth_page.dart';
 import 'package:nerd_nudge/menus/screens/favorites/favorites_main_page.dart';
 import 'package:nerd_nudge/menus/screens/sign_out/sign_out.dart';
 import 'package:nerd_nudge/menus/screens/user_feedback/user_feedback.dart';
 import 'package:nerd_nudge/menus/screens/user_profile/user_profile.dart';
 import 'package:nerd_nudge/subscriptions/services/purchase_api.dart';
-import 'package:nerd_nudge/subscriptions/subscription_comparison_page.dart';
-import 'package:nerd_nudge/subscriptions/subscription_page.dart';
-import 'package:nerd_nudge/subscriptions/subscription_page_tabs.dart';
-import 'package:nerd_nudge/subscriptions/upgrade_page.dart';
+import 'package:nerd_nudge/user_home_page/screens/home_page.dart';
 import 'package:nerd_nudge/utilities/gauge_tester_base.dart';
-import 'package:nerd_nudge/utilities/share_test.dart';
 import 'package:nerd_nudge/utilities/styles.dart';
-import 'package:nerd_nudge/ads_manager/ads_manager.dart';
 
 import 'firebase_options.dart';
 
@@ -49,17 +43,12 @@ class NerdNudgeApp extends StatelessWidget {
       title: 'Nerd Nudge',
       theme: Styles.getThemeData(),
       home: Scaffold(
-        /*appBar: AppBar(
-          title: const Text('Nerd Nudge'),
-          leading: Styles.getIconButton(),
-        ),*/
         body: const Authpage(),
       ),
       routes: {
         '/feedback': (context) => FeedbackPage(),
         '/favorites': (context) => const Favorites(),
-        '/subscription': (context) => SubscriptionPageTabsBased(),
-        '/inviteNerds': (context) => UpgradePage(),
+        '/inviteNerds': (context) => HomePage(userFullName: 'userFullName', userEmail: 'userEmail'),
         '/gaugetest': (context) => GaugeTesterBase(),
         '/signout': (context) => SignOut(),
         '/authpage': (context) => Authpage(),

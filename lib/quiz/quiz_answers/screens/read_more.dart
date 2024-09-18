@@ -31,6 +31,10 @@ class ReadMorePage extends StatefulWidget {
     initializeUserActivityEntity();
   }
 
+  static bool isQuizflexEmpty() {
+    return quizflexUserActivityAPIEntity.isQuizflexEmpty();
+  }
+
   @override
   State<ReadMorePage> createState() => _ReadMorePageState();
 }

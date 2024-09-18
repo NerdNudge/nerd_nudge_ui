@@ -20,7 +20,7 @@ class QuizHomePage extends StatefulWidget {
 class _QuizHomePageState extends State<QuizHomePage> {
   @override
   Widget build(BuildContext context) {
-    return TopicSelectionHomePage(title: 'Nerd Quiz', showShotsOrQuiz: startQuiz,);
+    return TopicSelectionHomePage(title: 'Nerd Quiz', showShotsOrQuiz: startQuiz, page: 'Quizflex',);
   }
 
   startQuiz() {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:nerd_nudge/nerd_shots/services/nerd_shots_service.dart';
-import 'package:nerd_nudge/subscriptions/upgrade_page.dart';
 import 'package:nerd_nudge/topics/screens/topic_selection_home_page.dart';
 import 'package:nerd_nudge/utilities/constants.dart';
 
@@ -10,6 +9,7 @@ import '../../../utilities/styles.dart';
 import '../../ads_manager/ads_manager.dart';
 import '../../../user_home_page/dto/user_home_stats.dart';
 import '../../cache_and_lock_manager/cache_locks_keys.dart';
+import '../../topics/screens/subtopic_selection.dart';
 import '../dto/shots_user_activity_api_entity.dart';
 
 class NerdShotsSwiped extends StatefulWidget {
@@ -74,7 +74,7 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => UpgradePage(),
+            builder: (context) => SubtopicSelectionPage(title: TopicSelection.selectedTopic, showShotsOrQuiz: startShots, isPaywallOpen: true, page: 'Shots',),
           ),
         );
       });
@@ -83,6 +83,17 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
         _currentQuizzes.addAll(nextQuizList);
       });
     }
+  }
+
+  startShots() {
+    Styles.showGlobalSnackbarMessageAndIcon('Swipe Right for the next shot!', Icons.swipe, Colors.black);
+    print('Start Shots home');
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => NerdShotsSwiped(),
+      ),
+    );
   }
 
   Future<List<dynamic>> _getNextQuizzes() async {
@@ -173,7 +184,7 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => UpgradePage(),
+              builder: (context) => SubtopicSelectionPage(title: TopicSelection.selectedTopic, showShotsOrQuiz: startShots, isPaywallOpen: true, page: 'Shots'),
             ),
           );
         });

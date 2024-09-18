@@ -13,10 +13,11 @@ class TopicSelection {
 }
 
 class TopicSelectionHomePage extends StatefulWidget {
-  TopicSelectionHomePage({super.key, required this.title, required this.showShotsOrQuiz});
+  TopicSelectionHomePage({super.key, required this.title, required this.showShotsOrQuiz, required this.page});
 
   String title;
   Function showShotsOrQuiz;
+  String page;
 
   @override
   State<TopicSelectionHomePage> createState() => _TopicSelectionHomePageState();
@@ -208,7 +209,7 @@ class _TopicSelectionHomePageState extends State<TopicSelectionHomePage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SubtopicSelectionPage(title: widget.title, showShotsOrQuiz: widget.showShotsOrQuiz,),
+        builder: (context) => SubtopicSelectionPage(title: widget.title, showShotsOrQuiz: widget.showShotsOrQuiz, isPaywallOpen: false, page: widget.page,),
       ),
     );
   }

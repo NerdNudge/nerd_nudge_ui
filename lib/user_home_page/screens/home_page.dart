@@ -12,12 +12,10 @@ import '../../../bottom_menus/screens/bottom_menu_options.dart';
 import '../../cache_and_lock_manager/cache_locks_keys.dart';
 import '../../cache_and_lock_manager/user_home_page_cache_manager.dart';
 import '../../insights/screens/user_insights_main_page.dart';
-import '../../login/screens/login_or_register.dart';
 import '../../menus/screens/menu_options.dart';
 import '../../nerd_shots/screens/shots_home.dart';
 import '../../quiz/home/screens/quiz_home_page.dart';
 import '../../subscriptions/screens/paywall_panel_screen.dart';
-import '../../subscriptions/subscription_page_tabs.dart';
 import '../dto/user_home_stats.dart';
 
 class HomePage extends StatefulWidget {
@@ -198,7 +196,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-        PaywallPanel.getSlidingPanel(context, _panelController),
+        PaywallPanel.getSlidingPanel(context, _panelController, 'Home'),
       ],
     );
   }

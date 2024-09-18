@@ -31,7 +31,7 @@ class MenuOptions {
           ),
           _getMenuListTile(context, Icons.person, 'Profile', '/profile'),
           _getMenuListTile(context, Icons.favorite, 'Favorites', '/favorites'),
-          _getMenuListTile(context, Icons.subscriptions, 'Subscription', '/subscription'),
+          //_getMenuListTile(context, Icons.subscriptions, 'Subscription', '/subscription'),
           _getMenuListTile(context, Icons.feedback, 'Feedback', '/feedback'),
           //_getMenuListTile(context, Icons.group_add, 'Invite Nerds', '/inviteNerds'),
           //_getMenuListTile(context, Icons.notifications_active, 'Nudger', '/gaugetest'),
