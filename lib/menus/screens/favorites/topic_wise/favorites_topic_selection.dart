@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../utilities/quiz_topics.dart';
 import '../../../../utilities/styles.dart';
+import '../../../Utilities/favorites_utilities.dart';
 import '../../../services/favorites/favorite_topics_service.dart';
 
 class FavoritesTopicSelectionPage extends StatefulWidget {
@@ -36,6 +37,18 @@ class _FavoritesTopicSelectionPageState
     }
   }
 
+  Future<List<Map<String, dynamic>>> _fetchSubtopics(String topic, String subtopic) async {
+    print('Starting to load subtopics...');
+    try {
+      final fetchedSubtopicsData = await FavoriteTopicsService().getFavoritesSubtopics(topic, subtopic);
+      print('Subtopics loaded successfully.');
+      return fetchedSubtopicsData;
+    } catch (e) {
+      print('Error loading subtopics: $e');
+      return [];
+    }
+  }
+
   _getSubtopicsListingPage(int topicindex) {
     return Stack(
       children: [
@@ -44,7 +57,7 @@ class _FavoritesTopicSelectionPageState
             decoration: Styles.getBackgroundBoxDecoration(),
             child: Padding(
               padding:
-              const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -56,7 +69,9 @@ class _FavoritesTopicSelectionPageState
 
                         return GestureDetector(
                           onTap: () {
-                            // Handle tap to show subtopics or other action
+                            setState(() {
+                              tabPlaceholder = _showSubtopicFavoriteDetails(topics[topicindex]['topicName'], subtopics[index]['name']);
+                            });
                           },
                           child: Card(
                             shape: RoundedRectangleBorder(
@@ -76,11 +91,11 @@ class _FavoritesTopicSelectionPageState
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Styles.getSizedHeightBox(10),
                                         Text(
-                                          subtopics[index]['name'],
+                                        subtopics[index]['name'] + ' (' + subtopics[index]['count'].toString() + ')',
                                           style: const TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.bold,
@@ -105,6 +120,24 @@ class _FavoritesTopicSelectionPageState
           ),
         ),
       ],
+    );
+  }
+
+  _showSubtopicFavoriteDetails(String topic, String subtopic) {
+    Future<List<Map<String, dynamic>>> futureSubtopics = _fetchSubtopics(topic, subtopic);
+    return FutureBuilder<List<Map<String, dynamic>>>(
+      future: futureSubtopics,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Center(child: Text('No favorites found.'));
+        } else {
+          return FavoriteUtils.getFavoritesListing(context, snapshot.data!);
+        }
+      },
     );
   }
 
@@ -170,7 +203,7 @@ class _FavoritesTopicSelectionPageState
                                         Expanded(
                                           child: Column(
                                             crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Text(
                                                 topicName,
@@ -192,7 +225,7 @@ class _FavoritesTopicSelectionPageState
                                                     style: TextStyle(
                                                       fontSize: 12,
                                                       fontWeight:
-                                                      FontWeight.bold,
+                                                          FontWeight.bold,
                                                       color: Colors.black54,
                                                     ),
                                                   ),
@@ -210,7 +243,7 @@ class _FavoritesTopicSelectionPageState
                                                     style: TextStyle(
                                                       fontSize: 12,
                                                       fontWeight:
-                                                      FontWeight.bold,
+                                                          FontWeight.bold,
                                                       color: Colors.black54,
                                                     ),
                                                   ),

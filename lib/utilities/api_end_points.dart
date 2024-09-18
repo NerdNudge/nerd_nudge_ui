@@ -17,6 +17,7 @@ class APIEndpoints {
   static const String RECENT_FAVORITES = '/api/nerdnudge/favorites/getUserRecentFavorites';
   static const String FAVORITE_QUOTES = '/api/nerdnudge/favorites/getUserFavoriteQuotes';
   static const String FAVORITE_TOPICS = '/api/nerdnudge/favorites/getUserFavoriteTopics';
+  static const String FAVORITE_SUBTOPICS = '/api/nerdnudge/favorites/getUserFavoriteSubtopics';
 
   static const String TOPICS = '/api/nerdnudge/topics/getall';
   static const String SUB_TOPICS = '/api/nerdnudge/topics/getsubtopics';

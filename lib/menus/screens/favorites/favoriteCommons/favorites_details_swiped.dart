@@ -10,7 +10,6 @@ import 'package:nerd_nudge/menus/services/favorites/favorites_service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../../../../nerd_shots/dto/shots_user_activity_api_entity.dart';
 import '../../../../utilities/colors.dart';
 import '../../../../utilities/constants.dart';
 import '../../../../utilities/styles.dart';
@@ -385,6 +384,17 @@ class _FavoritesDetailsSwipedState extends State<FavoritesDetailsSwiped> {
       int? currentIndex,
       CardSwiperDirection direction,
       ) {
+
+    if (direction == CardSwiperDirection.right && widget.index == 0) {
+      Styles.showGlobalSnackbarMessage("Can't swipe left. You're at the first favorite.");
+      return false;
+    }
+
+    if (direction == CardSwiperDirection.left && widget.index == widget.favorites.length - 1) {
+      Styles.showGlobalSnackbarMessage("Can't swipe right. You're at the last favorite.");
+      return false;
+    }
+
     if (direction == CardSwiperDirection.left) {
       if (widget.index < widget.favorites.length - 1) {
         setState(() {
