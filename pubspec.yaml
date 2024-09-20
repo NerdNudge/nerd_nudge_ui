@@ -1,9 +1,9 @@
 name: nerd_nudge
-description: "A new Flutter project."
+description: "A new way of learning and retaining what is learnt. Master Tech Concepts. Retain What Matters."
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.4+5
+version: 1.0.5+8
 
 environment:
   sdk: '>=3.4.4 <4.0.0'

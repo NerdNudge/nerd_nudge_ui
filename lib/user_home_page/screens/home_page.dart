@@ -185,8 +185,7 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 20),
 
                     _buildSectionTitle('Quote of the day'),
-                    Styles.buildQuoteCard(
-                        context, quoteOfTheDay, quoteAuthor, quoteId),
+                    buildQuoteCard(context, quoteOfTheDay, quoteAuthor, quoteId),
                     _getPurpleDivider(),
                     const SizedBox(height: 20),
                     _buildNumPeopleCard(userHomeStats),
@@ -197,6 +196,98 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         PaywallPanel.getSlidingPanel(context, _panelController, 'Home'),
+      ],
+    );
+  }
+
+  static IconData homeFavoriteQuoteDefault = Icons.favorite_border;
+
+  Widget buildQuoteCard(BuildContext context, String quoteOfTheDay,
+      String author, String quoteId) {
+    final GlobalKey repaintBoundaryKey = GlobalKey();
+
+    return Column(
+      children: [
+        RepaintBoundary(
+          key: repaintBoundaryKey, // Assign the key to the RepaintBoundary
+          child: Card(
+            color: CustomColors.purpleButtonColor,
+            margin:
+            const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          quoteOfTheDay,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          homeFavoriteQuoteDefault,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          print('Marked as favorite');
+                          setState(() {
+                            homeFavoriteQuoteDefault = Icons.favorite_outlined;
+                          });
+                          Styles.showGlobalSnackbarMessage('Quote Marked As Favorite.');
+                          Styles.favoriteQuoteSubmission(quoteId, true);
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      '~ $author',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        ElevatedButton(
+          onPressed: () {
+            Styles.shareCardContent(repaintBoundaryKey);
+          },
+          style: ElevatedButton.styleFrom(
+            foregroundColor: CustomColors.purpleButtonColor,
+            backgroundColor: Colors.white, // Text color
+            minimumSize: const Size(300, 10),
+            padding:
+            const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          child: Text(
+            'SHARE',
+            style: TextStyle(
+              color: CustomColors.purpleButtonColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
       ],
     );
   }

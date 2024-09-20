@@ -57,7 +57,7 @@ class PaywallPanel {
                       color: Colors.white54),
                 ),
               ),
-              Styles.getSizedHeightBox(14),
+              Styles.getSizedHeightBox(4),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
                 child: Text(
@@ -66,7 +66,7 @@ class PaywallPanel {
                   style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
-                      color: Colors.white70,
+                      color: Colors.white54,
                       height: 1.5),
                 ),
               ),

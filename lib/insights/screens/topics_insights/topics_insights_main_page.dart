@@ -164,7 +164,7 @@ class _TopicsInsightsState extends State<TopicsInsights> {
                 setState(() {
                   TopicsInsights.selectedTopic = option;
                   String? topicCode = TopicsInsights.topicNamesToCodesMap[option];
-                  int topicRank = widget.userInsights['rankings'][topicCode];
+                  int topicRank = widget.userInsights['rankings']?[topicCode] ?? 0;
                   print('Topic rank: $topicRank');
                   _currentTopicScreen = TopicSummaryInsights.getSelectedTopicSummary(context, TopicsInsights.summaryToDisplay[topicCode], TopicsInsights.selectedTopic, topicsDrillDown, getPeerComparison, closeButtonToTopicInsightsMainPage, topicRank);
                 });
@@ -230,7 +230,7 @@ class _TopicsInsightsState extends State<TopicsInsights> {
     print('Close button clicked.');
     setState(() {
       String? topicCode = TopicsInsights.topicNamesToCodesMap[TopicsInsights.selectedTopic];
-      int topicRank = widget.userInsights['rankings'][topicCode];
+      int topicRank = widget.userInsights['rankings']?[topicCode] ?? 0;
       print('Topic rank: $topicRank');
       _currentTopicScreen = TopicSummaryInsights.getSelectedTopicSummary(context, TopicsInsights.summaryToDisplay[topicCode], TopicsInsights.selectedTopic, topicsDrillDown, getPeerComparison, closeButtonToTopicInsightsMainPage, topicRank);
     });

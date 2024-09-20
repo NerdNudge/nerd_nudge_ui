@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:nerd_nudge/menus/services/user_profile_service/user_profile_service.dart';
 import 'package:nerd_nudge/subscriptions/screens/paywall_panel_screen.dart';
 import 'package:nerd_nudge/user_profile/dto/user_profile_entity.dart';
+import 'package:nerd_nudge/utilities/api_end_points.dart';
 import '../../../../utilities/colors.dart';
 import '../../../../utilities/styles.dart';
 import '../../../bottom_menus/screens/bottom_menu_options.dart';
@@ -128,39 +129,14 @@ class _ProfilePageState extends State<ProfilePage> {
     return Column(
       children: [
         Text(
-          'Nerd Nudge Pro',
+          PurchaseAPI.userCurrentOffering,
           style: const TextStyle(
               color: Colors.white54, fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         ElevatedButton(
           onPressed: () async {
-            try {
-              if (Platform.isAndroid) {
-                // Redirect to Google Play Store subscription management page
-                const url =
-                    'https://play.google.com/store/account/subscriptions';
-                if (await canLaunch(url)) {
-                  await launch(url);
-                } else {
-                  throw 'Could not launch $url';
-                }
-              } else if (Platform.isIOS) {
-                // Redirect to iOS subscription management page
-                const url = 'https://apps.apple.com/account/subscriptions';
-                if (await canLaunch(url)) {
-                  await launch(url);
-                } else {
-                  throw 'Could not launch $url';
-                }
-              }
-              PurchaseAPI.updateNerdNudgeOfferings();
-              PurchaseAPI.updateCurrentOffer();
-            } catch (e) {
-              print('Error opening subscription management page: $e');
-              Styles.showGlobalSnackbarMessage(
-                  'Unable to open subscription management page.');
-            }
+            _cancelSubscription();
           },
           style: ElevatedButton.styleFrom(
               backgroundColor: CustomColors.mainThemeColor),
@@ -168,6 +144,29 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ],
     );
+  }
+
+  _cancelSubscription() async {
+    try {
+      String url = '';
+      if (Platform.isAndroid) {
+        url = APIEndpoints.ANDROID_SUBSCRIPTIONS_URL;
+      } else if (Platform.isIOS) {
+        url = APIEndpoints.IOS_SUBSCRIPTIONS_URL;
+      }
+
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+        throw 'Could not launch $url';
+      }
+      PurchaseAPI.updateNerdNudgeOfferings();
+      PurchaseAPI.updateCurrentOffer();
+    } catch (e) {
+      print('Error opening subscription management page: $e');
+      Styles.showGlobalSnackbarMessage(
+          'Unable to open subscription management page.');
+    }
   }
 
   _displayFreemiumAccountDetails() {
@@ -187,7 +186,7 @@ class _ProfilePageState extends State<ProfilePage> {
             if (offerings == null || offerings.isEmpty) {
               Styles.showGlobalSnackbarMessage('No Offers found!');
             } else {
-              _panelController.open(); // Open the sliding panel
+              _panelController.open();
             }
           },
           child: const Text('Upgrade Account',
@@ -328,31 +327,35 @@ class _ProfilePageState extends State<ProfilePage> {
     if (user != null) {
       final String? userEmail = user.email;
 
-      // Confirm the user before proceeding
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Delete Account'),
-            content: const Text(
-                'Are you sure you want to permanently delete your account? This action cannot be undone.'),
+            content: const Text('Are you sure you want to permanently delete your account? This action cannot be undone.'),
             actions: [
               TextButton(
                 onPressed: () async {
-                  bool result = await UserProfileService()
-                      .callDeleteAccountAPI(userEmail!);
+                  try {
+                    await _reauthenticateUser(user);
 
-                  if (result) {
-                    await _auth.currentUser?.delete();
+                    bool result = await UserProfileService().callDeleteAccountAPI(userEmail!);
+
+                    if (result) {
+                      await _auth.currentUser?.delete();
+                      Navigator.pop(context);
+                      _showMessageDialog(context, 'Success', 'Your account has been deleted.');
+                      Styles.showGlobalSnackbarMessage('Your account has been deleted.');
+                      Navigator.pushNamedAndRemoveUntil(context, '/startpage', (route) => false);
+                    } else {
+                      Navigator.pop(context);
+                      _showMessageDialog(context, 'Error',
+                          'Failed to delete your account. Please try again.');
+                    }
+                  } catch (e) {
                     Navigator.pop(context);
                     _showMessageDialog(
-                        context, 'Success', 'Your account has been deleted.');
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, '/startpage', (route) => false);
-                  } else {
-                    Navigator.pop(context);
-                    _showMessageDialog(context, 'Error',
-                        'Failed to delete your account. Please try again.');
+                        context, 'Error', 'Re-authentication failed: $e');
                   }
                 },
                 child: const Text('Yes, Delete'),
@@ -370,5 +373,55 @@ class _ProfilePageState extends State<ProfilePage> {
     } else {
       _showMessageDialog(context, 'Error', 'No user is logged in.');
     }
+  }
+
+  Future<void> _reauthenticateUser(User user) async {
+    try {
+      AuthCredential credential = EmailAuthProvider.credential(
+        email: user.email!,
+        password: await _getPasswordFromUser(context),
+      );
+
+      await user.reauthenticateWithCredential(credential);
+    } catch (e) {
+      throw 'Re-authentication failed: $e';
+    }
+  }
+
+  Future<String> _getPasswordFromUser(BuildContext context) async {
+    String? password = await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        final TextEditingController passwordController =
+            TextEditingController();
+        return AlertDialog(
+          title: const Text('Re-authentication Required'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('Please enter your password to continue.'),
+              TextField(
+                controller: passwordController,
+                obscureText: true,
+                decoration: const InputDecoration(labelText: 'Password'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(passwordController.text);
+              },
+              child: const Text('Submit'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (password == null || password.isEmpty) {
+      throw 'Password is required to proceed.';
+    }
+    return password;
   }
 }
