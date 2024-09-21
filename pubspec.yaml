@@ -3,7 +3,7 @@ description: "A new way of learning and retaining what is learnt. Master Tech Co
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.5+8
+version: 1.0.5+13
 
 environment:
   sdk: '>=3.4.4 <4.0.0'
@@ -53,10 +53,12 @@ flutter:
     - images/
 
 
-flutter_icons:
-  android: true
-  ios: true
-  image_path: "images/NN_icon_2.png"
+#flutter_icons:
+#  android: true
+#  ios: true
+#  image_path: "images/app_logo_black_bg_1024.jpg"
+#  adaptive_icon_background: "#000000"
+#  adaptive_icon_foreground: "images/app_logo_black_bg_1024.png"
 
 
 flutter_launcher_icons:
@@ -65,3 +67,5 @@ flutter_launcher_icons:
   image_path: "images/app_logo_black_bg_1024.jpg"
   min_sdk_android: 21
   remove_alpha_ios: true
+  adaptive_icon_background: "#000000"
+  adaptive_icon_foreground: "images/app_logo_black_bg_1024.png"
