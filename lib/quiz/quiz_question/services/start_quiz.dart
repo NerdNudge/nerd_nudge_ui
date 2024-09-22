@@ -102,7 +102,7 @@ class _QuizServiceState extends State<QuizService> {
     } else {
       _quizSubmitted = false;
       print('Last shown Quiz count: ${NerdAdManager.lastShownQuizCount}, Quiz count today: ${UserHomeStats().getUserQuizCountToday()}');
-      if (NerdAdManager.lastShownQuizCount != UserHomeStats().getUserQuizCountToday() &&
+      if (UserHomeStats().getUserAccountType() == Constants.FREEMIUM && NerdAdManager.lastShownQuizCount != UserHomeStats().getUserQuizCountToday() &&
           UserHomeStats().adsFrequencyQuizFlex != 0 &&
           (UserHomeStats().getUserQuizCountToday() % UserHomeStats().adsFrequencyQuizFlex == 0)) {
         NerdAdManager.lastShownQuizCount = UserHomeStats().getUserQuizCountToday();

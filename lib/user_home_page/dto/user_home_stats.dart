@@ -60,6 +60,8 @@ class UserHomeStats {
     instance._numPeopleUsedNerdNudge = jsonData['numPeopleUsedNerdNudgeToday'] ?? 0;
     instance._adsFrequencyQuizFlex = jsonData['adsFrequencyQuizFlex'] ?? 7;
     instance._adsFrequencyShots = jsonData['adsFrequencyShots'] ?? 7;
+
+    // Adjust quiz and shots quota based on account type
     instance._quizflexQuota = (instance._accountType == Constants.FREEMIUM) ? jsonData['quizflexQuota'] ?? 12 : 10000;
     instance._shotsQuota = (instance._accountType == Constants.FREEMIUM) ? jsonData['shotsQuota'] ?? 15 : 10000;
 

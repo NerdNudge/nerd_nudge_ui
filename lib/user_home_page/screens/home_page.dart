@@ -185,7 +185,8 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 20),
 
                     _buildSectionTitle('Quote of the day'),
-                    buildQuoteCard(context, quoteOfTheDay, quoteAuthor, quoteId),
+                    buildQuoteCard(
+                        context, quoteOfTheDay, quoteAuthor, quoteId),
                     _getPurpleDivider(),
                     const SizedBox(height: 20),
                     _buildNumPeopleCard(userHomeStats),
@@ -213,7 +214,7 @@ class _HomePageState extends State<HomePage> {
           child: Card(
             color: CustomColors.purpleButtonColor,
             margin:
-            const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -241,7 +242,8 @@ class _HomePageState extends State<HomePage> {
                           setState(() {
                             homeFavoriteQuoteDefault = Icons.favorite_outlined;
                           });
-                          Styles.showGlobalSnackbarMessage('Quote Marked As Favorite.');
+                          Styles.showGlobalSnackbarMessage(
+                              'Quote Marked As Favorite.');
                           Styles.favoriteQuoteSubmission(quoteId, true);
                         },
                       ),
@@ -274,7 +276,7 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: Colors.white, // Text color
             minimumSize: const Size(300, 10),
             padding:
-            const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
@@ -374,8 +376,8 @@ class _HomePageState extends State<HomePage> {
           ),
           const SizedBox(height: 20.0),
           if (PurchaseAPI.userCurrentOffering == Constants.FREEMIUM)
-            Styles.buildNextActionButtonWithPaywall(context, 'UPGRADE', 0, _panelController),
-            //Styles.buildNextActionButton(context, 'UPGRADE', 0, SubscriptionPageTabsBased()),
+            Styles.buildNextActionButtonWithPaywall(
+                context, 'UPGRADE', 0, _panelController),
         ],
       ),
     );

@@ -320,13 +320,19 @@ class Styles {
       alignment: Alignment.center,
       child: ElevatedButton(
         onPressed: () async {
-          final List<Offering> offerings = PurchaseAPI.offerings;
-          print('Offerings: $offerings');
+          try {
+            final List<Offering> offerings = PurchaseAPI.offerings;
+            print('Offerings: $offerings');
 
-          if (offerings.isEmpty) {
-            Styles.showGlobalSnackbarMessage('No Offers found!');
-          } else {
-            panelController.open(); // Open the sliding panel
+            if (offerings.isEmpty) {
+              Styles.showGlobalSnackbarMessage('No Offers found!');
+            } else {
+              panelController.open(); // Open the sliding panel if offers are found
+            }
+          } catch (e) {
+            // Handle errors
+            print('Error fetching offerings: $e');
+            Styles.showGlobalSnackbarMessage('Failed to fetch offers, please try again later.');
           }
         },
         style: ElevatedButton.styleFrom(
@@ -337,7 +343,10 @@ class Styles {
             borderRadius: BorderRadius.circular(8.0),
           ),
         ),
-        child: Text('UPGRADE', style: TextStyle(color: CustomColors.purpleButtonColor, fontWeight: FontWeight.bold)),
+        child: Text(
+          textMessage,
+          style: TextStyle(color: CustomColors.purpleButtonColor, fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }

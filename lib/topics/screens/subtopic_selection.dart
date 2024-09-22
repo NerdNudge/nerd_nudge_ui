@@ -9,7 +9,14 @@ import '../../subscriptions/screens/paywall_panel_screen.dart';
 import '../services/topics_service.dart';
 
 class SubtopicSelectionPage extends StatefulWidget {
-  SubtopicSelectionPage({super.key, required this.title, required this.showShotsOrQuiz, required this.isPaywallOpen, required this.page});
+  SubtopicSelectionPage({
+    super.key,
+    required this.title,
+    required this.showShotsOrQuiz,
+    required this.isPaywallOpen,
+    required this.page,
+  });
+
   final String title;
   final Function showShotsOrQuiz;
   bool isPaywallOpen;
@@ -42,7 +49,7 @@ class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
   @override
   void initState() {
     super.initState();
-    _getSubtopics();  // Load subtopics when the widget is initialized
+    _getSubtopics(); // Load subtopics when the widget is initialized
   }
 
   @override
@@ -53,9 +60,9 @@ class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_panelController.isAttached) {
         if (widget.isPaywallOpen) {
-          _panelController.open(); // Open paywall
+          _panelController.open(); // Open the paywall if still mounted
         } else {
-          _panelController.close(); // Close paywall
+          _panelController.close(); // Close the panel if still mounted
         }
       }
     });
@@ -73,11 +80,11 @@ class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
 
   Widget _getBody() {
     if (isLoading) {
-      return Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (subtopics.isEmpty) {
-      return Center(child: Text('No subtopics available.'));
+      return const Center(child: Text('No subtopics available.'));
     }
 
     List<String> keys = subtopics.map((e) => e['name'] ?? 'Unnamed').toList();
@@ -166,8 +173,8 @@ class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
                                     ),
                                     ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: Color(0xFF6A69EB),
-                                        minimumSize: Size(15, 35),
+                                        backgroundColor: const Color(0xFF6A69EB),
+                                        minimumSize: const Size(15, 35),
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(12),
                                         ),

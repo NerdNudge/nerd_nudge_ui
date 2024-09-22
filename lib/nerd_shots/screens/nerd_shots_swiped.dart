@@ -74,7 +74,12 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => SubtopicSelectionPage(title: TopicSelection.selectedTopic, showShotsOrQuiz: startShots, isPaywallOpen: true, page: 'Shots',),
+            builder: (context) => SubtopicSelectionPage(
+              title: TopicSelection.selectedTopic,
+              showShotsOrQuiz: startShots,
+              isPaywallOpen: true,
+              page: 'Shots',
+            ),
           ),
         );
       });
@@ -86,7 +91,8 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
   }
 
   startShots() {
-    Styles.showGlobalSnackbarMessageAndIcon('Swipe Right for the next shot!', Icons.swipe, Colors.black);
+    Styles.showGlobalSnackbarMessageAndIcon(
+        'Swipe Right for the next shot!', Icons.swipe, Colors.black);
     print('Start Shots home');
     Navigator.push(
       context,
@@ -168,8 +174,7 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
   bool _shotsSubmitted = false;
 
   Widget? _getNextShot() {
-    print(
-        'index: $_currentIndex, shots count: ${UserHomeStats().getUserShotsCountToday()}, ${_shotsUserActivityAPIEntity.isShotsEmpty()}');
+    print('index: $_currentIndex, shots count: ${UserHomeStats().getUserShotsCountToday()}, ${_shotsUserActivityAPIEntity.isShotsEmpty()}');
 
     if (UserHomeStats().hasUserExhaustedNerdShots()) {
       if (!_shotsSubmitted && !_shotsUserActivityAPIEntity.isShotsEmpty()) {
@@ -178,42 +183,48 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
         _shotsUserActivityAPIEntity.clear();
         _shotsSubmitted = true; // Set the flag to true after submission
       }
+
       if (UserHomeStats().getUserAccountType() == Constants.FREEMIUM) {
         print('Freemium user.');
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => SubtopicSelectionPage(title: TopicSelection.selectedTopic, showShotsOrQuiz: startShots, isPaywallOpen: true, page: 'Shots'),
-            ),
-          );
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SubtopicSelectionPage(
+                  title: TopicSelection.selectedTopic,
+                  showShotsOrQuiz: startShots,
+                  isPaywallOpen: true,
+                  page: 'Shots',
+                ),
+              ),
+            );
         });
       }
       return null;
     } else {
       _shotsSubmitted = false;
-      print(
-          'Last shown Quiz count: ${NerdAdManager.lastShownShotsCount}, Quiz count today: ${UserHomeStats().getUserShotsCountToday()}');
-      if (NerdAdManager.lastShownShotsCount !=
-              UserHomeStats().getUserShotsCountToday() &&
+      print('Last shown Quiz count: ${NerdAdManager.lastShownShotsCount}, Quiz count today: ${UserHomeStats().getUserShotsCountToday()}');
+
+      // Handle ad logic safely
+      if (UserHomeStats().getUserAccountType() == Constants.FREEMIUM &&
+          NerdAdManager.lastShownShotsCount != UserHomeStats().getUserShotsCountToday() &&
           UserHomeStats().adsFrequencyShots != 0 &&
-          (UserHomeStats().getUserShotsCountToday() %
-                  UserHomeStats().adsFrequencyShots ==
-              0)) {
-        NerdAdManager.lastShownShotsCount =
-            UserHomeStats().getUserShotsCountToday();
+          (UserHomeStats().getUserShotsCountToday() % UserHomeStats().adsFrequencyShots == 0)) {
+        NerdAdManager.lastShownShotsCount = UserHomeStats().getUserShotsCountToday();
         return Container(
           height: 300,
           child: NerdAdManager(
             onAdClosed: () {
-              setState(() {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => NerdShotsSwiped(),
-                  ),
-                );
-              });
+              if (mounted) {
+                setState(() {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NerdShotsSwiped(),
+                    ),
+                  );
+                });
+              }
             },
           ),
         );

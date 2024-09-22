@@ -127,22 +127,22 @@ class _ProfilePageState extends State<ProfilePage> {
 
   _displayNerdNudgeProAccountDetails() {
     return Column(
-      children: [
-        Text(
-          PurchaseAPI.userCurrentOffering,
-          style: const TextStyle(
-              color: Colors.white54, fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        ElevatedButton(
-          onPressed: () async {
-            _cancelSubscription();
-          },
-          style: ElevatedButton.styleFrom(
-              backgroundColor: CustomColors.mainThemeColor),
-          child: const Text('Cancel Subscription'),
-        ),
-      ],
+        children: [
+          Text(
+            PurchaseAPI.userCurrentOffering,
+            style: const TextStyle(
+                color: Colors.white54, fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          ElevatedButton(
+            onPressed: () async {
+              _cancelSubscription();
+            },
+            style: ElevatedButton.styleFrom(
+                backgroundColor: CustomColors.mainThemeColor),
+            child: const Text('Cancel Subscription'),
+          ),
+        ],
     );
   }
 
@@ -172,10 +172,13 @@ class _ProfilePageState extends State<ProfilePage> {
   _displayFreemiumAccountDetails() {
     return Column(
       children: [
-        Text(
+        const Text(
           'Freemium User',
-          style: const TextStyle(
-              color: Colors.white54, fontSize: 16, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Colors.white54,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 8),
         ElevatedButton(
@@ -189,8 +192,10 @@ class _ProfilePageState extends State<ProfilePage> {
               _panelController.open();
             }
           },
-          child: const Text('Upgrade Account',
-              style: TextStyle(color: Colors.white70)),
+          child: const Text(
+            'Upgrade Account',
+            style: TextStyle(color: Colors.white70),
+          ),
           style: ElevatedButton.styleFrom(backgroundColor: Colors.black54),
         ),
       ],
