@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:nerd_nudge/explore_menu/screens/explore_home_page.dart';
+import 'package:nerd_nudge/menus/screens/favorites/favorites_main_page.dart';
 
 import '../../quiz/home/screens/quiz_home_page.dart';
 import '../../user_home_page/screens/home_page.dart';
@@ -35,10 +37,12 @@ class _BottomMenuState extends State<BottomMenu> {
       },
       items: [
         getBottomNavigationMenu(Icons.home, 'Home'),
-        getBottomNavigationMenu(Icons.school_rounded, 'Quiz'),
-        getBottomNavigationMenu(Icons.lightbulb, 'Shots'),
-        getBottomNavigationMenu(Icons.emoji_events, 'Challenges'),
+        getBottomNavigationMenu(Icons.explore, 'Explore'),
+        //getBottomNavigationMenu(Icons.school_rounded, 'Quiz'),
+        //getBottomNavigationMenu(Icons.lightbulb, 'Shots'),
+        //getBottomNavigationMenu(Icons.emoji_events, 'Challenges'),
         getBottomNavigationMenu(Icons.equalizer, 'Insights'),
+        getBottomNavigationMenu(Icons.favorite_rounded, 'Favorites'),
         //getBottomNavigationMenu(Icons.person, 'Profile'),
       ],
     );
@@ -56,13 +60,13 @@ class _BottomMenuState extends State<BottomMenu> {
         navigateScreen = HomePage(userFullName: userProfileEntity.getUserFullName(), userEmail: userProfileEntity.getUserEmail(),);
         break;
       case 1:
-        navigateScreen = QuizHomePage();
+        navigateScreen = ExplorePage();
         break;
       case 2:
-        navigateScreen = NerdShotsHome();
+        navigateScreen = UserInsights();
         break;
       case 3:
-        navigateScreen = ChallengesPage();
+        navigateScreen = Favorites();
         break;
       /*case 4:
         navigateScreen = ProfileHome();

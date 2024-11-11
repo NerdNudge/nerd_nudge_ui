@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:nerd_nudge/topics/screens/topic_selection_home_page.dart';
 import 'package:nerd_nudge/utilities/styles.dart';
 
-import '../../quiz_question/screens/question_body.dart';
-import '../../quiz_question/screens/question_header.dart';
+import '../../../bottom_menus/screens/bottom_menu_options.dart';
+import '../../../menus/screens/menu_options.dart';
+import '../../quiz_question/screens/realworld_challenge_body.dart';
+import '../../quiz_question/screens/realworld_challenge_header.dart';
 import 'answers_page_actions.dart';
 import 'answers_stats.dart';
 
@@ -38,7 +40,7 @@ class AnswerScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Container(
-            child: QuestionHeader(
+            child: RealworldChallengeHeader(
               topic: TopicSelection.selectedTopic,
               subtopic: TopicSelection.selectedSubtopic,
               difficultyLevel: completeQuiz['difficulty_level'],
@@ -49,27 +51,32 @@ class AnswerScreen extends StatelessWidget {
             width: double.infinity, // Width of the horizontal bar
             color: Color(0xFF252d3c),
           ),
-          Styles.getSizedHeightBox(15.0),
+          SizedBox(
+            height: 15.0,
+          ),
           _getTimerEndedInfo(didTimerEnd),
           Container(
-            child: QuestionContainer(
+            child: RealworldChallengeContainer(
               questionText: completeQuiz['question'],
             ),
           ),
-          Styles.getSizedHeightBox(15.0),
+          SizedBox(
+            height: 15.0,
+          ),
           Container(
             child: AnswerWithStats(
               completeQuiz: completeQuiz,
               didTimerEnd: didTimerEnd,
             ),
           ),
-          Styles.getSizedHeightBox(15.0),
+          SizedBox(
+            height: 15.0,
+          ),
           Container(
             child: AnswersPageActionButtons(
               completeQuiz: completeQuiz,
             ),
           ),
-          Styles.getSizedHeightBox(30.0),
         ],
       ),
     );

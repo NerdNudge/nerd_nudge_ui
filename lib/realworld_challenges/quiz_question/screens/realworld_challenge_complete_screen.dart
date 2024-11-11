@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:nerd_nudge/quiz/quiz_question/screens/question_actions.dart';
-import 'package:nerd_nudge/quiz/quiz_question/screens/question_body.dart';
-import 'package:nerd_nudge/quiz/quiz_question/screens/question_header.dart';
-import 'package:nerd_nudge/quiz/quiz_question/screens/question_options_body.dart';
-import 'package:nerd_nudge/quiz/quiz_question/screens/question_timer_body.dart';
-import 'package:nerd_nudge/topics/screens/topic_selection_home_page.dart';
+import 'package:nerd_nudge/realworld_challenges/quiz_question/screens/realworld_challenge_actions.dart';
+import 'package:nerd_nudge/realworld_challenges/quiz_question/screens/realworld_challenge_body.dart';
+import 'package:nerd_nudge/realworld_challenges/quiz_question/screens/realworld_challenge_header.dart';
+import 'package:nerd_nudge/realworld_challenges/quiz_question/screens/realworld_challenge_options_body.dart';
+import 'package:nerd_nudge/realworld_challenges/quiz_question/screens/realworld_challenge_timer_body.dart';
+import 'package:nerd_nudge/topics/screens/explore_topic_selection_home_page.dart';
 import 'package:nerd_nudge/utilities/styles.dart';
 
 import '../../../user_home_page/dto/user_home_stats.dart';
 
-class QuestionScreen extends StatelessWidget {
-  QuestionScreen({super.key, required this.completeQuiz});
+class RealWorldChallengeScreen extends StatelessWidget {
+  RealWorldChallengeScreen({super.key, required this.completeQuiz});
 
   final completeQuiz;
 
@@ -37,30 +37,30 @@ class QuestionScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Container(
-                  child: QuestionHeader(
-                    topic: TopicSelection.selectedTopic,
+                  child: RealworldChallengeHeader(
+                    topic: ExploreTopicSelection.selectedTopic,
                     subtopic: completeQuiz['sub_topic'],
                     difficultyLevel: completeQuiz['difficulty_level'],
                   ),
                 ),
                 Container(
-                  child: QuestionTimer(completeQuiz: completeQuiz,),
+                  child: RealworldChallengeTimer(completeQuiz: completeQuiz,),
                 ),
                 Styles.getSizedHeightBox(15),
                 Container(
-                  child: QuestionContainer(
+                  child: RealworldChallengeContainer(
                     questionText: completeQuiz['question'],
                   ),
                 ),
                 Styles.getSizedHeightBox(15),
                 Container(
-                  child: PossibleAnswersContainer(
+                  child: RealworldChallengePossibleAnswersContainer(
                     completeQuiz: completeQuiz,
                   ),
                 ),
                 Styles.getSizedHeightBox(15),
                 Container(
-                  child: QuestionActionButtons(
+                  child: RealworldChallengeActionButtons(
                     completeQuiz: completeQuiz,
                   ),
                 ),

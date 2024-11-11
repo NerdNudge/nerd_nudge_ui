@@ -366,8 +366,8 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildStatsRow(
-                      'Quizzes Remaining',
-                      'Shots Remaining',
+                      'Quizzes',
+                      'Shots',
                       _getTotalQuizflexQuota(userHomeStats),
                       _getTotalShotsQuota(userHomeStats)),
                 ],
@@ -410,7 +410,7 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   _buildStatsRow(
                       'Total Quizzes',
-                      'Percentage Correct',
+                      '% Correct',
                       userHomeStats.getTotalQuizzesAttempted().toString(),
                       '${userHomeStats.getTotalPercentageCorrect().toString()} %'),
                 ],
@@ -427,8 +427,8 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildStatsRow(
-                      'Highest in a Day',
-                      'Highest Correct in a Day',
+                      'Max in Day',
+                      'Max Correct',
                       userHomeStats.getHighestInADay().toString(),
                       userHomeStats.getHighestCorrectInADay().toString()),
                 ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../utilities/colors.dart';
 import '../../../utilities/quiz_topics.dart';
+import '../../../utilities/styles.dart';
 
 class ChallengeUtils {
   static _getChallengeCardBoxDecoration() {
@@ -35,6 +36,57 @@ class ChallengeUtils {
     );
   }
 
+
+  static getRealWorldChallengeCard({
+    required String message,
+    required IconData icon,
+    required int members,
+    required int numQuestions,
+    required int time,
+    required Function onTap,
+  }) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+      padding: EdgeInsets.all(10.0),
+      decoration: _getChallengeCardBoxDecoration(),
+      child: GestureDetector(
+        onTap: () => onTap(),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, color: CustomColors.purpleButtonColor, size: 40.0),
+            Styles.getSizedHeightBox(18),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        message,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: CustomColors.purpleButtonColor,
+                        ),
+                      ),
+                      _getCardRow(members.toString(), Icons.group),
+                    ],
+                  ),
+                  Styles.getSizedHeightBox(10),
+                  _getCardRow('Questions: $numQuestions', Icons.format_list_numbered),
+                  Styles.getSizedHeightBox(5),
+                  _getCardRow('Time: $time minutes', Icons.timer),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   static getChallengeCard({
     required String message,

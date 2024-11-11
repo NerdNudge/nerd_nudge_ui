@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nerd_nudge/quiz/quiz_answers/screens/answers_page_actions.dart';
 import 'package:nerd_nudge/quiz/quiz_answers/screens/read_more.dart';
 import 'package:nerd_nudge/quiz/quiz_question/services/nerd_quizflex_service.dart';
+import 'package:nerd_nudge/topics/screens/explore_topic_selection_home_page.dart';
 import 'package:nerd_nudge/topics/screens/topic_selection_home_page.dart';
 import 'package:nerd_nudge/ads_manager/ads_manager.dart';
 
@@ -41,7 +42,7 @@ class _QuizServiceState extends State<QuizService> {
   @override
   Widget build(BuildContext context) {
     int l = _currentQuizzes.length;
-    print('lenth of current quizzes: $l');
+    print('length of current quizzes: $l');
     var nextQuiz = _getNextQuiz();
     if (nextQuiz == null) {
       return Scaffold(
@@ -93,7 +94,7 @@ class _QuizServiceState extends State<QuizService> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => SubtopicSelectionPage(title: TopicSelection.selectedTopic, showShotsOrQuiz: startQuiz, isPaywallOpen: true, page: 'Quizflex'),
+              builder: (context) => SubtopicSelectionPage(title: ExploreTopicSelection.selectedTopic, showShotsOrQuiz: startQuiz, isPaywallOpen: true, page: 'Quizflex'),
             ),
           );
         });
@@ -151,7 +152,7 @@ class _QuizServiceState extends State<QuizService> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => SubtopicSelectionPage(title: TopicSelection.selectedTopic, showShotsOrQuiz: startQuiz, isPaywallOpen: true, page: 'Quizflex'),
+            builder: (context) => SubtopicSelectionPage(title: ExploreTopicSelection.selectedTopic, showShotsOrQuiz: startQuiz, isPaywallOpen: true, page: 'Quizflex'),
           ),
         );
       });
@@ -176,7 +177,7 @@ class _QuizServiceState extends State<QuizService> {
     } else {
       print('Fetching the next quizzes set.');
       var nextQuestions = await NerdQuizflexService().getNextQuizflexes(
-          TopicSelection.selectedTopic, TopicSelection.selectedSubtopic, 10);
+          ExploreTopicSelection.selectedTopic, ExploreTopicSelection.selectedSubtopic, 10);
       print('Fetched Quizzes: $nextQuestions');
       return nextQuestions['data'] ?? [];
     }

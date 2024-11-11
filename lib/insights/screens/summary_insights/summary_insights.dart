@@ -135,7 +135,7 @@ class _SummaryInsightsState extends State<SummaryInsights> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
-              'Click For Details: ',
+              'Details: ',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 14,

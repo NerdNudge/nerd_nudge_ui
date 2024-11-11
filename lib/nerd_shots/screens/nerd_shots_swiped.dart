@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:nerd_nudge/nerd_shots/services/nerd_shots_service.dart';
+import 'package:nerd_nudge/topics/screens/explore_topic_selection_home_page.dart';
 import 'package:nerd_nudge/topics/screens/topic_selection_home_page.dart';
 import 'package:nerd_nudge/utilities/constants.dart';
 
@@ -75,7 +76,7 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
           context,
           MaterialPageRoute(
             builder: (context) => SubtopicSelectionPage(
-              title: TopicSelection.selectedTopic,
+              title: ExploreTopicSelection.selectedTopic,
               showShotsOrQuiz: startShots,
               isPaywallOpen: true,
               page: 'Shots',
@@ -108,7 +109,7 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
       return [];
     } else {
       var nextQuestions = await NerdShotsService().getNextQuizflexes(
-          TopicSelection.selectedTopic, TopicSelection.selectedSubtopic, 10);
+          ExploreTopicSelection.selectedTopic, ExploreTopicSelection.selectedSubtopic, 10);
       print('$nextQuestions');
       return nextQuestions['data'];
     }
@@ -191,7 +192,7 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
               context,
               MaterialPageRoute(
                 builder: (context) => SubtopicSelectionPage(
-                  title: TopicSelection.selectedTopic,
+                  title: ExploreTopicSelection.selectedTopic,
                   showShotsOrQuiz: startShots,
                   isPaywallOpen: true,
                   page: 'Shots',

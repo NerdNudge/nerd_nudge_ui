@@ -294,35 +294,15 @@ class _ProfilePageState extends State<ProfilePage> {
     if (email != null && email.isNotEmpty) {
       try {
         await _auth.sendPasswordResetEmail(email: email);
-        _showMessageDialog(context, 'Password Reset',
+        Styles.showMessageDialog(context, 'Password Reset',
             'A password reset link has been sent to $email.');
       } catch (e) {
-        _showMessageDialog(context, 'Error',
+        Styles.showMessageDialog(context, 'Error',
             'Unable to send password reset email. Please try again.');
       }
     } else {
-      _showMessageDialog(context, 'Error', 'No email found for this user.');
+      Styles.showMessageDialog(context, 'Error', 'No email found for this user.');
     }
-  }
-
-  void _showMessageDialog(BuildContext context, String title, String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   void _deleteAccount(BuildContext context) async {
@@ -349,18 +329,17 @@ class _ProfilePageState extends State<ProfilePage> {
                     if (result) {
                       await _auth.currentUser?.delete();
                       Navigator.pop(context);
-                      _showMessageDialog(context, 'Success', 'Your account has been deleted.');
+                      Styles.showMessageDialog(context, 'Success', 'Your account has been deleted.');
                       Styles.showGlobalSnackbarMessage('Your account has been deleted.');
                       Navigator.pushNamedAndRemoveUntil(context, '/startpage', (route) => false);
                     } else {
                       Navigator.pop(context);
-                      _showMessageDialog(context, 'Error',
+                      Styles.showMessageDialog(context, 'Error',
                           'Failed to delete your account. Please try again.');
                     }
                   } catch (e) {
                     Navigator.pop(context);
-                    _showMessageDialog(
-                        context, 'Error', 'Re-authentication failed: $e');
+                    Styles.showMessageDialog(context, 'Error', 'Re-authentication failed: $e');
                   }
                 },
                 child: const Text('Yes, Delete'),
@@ -376,7 +355,7 @@ class _ProfilePageState extends State<ProfilePage> {
         },
       );
     } else {
-      _showMessageDialog(context, 'Error', 'No user is logged in.');
+      Styles.showMessageDialog(context, 'Error', 'No user is logged in.');
     }
   }
 

@@ -327,7 +327,7 @@ class Styles {
             if (offerings.isEmpty) {
               Styles.showGlobalSnackbarMessage('No Offers found!');
             } else {
-              panelController.open(); // Open the sliding panel if offers are found
+              panelController.open();
             }
           } catch (e) {
             // Handle errors
@@ -395,6 +395,15 @@ class Styles {
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
       ),
+      /*gradient: LinearGradient(
+        colors: [
+          Color(0xFFB19CD9), // Light purple shade
+          Color(0xFF8B70C4), // Medium purple shade
+          Color(0xFF7A4EB9), // Darker purple shade
+        ],
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+      ),*/
     );
   }
 
@@ -532,5 +541,25 @@ class Styles {
     } catch (e) {
       print('Error capturing screenshot: $e');
     }
+  }
+
+  static void showMessageDialog(BuildContext context, String title, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

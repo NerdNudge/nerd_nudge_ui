@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:nerd_nudge/topics/screens/explore_topic_selection_home_page.dart';
 import 'package:nerd_nudge/topics/screens/topic_selection_home_page.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
@@ -9,8 +8,8 @@ import '../../../menus/screens/menu_options.dart';
 import '../../subscriptions/screens/paywall_panel_screen.dart';
 import '../services/topics_service.dart';
 
-class SubtopicSelectionPage extends StatefulWidget {
-  SubtopicSelectionPage({
+class ExploreSubtopicSelectionPage extends StatefulWidget {
+  ExploreSubtopicSelectionPage({
     super.key,
     required this.title,
     required this.showShotsOrQuiz,
@@ -24,17 +23,17 @@ class SubtopicSelectionPage extends StatefulWidget {
   final String page;
 
   @override
-  State<SubtopicSelectionPage> createState() => _SubtopicSelectionPageState();
+  State<ExploreSubtopicSelectionPage> createState() => _ExploreSubtopicSelectionPageState();
 }
 
-class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
+class _ExploreSubtopicSelectionPageState extends State<ExploreSubtopicSelectionPage> {
   late List<Map<String, String>> subtopics = [];
   bool isLoading = true;
   final PanelController _panelController = PanelController();
 
   _getSubtopics() async {
     try {
-      final result = await TopicsService().getSubtopics(ExploreTopicSelection.selectedTopic);
+      final result = await TopicsService().getSubtopics(TopicSelection.selectedTopic);
       setState(() {
         subtopics = result;
         isLoading = false;
@@ -55,7 +54,7 @@ class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
 
   @override
   Widget build(BuildContext context) {
-    String topicsel = ExploreTopicSelection.selectedTopic;
+    String topicsel = TopicSelection.selectedTopic;
     print('Subtopics called for topic: $topicsel');
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -121,7 +120,7 @@ class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
                     onPressed: () {
                       setState(() {
                         if (keys.isNotEmpty) {
-                          ExploreTopicSelection.selectedSubtopic = 'Random';
+                          TopicSelection.selectedSubtopic = 'Random';
                         }
                       });
                       widget.showShotsOrQuiz();
@@ -182,8 +181,8 @@ class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
                                       ),
                                       onPressed: () {
                                         setState(() {
-                                          ExploreTopicSelection.selectedSubtopic = key;
-                                          String ts = ExploreTopicSelection.selectedTopic;
+                                          TopicSelection.selectedSubtopic = key;
+                                          String ts = TopicSelection.selectedTopic;
                                           print('Selected subtopic: $key for topic: $ts');
                                         });
                                         widget.showShotsOrQuiz();
