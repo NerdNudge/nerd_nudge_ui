@@ -6,7 +6,7 @@ import 'package:nerd_nudge/utilities/styles.dart';
 
 import '../../../user/rankings.dart';
 import '../../../user/scores.dart';
-import '../../quiz_answers/screens/answer_complete_screen.dart';
+import '../../quiz_answers/screens/realworld_challenge_answer_complete_screen.dart';
 
 class RealworldChallengeTimer extends StatelessWidget {
   const RealworldChallengeTimer({super.key, required this.completeQuiz});
@@ -30,7 +30,7 @@ class RealworldChallengeTimer extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => AnswerScreen(completeQuiz: completeQuiz, didTimerEnd: true, timeTaken: 10,),
+            builder: (context) => RealworldChallengeAnswerScreen(completeQuiz: completeQuiz, didTimerEnd: true, timeTaken: 10,),
           ),
         );
       },

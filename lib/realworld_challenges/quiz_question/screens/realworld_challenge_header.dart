@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nerd_nudge/realworld_challenges/quiz_question/services/start_realworld_challenge.dart';
 import 'package:nerd_nudge/utilities/styles.dart';
 
 class RealworldChallengeHeader extends StatelessWidget {
@@ -10,7 +11,6 @@ class RealworldChallengeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       children: <Widget>[
         SizedBox(
@@ -37,10 +37,10 @@ class RealworldChallengeHeader extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Expanded(
-                child: Styles.getTitleDescriptionWidget('Question: ', '3/10', Colors.black, Colors.green, 15, 16),
+                child: Styles.getTitleDescriptionWidget('Question: ', '${RealworldChallengeServiceMainPage.currentIndex}/${RealworldChallengeServiceMainPage.totalDailyQuiz}', Colors.black, Colors.green, 15, 16),
               ),
               Expanded(
-                child: Styles.getTitleDescriptionWidget('Score: ', '2/2', Colors.black, Colors.green, 15, 16),
+                child: Styles.getTitleDescriptionWidget('Score: ', '${RealworldChallengeServiceMainPage.correctAnswers}', Colors.black, Colors.green, 15, 16),
               ),
               Expanded(
                 child: Styles.getTitleDescriptionWidget('Difficulty: ', difficultyLevel, Colors.black, Colors.black, 15, 15),

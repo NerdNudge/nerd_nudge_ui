@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nerd_nudge/explore_menu/screens/explore_home_page.dart';
 import 'package:nerd_nudge/quiz/quiz_answers/dto/quizflex_user_activity_api_entity.dart';
 import 'package:nerd_nudge/quiz/quiz_answers/screens/read_more.dart';
 import 'package:nerd_nudge/quiz/quiz_answers/services/quizflex_submission.dart';
@@ -106,7 +107,7 @@ class AnswersPageActionButtons extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => QuizHomePage(),
+        builder: (context) => ExplorePage(),
       ),
     );
   }

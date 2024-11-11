@@ -4,7 +4,7 @@ import 'package:nerd_nudge/user/rankings.dart';
 import 'package:nerd_nudge/user/scores.dart';
 
 import '../../../../utilities/styles.dart';
-import '../../quiz_answers/screens/answer_complete_screen.dart';
+import '../../quiz_answers/screens/realworld_challenge_answer_complete_screen.dart';
 
 class RealworldChallengeActionButtons extends StatelessWidget {
   const RealworldChallengeActionButtons({super.key, required this.completeQuiz});
@@ -31,7 +31,7 @@ class RealworldChallengeActionButtons extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => AnswerScreen(completeQuiz: completeQuiz, didTimerEnd: false, timeTaken: differenceInSeconds,),
+                builder: (context) => RealworldChallengeAnswerScreen(completeQuiz: completeQuiz, didTimerEnd: false, timeTaken: differenceInSeconds,),
               ),
             );
           },

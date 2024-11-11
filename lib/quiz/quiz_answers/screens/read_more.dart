@@ -227,7 +227,7 @@ class _ReadMorePageState extends State<ReadMorePage> {
             Container(
               child: QuestionHeader(
                 topic: TopicSelection.selectedTopic,
-                subtopic: TopicSelection.selectedSubtopic,
+                subtopic: widget.completeQuiz['sub_topic'],
                 difficultyLevel: widget.completeQuiz['difficulty_level'],
               ),
             ),

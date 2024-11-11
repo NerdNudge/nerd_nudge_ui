@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nerd_nudge/topics/screens/explore_topic_selection_home_page.dart';
 import 'package:nerd_nudge/topics/screens/topic_selection_home_page.dart';
 import 'package:nerd_nudge/utilities/styles.dart';
 
@@ -39,8 +40,8 @@ class AnswerScreen extends StatelessWidget {
         children: <Widget>[
           Container(
             child: QuestionHeader(
-              topic: TopicSelection.selectedTopic,
-              subtopic: TopicSelection.selectedSubtopic,
+              topic: ExploreTopicSelection.selectedTopic,
+              subtopic: completeQuiz['sub_topic'],
               difficultyLevel: completeQuiz['difficulty_level'],
             ),
           ),

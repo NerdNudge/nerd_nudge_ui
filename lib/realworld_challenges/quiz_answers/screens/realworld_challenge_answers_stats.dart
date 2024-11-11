@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:nerd_nudge/quiz/quiz_answers/screens/read_more.dart';
+import 'package:nerd_nudge/realworld_challenges/quiz_question/services/start_realworld_challenge.dart';
 
-class AnswerWithStats extends StatefulWidget {
-  const AnswerWithStats({super.key, required this.completeQuiz, required this.didTimerEnd});
+class RealworldChallengeAnswerWithStats extends StatefulWidget {
+  const RealworldChallengeAnswerWithStats({super.key, required this.completeQuiz, required this.didTimerEnd});
 
   final completeQuiz;
   final didTimerEnd;
 
   @override
-  State<AnswerWithStats> createState() => _AnswerWithStatsState();
+  State<RealworldChallengeAnswerWithStats> createState() => _RealworldChallengeAnswerWithStatsState();
 }
 
-class _AnswerWithStatsState extends State<AnswerWithStats> {
+class _RealworldChallengeAnswerWithStatsState extends State<RealworldChallengeAnswerWithStats> {
   List<AnswerOption> allAnswers = [];
   Color defaultAnswerBorderColor = Colors.blueGrey.shade100;
   Color selectedAnswerBorderColor = Colors.green.shade500;
@@ -42,7 +43,11 @@ class _AnswerWithStatsState extends State<AnswerWithStats> {
     });
 
     var quiz = widget.completeQuiz;
-    ReadMorePage.quizflexUserActivityAPIEntity.addQuizflex(quiz['topic_name'], quiz['sub_topic'], quiz['id'], quiz['difficulty_level'], isAnswerCorrect());
+    bool isRightAnswer = isAnswerCorrect();
+    if(isRightAnswer) {
+      RealworldChallengeServiceMainPage.correctAnswers ++;
+    }
+    ReadMorePage.quizflexUserActivityAPIEntity.addQuizflex(quiz['topic_name'], quiz['sub_topic'], quiz['id'], quiz['difficulty_level'], isRightAnswer);
   }
 
   Color getAnswerOptionContainerColor(String answerSequence) {

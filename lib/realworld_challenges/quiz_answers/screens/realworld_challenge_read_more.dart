@@ -16,8 +16,8 @@ import '../../../utilities/constants.dart';
 import '../../../utilities/styles.dart';
 import '../../quiz_question/screens/realworld_challenge_header.dart';
 
-class ReadMorePage extends StatefulWidget {
-  const ReadMorePage({super.key, required this.completeQuiz});
+class RealworldChallengeReadMorePage extends StatefulWidget {
+  const RealworldChallengeReadMorePage({super.key, required this.completeQuiz});
 
   final completeQuiz;
   static QuizflexUserActivityAPIEntity quizflexUserActivityAPIEntity = QuizflexUserActivityAPIEntity();
@@ -36,10 +36,10 @@ class ReadMorePage extends StatefulWidget {
   }
 
   @override
-  State<ReadMorePage> createState() => _ReadMorePageState();
+  State<RealworldChallengeReadMorePage> createState() => _RealworldChallengeReadMorePageState();
 }
 
-class _ReadMorePageState extends State<ReadMorePage> {
+class _RealworldChallengeReadMorePageState extends State<RealworldChallengeReadMorePage> {
   late int _likeCount;
   late int _dislikeCount;
   late int _favoriteCount;
@@ -55,7 +55,7 @@ class _ReadMorePageState extends State<ReadMorePage> {
   @override
   void initState() {
     super.initState();
-    ReadMorePage.initializeUserActivityEntity();
+    RealworldChallengeReadMorePage.initializeUserActivityEntity();
   }
 
   _resetIconsAndCounts(dynamic quiz) {
@@ -77,11 +77,11 @@ class _ReadMorePageState extends State<ReadMorePage> {
       if (_likesIcon == Icons.thumb_up_alt_outlined) {
         _likesIcon = Icons.thumb_up;
         _likeCount++;
-        ReadMorePage.quizflexUserActivityAPIEntity.addLike(id);
+        RealworldChallengeReadMorePage.quizflexUserActivityAPIEntity.addLike(id);
       } else {
         _likesIcon = Icons.thumb_up_alt_outlined;
         _likeCount--;
-        ReadMorePage.quizflexUserActivityAPIEntity.removeLike(id);
+        RealworldChallengeReadMorePage.quizflexUserActivityAPIEntity.removeLike(id);
       }
     });
   }
@@ -91,11 +91,11 @@ class _ReadMorePageState extends State<ReadMorePage> {
       if (_dislikesIcon == Icons.thumb_down_alt_outlined) {
         _dislikesIcon = Icons.thumb_down;
         _dislikeCount++;
-        ReadMorePage.quizflexUserActivityAPIEntity.addDislike(id);
+        RealworldChallengeReadMorePage.quizflexUserActivityAPIEntity.addDislike(id);
       } else {
         _dislikesIcon = Icons.thumb_down_alt_outlined;
         _dislikeCount--;
-        ReadMorePage.quizflexUserActivityAPIEntity.removeDislike(id);
+        RealworldChallengeReadMorePage.quizflexUserActivityAPIEntity.removeDislike(id);
       }
     });
   }
@@ -105,19 +105,19 @@ class _ReadMorePageState extends State<ReadMorePage> {
       if (_favoriteIcon == Icons.favorite_border_outlined) {
         _favoriteIcon = Icons.favorite;
         _favoriteCount++;
-        ReadMorePage.quizflexUserActivityAPIEntity.addFavorite(
+        RealworldChallengeReadMorePage.quizflexUserActivityAPIEntity.addFavorite(
             quiz['topic_name'], quiz['sub_topic'], quiz['id']);
       } else {
         _favoriteIcon = Icons.favorite_border_outlined;
         _favoriteCount--;
-        ReadMorePage.quizflexUserActivityAPIEntity.removeFavorite(
+        RealworldChallengeReadMorePage.quizflexUserActivityAPIEntity.removeFavorite(
             quiz['topic_name'], quiz['sub_topic'], quiz['id']);
       }
     });
   }
 
   IconData _getLikesIcon(String id) {
-    if(ReadMorePage.quizflexUserActivityAPIEntity.isLikedByUser(id)) {
+    if(RealworldChallengeReadMorePage.quizflexUserActivityAPIEntity.isLikedByUser(id)) {
       return Icons.thumb_up;
     }
 
@@ -125,7 +125,7 @@ class _ReadMorePageState extends State<ReadMorePage> {
   }
 
   int _getLikesCount(dynamic quiz, String id) {
-    if(ReadMorePage.quizflexUserActivityAPIEntity.isLikedByUser(id)) {
+    if(RealworldChallengeReadMorePage.quizflexUserActivityAPIEntity.isLikedByUser(id)) {
       return quiz['likes'] + 1;
     }
 
@@ -133,7 +133,7 @@ class _ReadMorePageState extends State<ReadMorePage> {
   }
 
   IconData _getDisLikesIcon(String id) {
-    if(ReadMorePage.quizflexUserActivityAPIEntity.isDisLikedByUser(id)) {
+    if(RealworldChallengeReadMorePage.quizflexUserActivityAPIEntity.isDisLikedByUser(id)) {
       return Icons.thumb_down;
     }
 
@@ -141,7 +141,7 @@ class _ReadMorePageState extends State<ReadMorePage> {
   }
 
   int _getDisLikesCount(dynamic quiz, String id) {
-    if(ReadMorePage.quizflexUserActivityAPIEntity.isDisLikedByUser(id)) {
+    if(RealworldChallengeReadMorePage.quizflexUserActivityAPIEntity.isDisLikedByUser(id)) {
       return quiz['dislikes'] + 1;
     }
 
@@ -149,7 +149,7 @@ class _ReadMorePageState extends State<ReadMorePage> {
   }
 
   IconData _getFavoritesIcon(String topic, String subtopic, String id) {
-    if(ReadMorePage.quizflexUserActivityAPIEntity.isFavoriteByUser(topic, subtopic, id)) {
+    if(RealworldChallengeReadMorePage.quizflexUserActivityAPIEntity.isFavoriteByUser(topic, subtopic, id)) {
       return Icons.favorite;
     }
 
@@ -157,7 +157,7 @@ class _ReadMorePageState extends State<ReadMorePage> {
   }
 
   int _getFavoritesCount(dynamic quiz, String id) {
-    if(ReadMorePage.quizflexUserActivityAPIEntity.isFavoriteByUser(quiz['topic_name'], quiz['sub_topic'], id)) {
+    if(RealworldChallengeReadMorePage.quizflexUserActivityAPIEntity.isFavoriteByUser(quiz['topic_name'], quiz['sub_topic'], id)) {
       return quiz['favorites'] + 1;
     }
 
@@ -165,7 +165,7 @@ class _ReadMorePageState extends State<ReadMorePage> {
   }
 
   IconData _getSharesIcon(String id) {
-    if(ReadMorePage.quizflexUserActivityAPIEntity.isSharedByUser(id)) {
+    if(RealworldChallengeReadMorePage.quizflexUserActivityAPIEntity.isSharedByUser(id)) {
       return Icons.share;
     }
 
@@ -173,7 +173,7 @@ class _ReadMorePageState extends State<ReadMorePage> {
   }
 
   int _getSharesCount(dynamic quiz, String id) {
-    if(ReadMorePage.quizflexUserActivityAPIEntity.isSharedByUser(id)) {
+    if(RealworldChallengeReadMorePage.quizflexUserActivityAPIEntity.isSharedByUser(id)) {
       return quiz['shares'] + 1;
     }
 
@@ -182,7 +182,7 @@ class _ReadMorePageState extends State<ReadMorePage> {
 
   Future<void> _captureAndShareScreenshot(String id) async {
     try {
-      ReadMorePage.quizflexUserActivityAPIEntity.addShare(id);
+      RealworldChallengeReadMorePage.quizflexUserActivityAPIEntity.addShare(id);
       RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext!
           .findRenderObject() as RenderRepaintBoundary;
       ui.Image image = await boundary.toImage(pixelRatio: 3.0);
@@ -227,7 +227,7 @@ class _ReadMorePageState extends State<ReadMorePage> {
             Container(
               child: RealworldChallengeHeader(
                 topic: TopicSelection.selectedTopic,
-                subtopic: TopicSelection.selectedSubtopic,
+                subtopic: widget.completeQuiz['sub_topic'],
                 difficultyLevel: widget.completeQuiz['difficulty_level'],
               ),
             ),

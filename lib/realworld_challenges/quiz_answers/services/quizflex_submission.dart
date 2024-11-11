@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 
 import '../../../utilities/api_end_points.dart';
 import '../../../utilities/api_service.dart';
-import '../screens/read_more.dart';
+import '../screens/realworld_challenge_read_more.dart';
 
 class QuizflexSubmissionService {
   QuizflexSubmissionService._privateConstructor();
@@ -17,11 +17,11 @@ class QuizflexSubmissionService {
     Map<String, dynamic> result = {};
     try {
       print(APIEndpoints.USER_ACTIVITY_BASE_URL + APIEndpoints.QUIZFLEX_SUBMISSION);
-      print(ReadMorePage.quizflexUserActivityAPIEntity.toJson());
-      result = await apiService.putRequest(APIEndpoints.USER_ACTIVITY_BASE_URL + APIEndpoints.QUIZFLEX_SUBMISSION, ReadMorePage.quizflexUserActivityAPIEntity.toJson());
+      print(RealworldChallengeReadMorePage.quizflexUserActivityAPIEntity.toJson());
+      result = await apiService.putRequest(APIEndpoints.USER_ACTIVITY_BASE_URL + APIEndpoints.QUIZFLEX_SUBMISSION, RealworldChallengeReadMorePage.quizflexUserActivityAPIEntity.toJson());
       print('API Result: $result');
 
-      ReadMorePage.resetUserActivityEntity(); // Reset the entity after the API call
+      RealworldChallengeReadMorePage.resetUserActivityEntity(); // Reset the entity after the API call
     } catch (e) {
       print(e);
     }

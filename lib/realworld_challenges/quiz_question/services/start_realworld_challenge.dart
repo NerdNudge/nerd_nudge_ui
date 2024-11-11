@@ -16,8 +16,14 @@ import '../screens/realworld_challenge_complete_screen.dart';
 class RealworldChallengeServiceMainPage extends StatefulWidget {
   const RealworldChallengeServiceMainPage({super.key});
 
+  static int correctAnswers = 0;
+  static int totalDailyQuiz = 3;
+  static int currentIndex = 0;
+
   static void resetCurrentQuizzes() {
     _RealworldChallengeServiceMainPageState._currentQuizzes = [];
+    correctAnswers = 0;
+    currentIndex = 0;
   }
 
   @override
@@ -35,7 +41,6 @@ class _RealworldChallengeServiceMainPageState
   }
 
   static List<dynamic> _currentQuizzes = [];
-  static int _currentIndex = 0;
   static bool _quizSubmitted = false;
 
   @override
@@ -72,7 +77,7 @@ class _RealworldChallengeServiceMainPageState
         drawer: MenuOptions.getMenuDrawer(context),
         body: nextQuiz is Widget
             ? nextQuiz
-            : RealWorldChallengeScreen(completeQuiz: nextQuiz),
+            : RealWorldChallengeScreen(completeQuiz: nextQuiz,),
       ),
     );
   }
@@ -97,12 +102,12 @@ class _RealworldChallengeServiceMainPageState
       _updateCurrentQuiz();
       return null;
     }
-    else if(_currentIndex >= _currentQuizzes.length) {
+    else if(RealworldChallengeServiceMainPage.currentIndex >= _currentQuizzes.length) {
       return Constants.COMPLETED;
     }
 
-    var quizFlex = _currentQuizzes[_currentIndex];
-    _currentIndex++;
+    var quizFlex = _currentQuizzes[RealworldChallengeServiceMainPage.currentIndex];
+    RealworldChallengeServiceMainPage.currentIndex ++;
     return quizFlex;
   }
 
@@ -134,8 +139,8 @@ class _RealworldChallengeServiceMainPageState
         int len = _currentQuizzes.length;
         print('current rwc quizzes length: $len');
 
-        if (_currentIndex >= _currentQuizzes.length) {
-          _currentIndex = _currentQuizzes.length - 1;
+        if (RealworldChallengeServiceMainPage.currentIndex >= _currentQuizzes.length) {
+          RealworldChallengeServiceMainPage.currentIndex = _currentQuizzes.length - 1;
         }
       });
     }
@@ -148,7 +153,7 @@ class _RealworldChallengeServiceMainPageState
     } else {
       print('Fetching the next quizzes set.');
       var nextQuestions = await NerdQuizflexService()
-          .getNextQuizflexes(ExploreTopicSelection.selectedTopic, 'Random', 3);
+          .getNextQuizflexes(ExploreTopicSelection.selectedTopic, 'Random', RealworldChallengeServiceMainPage.totalDailyQuiz);
       print('Fetched Quizzes: $nextQuestions');
       return nextQuestions['data'] ?? [];
     }

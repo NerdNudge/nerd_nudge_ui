@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nerd_nudge/topics/screens/explore_topic_selection_home_page.dart';
 import 'package:nerd_nudge/topics/screens/topic_selection_home_page.dart';
 import 'package:nerd_nudge/utilities/styles.dart';
 
@@ -6,11 +7,11 @@ import '../../../bottom_menus/screens/bottom_menu_options.dart';
 import '../../../menus/screens/menu_options.dart';
 import '../../quiz_question/screens/realworld_challenge_body.dart';
 import '../../quiz_question/screens/realworld_challenge_header.dart';
-import 'answers_page_actions.dart';
-import 'answers_stats.dart';
+import 'realworld_challenge_answers_page_actions.dart';
+import 'realworld_challenge_answers_stats.dart';
 
-class AnswerScreen extends StatelessWidget {
-  const AnswerScreen(
+class RealworldChallengeAnswerScreen extends StatelessWidget {
+  const RealworldChallengeAnswerScreen(
       {super.key,
       required this.completeQuiz,
       required this.didTimerEnd,
@@ -41,8 +42,8 @@ class AnswerScreen extends StatelessWidget {
         children: <Widget>[
           Container(
             child: RealworldChallengeHeader(
-              topic: TopicSelection.selectedTopic,
-              subtopic: TopicSelection.selectedSubtopic,
+              topic: ExploreTopicSelection.selectedTopic,
+              subtopic: completeQuiz['sub_topic'],
               difficultyLevel: completeQuiz['difficulty_level'],
             ),
           ),
@@ -64,7 +65,7 @@ class AnswerScreen extends StatelessWidget {
             height: 15.0,
           ),
           Container(
-            child: AnswerWithStats(
+            child: RealworldChallengeAnswerWithStats(
               completeQuiz: completeQuiz,
               didTimerEnd: didTimerEnd,
             ),
@@ -73,7 +74,7 @@ class AnswerScreen extends StatelessWidget {
             height: 15.0,
           ),
           Container(
-            child: AnswersPageActionButtons(
+            child: RealworldChallengeAnswersPageActionButtons(
               completeQuiz: completeQuiz,
             ),
           ),
