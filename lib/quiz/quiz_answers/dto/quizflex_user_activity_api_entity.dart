@@ -20,6 +20,7 @@ class QuizflexUserActivityAPIEntity {
   static List<String> _dislikes = [];
   static List<String> _shares = [];
   static Map<String, Map<String, List<String>>> _favorites = {};
+  static bool _isRWC = false;
 
   void _initialize() {
     _quizflex.clear();
@@ -28,6 +29,7 @@ class QuizflexUserActivityAPIEntity {
     _shares.clear();
     _favorites.clear();
     _timestamp = 0;
+    _isRWC = false;
   }
 
   void clearData() {
@@ -57,6 +59,9 @@ class QuizflexUserActivityAPIEntity {
     return _shares.contains(id);
   }
 
+  void setIsRWC(bool isRWC) {
+    _isRWC = isRWC;
+  }
 
   void addFavorite(String topic, String subtopic, String id) {
     _favorites[topic] ??= {};
@@ -140,6 +145,7 @@ class QuizflexUserActivityAPIEntity {
       'likes': _likes,
       'dislikes': _dislikes,
       'shares': _shares,
+      'isRWC': _isRWC
     };
   }
 
@@ -154,7 +160,8 @@ QuizflexUserActivityAPIEntity {
   likes: $_likes,
   dislikes: $_dislikes,
   shares: $_shares,
-  favorites: $_favorites
+  favorites: $_favorites,
+  isRWC: $_isRWC
 }
     ''';
   }

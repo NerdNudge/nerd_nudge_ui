@@ -10,9 +10,12 @@ import '../../../../utilities/styles.dart';
 import '../../../bottom_menus/screens/bottom_menu_options.dart';
 import '../../../menus/screens/menu_options.dart';
 import '../../nerd_shots/screens/nerd_shots_swiped.dart';
+import '../../user_home_page/dto/user_home_stats.dart';
+import '../../utilities/constants.dart';
 
 class ExploreTopicSelection {
   static String selectedTopic = '';
+  static String selectedTopicCode = '';
   static String selectedSubtopic = '';
 }
 
@@ -31,6 +34,7 @@ class _ExploreTopicSelectionHomePageState
   late List<dynamic> topics = [];
   static PanelController _topicSelectionPanelController = PanelController();
   static PanelController _challengesPaywallPanelController = PanelController();
+  late Map<String, dynamic> userStats = {};
 
   static List<Map<String, String>> topicSelectionActions = [
     {
@@ -81,7 +85,7 @@ class _ExploreTopicSelectionHomePageState
       if (result is Map<String, dynamic> && result.containsKey('data')) {
         final data = result['data'];
         final topicsData = data['topics'] as Map<String, dynamic>;
-        final userStats = data['userStats'] as Map<String, dynamic>;
+        userStats = data['userStats'] as Map<String, dynamic>;
 
         setState(() {
           topics = topicsData.entries.map((entry) {
@@ -136,6 +140,7 @@ class _ExploreTopicSelectionHomePageState
                             setState(() {
                               print('selected topic: $topicName');
                               ExploreTopicSelection.selectedTopic = topicName;
+                              ExploreTopicSelection.selectedTopicCode = topic['topicCode'];
                               TopicSelection.selectedTopic = topicName;
                               QuizService.resetCurrentQuizzes();
                             });
@@ -265,14 +270,14 @@ class _ExploreTopicSelectionHomePageState
       return _buildTopicSelectionActionsPaywallPanel(context);
     }
     else {
-      return PaywallPanel.buildDailyChallengePaywallPanel(context, ExploreTopicSelection.selectedTopic);
-      /*if (UserHomeStats().getUserAccountType() == Constants.FREEMIUM) {
+      //return PaywallPanel.buildDailyChallengePaywallPanel(context, ExploreTopicSelection.selectedTopic, ExploreTopicSelection.selectedTopicCode, userStats);
+      if (UserHomeStats().getUserAccountType() == Constants.FREEMIUM) {
         return PaywallPanel.buildUpgradeAccountPaywallPanel(context,
             'Upgrade your account to enjoy daily real-world challenges across topics.');
       }
       else {
-        return PaywallPanel.buildDailyChallengePaywallPanel(context, ExploreTopicSelection.selectedTopic);
-      }*/
+        return PaywallPanel.buildDailyChallengePaywallPanel(context, ExploreTopicSelection.selectedTopic, ExploreTopicSelection.selectedTopicCode, userStats);
+      }
     }
   }
 

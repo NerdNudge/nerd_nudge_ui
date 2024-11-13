@@ -48,6 +48,7 @@ class RealworldChallengeAnswersPageActionButtons extends StatelessWidget {
         if (isLastQuizPage)
           ElevatedButton.icon(
             onPressed: () {
+              submitQuizflex();
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -130,6 +131,7 @@ class RealworldChallengeAnswersPageActionButtons extends StatelessWidget {
 
   static Future<void> submitQuizflex() async {
     QuizflexSubmissionService quizflexSubmissionService = QuizflexSubmissionService();
+    RealworldChallengeReadMorePage.quizflexUserActivityAPIEntity.setIsRWC(true);
     quizflexSubmissionService.submitQuizflex();
   }
 

@@ -21,6 +21,11 @@ class TopicsService {
   Map<String, String> _topicNameToCodesMapping = {};
 
 
+  void invalidateTopicsCache() {
+    print('Invalidating topics cache.');    
+    _lastFetchedTime = null;
+  }
+
 
   Future<dynamic> getTopics() async {
     print('getting Topics now..');

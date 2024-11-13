@@ -9,6 +9,7 @@ class APIEndpoints {
   static const String LEADERBOARD = '/api/nerdnudge/userranks/getLeaderBoard';
 
   static const String QUIZFLEXES = '/api/nerdnudge/quizflexes/getQuizFlexes';
+  static const String REAL_WORLD_CHALLENGES = '/api/nerdnudge/quizflexes/getRealworldChallenges';
   static const String SHOTS_SUBMISSION = '/api/nerdnudge/useractivity/shotsSubmission';
   static const String QUIZFLEX_SUBMISSION = '/api/nerdnudge/useractivity/quizflexSubmission';
   static const String FAVORITES_SUBMISSION = '/api/nerdnudge/useractivity/favoritesSubmission';

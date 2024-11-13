@@ -50,6 +50,44 @@ class NerdQuizflexService {
     }
   }
 
+  Future<dynamic> getRealWorldChallenges(
+      String topic, String subtopic, int limit) async {
+    print('getting Quizflex data now..');
+    final ApiService apiService = ApiService();
+    dynamic result;
+    try {
+      print(APIEndpoints.CONTENT_MANAGER_BASE_URL +
+          APIEndpoints.REAL_WORLD_CHALLENGES +
+          "?topic=" +
+          topic +
+          "&subtopic=" +
+          subtopic +
+          "&limit=" +
+          limit.toString());
+      result = await apiService.getRequest(
+          APIEndpoints.CONTENT_MANAGER_BASE_URL,
+          APIEndpoints.REAL_WORLD_CHALLENGES +
+              "?topic=" +
+              topic +
+              "&subtopic=" +
+              subtopic +
+              "&limit=" +
+              limit.toString());
+      print('API Result: $result');
+
+      if (result is Map<String, dynamic>) {
+        return result;
+      } else if (result is String) {
+        return json.decode(result);
+      } else {
+        throw const FormatException("Unexpected response format");
+      }
+    } catch (e) {
+      print(e);
+      return '{}';
+    }
+  }
+
   /*Future<dynamic> quizflexSubmission(ShotsUserActivityAPIEntity entity) async {
     final ApiService apiService = ApiService();
     dynamic result;

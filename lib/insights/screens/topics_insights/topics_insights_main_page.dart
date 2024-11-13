@@ -23,7 +23,7 @@ class TopicsInsights extends StatefulWidget {
   static late var summaryToDisplay;
 
   static late Map<String, String> topicCodesToNamesMap;
-  static late Map<String, String> topicNamesToCodesMap;
+  static late Map<String, String> topicNamesToCodesMap = {};
 
   static late List<String> topicsToDisplay;
 

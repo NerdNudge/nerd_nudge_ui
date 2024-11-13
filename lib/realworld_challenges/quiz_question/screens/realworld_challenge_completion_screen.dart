@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nerd_nudge/topics/screens/explore_topic_selection_home_page.dart';
+import 'package:nerd_nudge/topics/services/topics_service.dart';
 import '../../../bottom_menus/screens/bottom_menu_options.dart';
 import '../../../menus/screens/menu_options.dart';
 import '../../../user_home_page/screens/home_page.dart';
@@ -12,6 +13,7 @@ class RealworldChallengeCompletionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TopicsService().invalidateTopicsCache();
     return PopScope(
       canPop: false,
       child: Scaffold(

@@ -151,11 +151,11 @@ class _RealworldChallengeServiceMainPageState
       print('User has exhausted the quiz counts.');
       return [];
     } else {
-      print('Fetching the next quizzes set.');
-      var nextQuestions = await NerdQuizflexService()
-          .getNextQuizflexes(ExploreTopicSelection.selectedTopic, 'Random', RealworldChallengeServiceMainPage.totalDailyQuiz);
-      print('Fetched Quizzes: $nextQuestions');
-      return nextQuestions['data'] ?? [];
+      print('Fetching the next rwc set.');
+      var nextChallenges = await NerdQuizflexService()
+          .getRealWorldChallenges(ExploreTopicSelection.selectedTopic, 'Random', RealworldChallengeServiceMainPage.totalDailyQuiz);
+      print('Fetched RWC: $nextChallenges');
+      return nextChallenges['data'] ?? [];
     }
   }
 }
