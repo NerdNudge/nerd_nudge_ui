@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nerd_nudge/quiz/quiz_question/services/start_quiz.dart';
+import 'package:nerd_nudge/topics/screens/explore_topic_selection_home_page.dart';
 import 'package:nerd_nudge/topics/screens/subtopic_selection.dart';
 import 'package:nerd_nudge/topics/services/topics_service.dart';
 import 'package:nerd_nudge/utilities/quiz_topics.dart';
@@ -120,6 +121,8 @@ class _TopicSelectionHomePageState extends State<TopicSelectionHomePage> {
                             setState(() {
                               print('selected topic: $topicName');
                               TopicSelection.selectedTopic = topicName;
+                              ExploreTopicSelection.selectedTopic = topicName;
+                              ExploreTopicSelection.selectedTopicCode = topic['topicCode'];
                               QuizService.resetCurrentQuizzes();
                             });
                             showSubtopics(context);

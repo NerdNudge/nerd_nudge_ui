@@ -4,8 +4,9 @@ import '../../../utilities/colors.dart';
 import '../../../utilities/styles.dart';
 
 class TopicDrillDown {
-  static getTopicDrillDown(lifetimeSummary, selectedTopic, Function getCloseButtonClick) {
+  static getTopicDrillDown(BuildContext context, lifetimeSummary, selectedTopic, Function getCloseButtonClick) {
     print('drill down clicked.');
+    final subtopics = lifetimeSummary[selectedTopic]?['subtopics'] as Map<String, dynamic>? ?? {};
     return Column(
       children: [
         Text(
@@ -15,7 +16,7 @@ class TopicDrillDown {
             fontSize: 20,
           ),
         ),
-        Styles.getSizedHeightBox(20),
+        Styles.getSizedHeightBoxByScreen(context, 20),
         Container(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -26,7 +27,7 @@ class TopicDrillDown {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Styles.getSizedHeightBox(10),
+                    Styles.getSizedHeightBoxByScreen(context, 10),
                     Styles.getTitleDescriptionWidget(
                       '${entry.key} ',  // Subtopic name
                       '(${entry.value}%)',  // Percentage correct
@@ -50,18 +51,19 @@ class TopicDrillDown {
             ],
           ),
         ),
-        Styles.getSizedHeightBox(20),
+        Styles.getSizedHeightBoxByScreen(context, 20),
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Styles.getTitleDescriptionWidget(
               'Overall Percentage: ',
-              '59%',
+              '${_calculateOverallPercentage(subtopics).toStringAsFixed(1)}%',
               Colors.black,
               Colors.black,
               15,
               15,
             ),
-            Styles.getSizedWidthBox(40),
+            Styles.getSizedWidthBoxByScreen(context, 20),
             Container(
               width: 40.0,
               height: 40.0,
@@ -79,5 +81,14 @@ class TopicDrillDown {
         ),
       ],
     );
+  }
+
+  static double _calculateOverallPercentage(Map<String, dynamic> subtopics) {
+    if (subtopics.isEmpty) return 0.0;
+    double total = 0.0;
+    subtopics.values.forEach((value) {
+      total += (value as num).toDouble();
+    });
+    return total / subtopics.length;
   }
 }

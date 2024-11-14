@@ -213,7 +213,7 @@ class PaywallPanel {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Styles.getSizedHeightBox(10),
+        Styles.getSizedHeightBoxByScreen(context, 10),
         Center(
           child: Text(
             topic,
@@ -224,7 +224,7 @@ class PaywallPanel {
             ),
           ),
         ),
-        Styles.getSizedHeightBox(10),
+        Styles.getSizedHeightBoxByScreen(context, 10),
         const Padding(
           padding: EdgeInsets.all(8.0),
           child: Text(
@@ -236,22 +236,22 @@ class PaywallPanel {
             ),
           ),
         ),
-        Styles.getSizedHeightBox(5),
-        _buildLastSevenDaysChallenges(rwc),
-        Styles.getSizedHeightBox(10),
+        Styles.getSizedHeightBoxByScreen(context, 5),
+        _buildLastSevenDaysChallenges(context, rwc),
+        Styles.getSizedHeightBoxByScreen(context, 10),
         Styles.getDivider(),
-        Styles.getSizedHeightBox(10),
+        Styles.getSizedHeightBoxByScreen(context, 10),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 12),
           child: _getChallengePaywallMessage(challengeTakenToday),
         ),
-        Styles.getSizedHeightBox(30),
+        Styles.getSizedHeightBoxByScreen(context, 30),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(Icons.menu_book, size: 24, color: Colors.white54),
-            Styles.getSizedWidthBox(10),
+            Styles.getSizedWidthBoxByScreen(context, 10),
             Text(
               '10 Questions',
               textAlign: TextAlign.center,
@@ -261,7 +261,7 @@ class PaywallPanel {
                   color: Colors.white54,
                   height: 1.5),
             ),
-            Styles.getSizedWidthBox(20),
+            Styles.getSizedWidthBoxByScreen(context, 20),
             Text(
               '|',
               textAlign: TextAlign.center,
@@ -271,9 +271,9 @@ class PaywallPanel {
                   color: Colors.white54,
                   height: 1.5),
             ),
-            Styles.getSizedWidthBox(20),
+            Styles.getSizedWidthBoxByScreen(context, 20),
             Icon(Icons.timer_outlined, size: 24, color: Colors.white54),
-            Styles.getSizedWidthBox(10),
+            Styles.getSizedWidthBoxByScreen(context, 10),
             Text(
               '8 Minutes',
               textAlign: TextAlign.center,
@@ -285,7 +285,7 @@ class PaywallPanel {
             ),
           ],
         ),
-        Styles.getSizedHeightBox(40),
+        Styles.getSizedHeightBoxByScreen(context, 40),
         if (challengeTakenToday)
           Styles.buildNextActionButton(context, 'CLOSE', 3, ExplorePage())
         else
@@ -294,7 +294,7 @@ class PaywallPanel {
     );
   }
 
-  static Widget _buildLastSevenDaysChallenges(Map<String, dynamic> rwc) {
+  static Widget _buildLastSevenDaysChallenges(BuildContext context, Map<String, dynamic> rwc) {
     final today = DateTime.now();
     final lastSevenDays = List.generate(7, (index) => today.subtract(Duration(days: 6 - index)));
 
@@ -303,7 +303,7 @@ class PaywallPanel {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 10),
+          Styles.getSizedHeightBoxByScreen(context, 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: lastSevenDays.map((date) {
@@ -328,7 +328,7 @@ class PaywallPanel {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Styles.getSizedHeightBox(10),
+                  Styles.getSizedHeightBoxByScreen(context, 10),
                   ShaderMask(
                     shaderCallback: (Rect bounds) {
                       return LinearGradient(
@@ -345,7 +345,7 @@ class PaywallPanel {
                       color: Colors.white, // Apply the gradient to the icon
                     ),
                   ),
-                  Styles.getSizedHeightBox(8),
+                  Styles.getSizedHeightBoxByScreen(context, 8),
                   Text(
                     '$percentage%', // Display the calculated percentage
                     style: TextStyle(

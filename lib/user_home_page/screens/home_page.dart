@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _checkEmailAndNavigate() {
-    if (widget.userEmail.isEmpty || widget.userEmail == null) {
+    if (widget.userEmail.isEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacementNamed(context, '/startpage');
       });
@@ -105,6 +105,7 @@ class _HomePageState extends State<HomePage> {
     String quoteAuthor = userHomeStats.quoteAuthor;
     String quoteId = userHomeStats.quoteId;
     UserProfileEntity().setUserAccountType(userHomeStats.getUserAccountType());
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return Stack(
       children: [
@@ -133,13 +134,13 @@ class _HomePageState extends State<HomePage> {
                       height: 100, // Adjust the size as needed
                       width: 100,
                     ),
-                    const SizedBox(height: 10), // Space between logo and text
-                    const Text(
+                    const SizedBox(height: 10),
+                    Text(
                       'Nerd Nudge',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
-                        fontSize: 50,
+                        fontSize: screenWidth * 0.1,
                       ),
                     ),
                     const SizedBox(height: 40),
@@ -558,7 +559,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void onNerdShots(BuildContext context) {
-    BottomMenu.updateIndex(2);
+    BottomMenu.updateIndex(1);
     Navigator.push(
       context,
       MaterialPageRoute(

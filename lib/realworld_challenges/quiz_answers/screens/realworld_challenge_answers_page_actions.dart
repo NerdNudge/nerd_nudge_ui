@@ -4,7 +4,6 @@ import 'package:nerd_nudge/realworld_challenges/quiz_answers/screens/realworld_c
 import 'package:nerd_nudge/realworld_challenges/quiz_question/screens/realworld_challenge_completion_screen.dart';
 import 'package:nerd_nudge/utilities/styles.dart';
 import '../../../utilities/colors.dart';
-import '../../home/screens/realworld_challenges_home_page.dart';
 import '../../quiz_question/services/start_realworld_challenge.dart';
 
 class RealworldChallengeAnswersPageActionButtons extends StatelessWidget {
@@ -141,7 +140,7 @@ class RealworldChallengeAnswersPageActionButtons extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => RealWorldChallengeHomePage(),
+        builder: (context) => RealworldChallengeCompletionScreen(),
       ),
     );
   }

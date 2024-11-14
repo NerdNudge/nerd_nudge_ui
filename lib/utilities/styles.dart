@@ -430,6 +430,18 @@ class Styles {
     );
   }
 
+  static Widget getSizedHeightBoxByScreen(BuildContext context, double height) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * (height / 1000),
+    );
+  }
+
+  static Widget getSizedWidthBoxByScreen(BuildContext context, double width) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.height * (width / 1000),
+    );
+  }
+
   static Widget getSizedHeightBox(double height) {
     return SizedBox(
       height: height,

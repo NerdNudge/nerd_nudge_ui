@@ -13,9 +13,7 @@ class RealworldChallengeHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        SizedBox(
-          height: 10.0,
-        ),
+        Styles.getSizedHeightBoxByScreen(context, 10),
         Container(
           child: Column(
             children: <Widget>[
@@ -29,9 +27,7 @@ class RealworldChallengeHeader extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(
-          height: 15.0,
-        ),
+        Styles.getSizedHeightBoxByScreen(context, 15),
         Container(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -43,14 +39,12 @@ class RealworldChallengeHeader extends StatelessWidget {
                 child: Styles.getTitleDescriptionWidget('Score: ', '${RealworldChallengeServiceMainPage.correctAnswers}', Colors.black, Colors.green, 15, 16),
               ),
               Expanded(
-                child: Styles.getTitleDescriptionWidget('Difficulty: ', difficultyLevel, Colors.black, Colors.black, 15, 15),
+                child: Styles.getTitleDescriptionWidget(difficultyLevel, '', Colors.black, Colors.black, 15, 15),
               ),
             ],
           ),
         ),
-        SizedBox(
-          height: 12.0,
-        ),
+        Styles.getSizedHeightBoxByScreen(context, 12),
       ],
     );
   }

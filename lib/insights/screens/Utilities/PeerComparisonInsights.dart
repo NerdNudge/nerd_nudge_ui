@@ -43,14 +43,13 @@ class PeerComparisonInsights extends StatelessWidget {
                   ),
                 ),
                 Styles.getSizedHeightBox(20),
-                _buildComparisonChart(),
+                _buildComparisonChart(context),
                 Styles.getSizedHeightBox(20),
-                _buildStatistics(),
+                _buildStatistics(context),
               ],
             ),
-            Positioned(
-              top: 0,
-              right: 0,
+            Align(
+              alignment: Alignment.topRight,
               child: Container(
                 width: 40.0,
                 height: 40.0,
@@ -71,9 +70,9 @@ class PeerComparisonInsights extends StatelessWidget {
     );
   }
 
-  Widget _buildComparisonChart() {
+  Widget _buildComparisonChart(BuildContext context) {
     return Container(
-      height: 250,
+        height: MediaQuery.of(context).size.height * 0.3,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(15),
@@ -154,39 +153,40 @@ class PeerComparisonInsights extends StatelessWidget {
     return barGroups;
   }
 
+  BarChartRodData buildBarChartRod(double value, Color color) {
+    return BarChartRodData(
+      toY: value,
+      color: color,
+      width: 10,
+      borderRadius: BorderRadius.circular(4),
+    );
+  }
+
   BarChartGroupData _getBar(int x, double userValue, double peerValue) {
     return BarChartGroupData(
       x: x,
       barRods: [
-        BarChartRodData(
-          toY: userValue,
-          color: Colors.green,
-          width: 10,
-          borderRadius: BorderRadius.circular(4),
-        ),
-        BarChartRodData(
-          toY: peerValue,
-          color: Colors.orange,
-          width: 10,
-          borderRadius: BorderRadius.circular(4),
-        ),
+        buildBarChartRod(userValue, Colors.green),
+        buildBarChartRod(peerValue, Colors.orange),
       ],
       barsSpace: 12,
     );
   }
 
-  Widget _buildStatistics() {
+  Widget _buildStatistics(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _buildStatisticCard(
+          context,
           'You',
           peerComparisonData['userAverage'].toString(),
           Icons.person,
           Colors.green,
         ),
-        Styles.getSizedWidthBox(20),
+        Styles.getSizedWidthBoxByScreen(context, 20),
         _buildStatisticCard(
+          context,
           'Peers',
           peerComparisonData['peersAverage'].toString(),
           Icons.group,
@@ -196,14 +196,14 @@ class PeerComparisonInsights extends StatelessWidget {
     );
   }
 
-  Widget _buildStatisticCard(String label, String value, IconData icon, Color color) {
+  Widget _buildStatisticCard(BuildContext context, String label, String value, IconData icon, Color color) {
     return Card(
       elevation: 5,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
       child: SizedBox(
-        width: 120,  // Adjust this width as needed to match the bar chart's width
+        width: MediaQuery.of(context).size.width * 0.3,
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Column(

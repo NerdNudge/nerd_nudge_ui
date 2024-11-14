@@ -120,7 +120,7 @@ class _TopicsInsightsState extends State<TopicsInsights> {
             ),
           ),
         ),
-        Styles.getSizedHeightBox(20),
+        Styles.getSizedHeightBoxByScreen(context, 20),
         Styles.getTitleDescriptionWidgetWithSoftWrap(
           'Strongest Topic: ',
           'System Design',
@@ -129,7 +129,7 @@ class _TopicsInsightsState extends State<TopicsInsights> {
           15,
           15,
         ),
-        Styles.getSizedHeightBox(5),
+        Styles.getSizedHeightBoxByScreen(context, 5),
         Styles.getTitleDescriptionWidgetWithSoftWrap(
           'Weakest Topic: ',
           'Data Structures and Algorithms',
@@ -138,7 +138,7 @@ class _TopicsInsightsState extends State<TopicsInsights> {
           15,
           15,
         ),
-        Styles.getSizedHeightBox(20),
+        Styles.getSizedHeightBoxByScreen(context, 20),
         Text(
           'Select a Topic: ',
           style: TextStyle(
@@ -147,7 +147,7 @@ class _TopicsInsightsState extends State<TopicsInsights> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        Styles.getSizedHeightBox(13),
+        Styles.getSizedHeightBoxByScreen(context, 13),
         Wrap(
           spacing: 8.0,
           runSpacing: 4.0,
@@ -178,7 +178,7 @@ class _TopicsInsightsState extends State<TopicsInsights> {
             );
           }).toList(),
         ),
-        Styles.getSizedHeightBox(10),
+        Styles.getSizedHeightBoxByScreen(context, 10),
       ],
     );
   }
@@ -216,7 +216,7 @@ class _TopicsInsightsState extends State<TopicsInsights> {
     print('details clicked.');
     setState(() {
       String? topicCode = TopicsInsights.topicNamesToCodesMap[TopicsInsights.selectedTopic];
-      _currentTopicScreen = TopicDrillDown.getTopicDrillDown(TopicsInsights.summaryToDisplay, topicCode, closeButtonToTopicInsightsSummaryPage);
+      _currentTopicScreen = TopicDrillDown.getTopicDrillDown(context, TopicsInsights.summaryToDisplay, topicCode, closeButtonToTopicInsightsSummaryPage);
     });
   }
 

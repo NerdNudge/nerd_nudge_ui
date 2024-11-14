@@ -10,6 +10,7 @@ import '../../../../utilities/styles.dart';
 import '../../../bottom_menus/screens/bottom_menu_options.dart';
 import '../../../menus/screens/menu_options.dart';
 import '../../nerd_shots/screens/nerd_shots_swiped.dart';
+import '../../subscriptions/services/purchase_api.dart';
 import '../../user_home_page/dto/user_home_stats.dart';
 import '../../utilities/constants.dart';
 
@@ -36,23 +37,23 @@ class _ExploreTopicSelectionHomePageState
   static PanelController _challengesPaywallPanelController = PanelController();
   late Map<String, dynamic> userStats = {};
 
-  static List<Map<String, String>> topicSelectionActions = [
+  static List<Map<String, dynamic>> topicSelectionActions = [
     {
       'id': 'NQ',
-      'icon': 'Icons.school_rounded',
+      'icon': Icons.school_rounded,
       'title': 'Nerd Quiz',
       'subtitle':
           'Test your knowledge with curated quizzes on various sub-topics.',
     },
     {
       'id': 'NS',
-      'icon': 'Icons.lightbulb',
+      'icon': Icons.lightbulb,
       'title': 'Nerd Shots',
       'subtitle': 'Swipe through quick, byte-sized, digestible tech insights and facts.',
     },
     {
       'id': 'RWC',
-      'icon': 'Icons.emoji_events',
+      'icon': Icons.emoji_events,
       'title': 'Real-World Challenges',
       'subtitle':
           'Daily challenges: Tackle practical, real-world scenarios to boost your problem-solving skills.',
@@ -110,6 +111,7 @@ class _ExploreTopicSelectionHomePageState
       }
     } catch (e) {
       print('Error loading topics: $e');
+      Styles.showGlobalSnackbarMessage('Failed to load topics. Please try again.');
     }
   }
 
@@ -225,7 +227,7 @@ class _ExploreTopicSelectionHomePageState
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(height: 100),
+                                  SizedBox(height: MediaQuery.of(context).size.height * 0.1),
                                 ],
                               ),
                             ),
@@ -271,7 +273,7 @@ class _ExploreTopicSelectionHomePageState
     }
     else {
       //return PaywallPanel.buildDailyChallengePaywallPanel(context, ExploreTopicSelection.selectedTopic, ExploreTopicSelection.selectedTopicCode, userStats);
-      if (UserHomeStats().getUserAccountType() == Constants.FREEMIUM) {
+      if (PurchaseAPI.userCurrentOffering == Constants.FREEMIUM) {
         return PaywallPanel.buildUpgradeAccountPaywallPanel(context,
             'Upgrade your account to enjoy daily real-world challenges across topics.');
       }
@@ -328,7 +330,7 @@ class _ExploreTopicSelectionHomePageState
                             color: Colors.white24,
                             padding: EdgeInsets.all(8.0),
                             child: Icon(
-                              getIconData(transaction['icon']!),
+                              transaction['icon']!,
                               size: 40, // Icon size
                               color: Colors.black54,
                             ),
@@ -406,19 +408,6 @@ class _ExploreTopicSelectionHomePageState
 
   String _getNumPeopleText(int num) {
     return (num == 1) ? '$num person took this.' : '$num people took this.';
-  }
-
-  static IconData getIconData(String iconName) {
-    switch (iconName) {
-      case 'Icons.school_rounded':
-        return Icons.school_rounded;
-      case 'Icons.lightbulb':
-        return Icons.lightbulb;
-      case 'Icons.emoji_events':
-        return Icons.emoji_events;
-      default:
-        return Icons.help; // Default icon in case of an unknown name
-    }
   }
 
   void showTopicsSelectionPaywall(BuildContext context) {

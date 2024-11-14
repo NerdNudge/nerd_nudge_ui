@@ -4,7 +4,12 @@ import 'package:nerd_nudge/user/scores.dart';
 import 'package:nerd_nudge/utilities/styles.dart';
 
 class QuestionHeader extends StatelessWidget {
-  const QuestionHeader({super.key, required this.topic, required this.subtopic, required this.difficultyLevel});
+  const QuestionHeader({
+    Key? key,
+    required this.topic,
+    required this.subtopic,
+    required this.difficultyLevel,
+  }) : super(key: key);
 
   final String topic;
   final String subtopic;
@@ -17,44 +22,68 @@ class QuestionHeader extends StatelessWidget {
 
     return Column(
       children: <Widget>[
-        SizedBox(
-          height: 10.0,
+        // Adjusted SizedBox using percentage
+        Styles.getSizedHeightBoxByScreen(context, 15),
+        Column(
+          children: <Widget>[
+            Styles.getTitleDescriptionWidget(
+              'Topic: ',
+              topic,
+              Colors.black,
+              Colors.black,
+              15,
+              17,
+            ),
+            Styles.getTitleDescriptionWidget(
+              'Sub-topic: ',
+              subtopic,
+              Colors.black,
+              Colors.black,
+              15,
+              17,
+            ),
+          ],
         ),
-        Container(
-          child: Column(
-            children: <Widget>[
-              Container(
-                child: Styles.getTitleDescriptionWidget('Topic: ', topic, Colors.black, Colors.black, 15, 17),
+        Styles.getSizedHeightBoxByScreen(context, 15), // 1.5% of screen height
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Expanded(
+              flex: 2,
+              child: Styles.getTitleDescriptionWidget(
+                'Score: ',
+                score.toString(),
+                Colors.black,
+                Colors.green,
+                15,
+                16,
               ),
-
-              Container(
-                child: Styles.getTitleDescriptionWidget('Sub-topic: ', subtopic, Colors.black, Colors.black, 15, 17),
+            ),
+            Expanded(
+              flex: 2,
+              child: Styles.getTitleDescriptionWidget(
+                'Rank: ',
+                rank.toString(),
+                Colors.black,
+                Colors.green,
+                15,
+                16,
               ),
-            ],
-          ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Styles.getTitleDescriptionWidget(
+                difficultyLevel,
+                '',
+                Colors.black,
+                Colors.black,
+                15,
+                15,
+              ),
+            ),
+          ],
         ),
-        SizedBox(
-          height: 15.0,
-        ),
-        Container(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Expanded(
-                child: Styles.getTitleDescriptionWidget('Score: ', score.toString(), Colors.black, Colors.green, 15, 16),
-              ),
-              Expanded(
-                child: Styles.getTitleDescriptionWidget('Rank: ', rank.toString(), Colors.black, Colors.green, 15, 16),
-              ),
-              Expanded(
-                child: Styles.getTitleDescriptionWidget('Difficulty: ', difficultyLevel, Colors.black, Colors.black, 15, 15),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(
-          height: 12.0,
-        ),
+        Styles.getSizedHeightBoxByScreen(context, 12), // 1.2% of screen height
       ],
     );
   }

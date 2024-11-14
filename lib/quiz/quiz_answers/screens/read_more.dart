@@ -9,8 +9,6 @@ import 'dart:io';
 
 import '../../../menus/screens/menu_options.dart';
 import '../../../topics/screens/topic_selection_home_page.dart';
-import '../../../utilities/api_end_points.dart';
-import '../../../utilities/api_service.dart';
 import '../../../utilities/colors.dart';
 import '../../../utilities/constants.dart';
 import '../../../utilities/styles.dart';
@@ -198,6 +196,7 @@ class _ReadMorePageState extends State<ReadMorePage> {
       Share.shareFiles([imagePath.path], text: '\n\n$shareMessage');
     } catch (e) {
       print('Error capturing screenshot: $e');
+      Styles.showGlobalSnackbarMessage('Failed to capture screenshot. Please try again.');
     }
   }
 
@@ -236,9 +235,7 @@ class _ReadMorePageState extends State<ReadMorePage> {
               width: double.infinity, // Width of the horizontal bar
               color: const Color(0xFF252d3c),
             ),
-            const SizedBox(
-              height: 20.0,
-            ),
+            Styles.getSizedHeightBoxByScreen(context, 20),
             Card(
               color: CustomColors.mainThemeColor,
               margin:
@@ -263,23 +260,15 @@ class _ReadMorePageState extends State<ReadMorePage> {
                   children: <Widget>[
                     Styles.getTitleDescriptionWidget('Description: ',
                         description, Colors.black, Colors.black, 18, 17),
-                    const SizedBox(
-                      height: 30.0,
-                    ),
+                    Styles.getSizedHeightBoxByScreen(context, 30),
                     Styles.getTitleDescriptionWidget('Pro Tip: ', pro_tip,
                         Colors.black, Colors.black, 18, 17),
-                    const SizedBox(
-                      height: 30.0,
-                    ),
+                    Styles.getSizedHeightBoxByScreen(context, 30),
                     Styles.getTitleDescriptionWidget('Fun Fact: ', fun_fact,
                         Colors.black, Colors.black, 18, 17),
-                    const SizedBox(
-                      height: 10.0,
-                    ),
+                    Styles.getSizedHeightBoxByScreen(context, 20),
                     Styles.getDivider(),
-                    const SizedBox(
-                      height: 10.0,
-                    ),
+                    Styles.getSizedHeightBoxByScreen(context, 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -289,21 +278,21 @@ class _ReadMorePageState extends State<ReadMorePage> {
                           count: _likeCount,
                           onPressed: () => _updateLike(quizId),
                         ),
-                        const SizedBox(width: 10),
+                        Styles.getSizedWidthBoxByScreen(context, 10),
                         Styles.buildIconButtonWithCounter(
                           icon: _dislikesIcon,
                           color: Colors.red,
                           count: _dislikeCount,
                           onPressed: () => _updateDislike(quizId),
                         ),
-                        const SizedBox(width: 10),
+                        Styles.getSizedWidthBoxByScreen(context, 10),
                         Styles.buildIconButtonWithCounter(
                           icon: _favoriteIcon,
                           color: Colors.pink,
                           count: _favoriteCount,
                           onPressed: () => _updateFavorite(widget.completeQuiz),
                         ),
-                        const SizedBox(width: 10),
+                        Styles.getSizedWidthBoxByScreen(context, 10),
                         Styles.buildIconButtonWithCounter(
                           icon: _shareIcon,
                           color: Colors.blue,
@@ -312,9 +301,7 @@ class _ReadMorePageState extends State<ReadMorePage> {
                         ),
                       ],
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
+                    Styles.getSizedHeightBoxByScreen(context, 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

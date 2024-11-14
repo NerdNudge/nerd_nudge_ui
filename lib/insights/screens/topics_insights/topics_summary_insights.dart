@@ -52,6 +52,8 @@ class TopicSummaryInsights {
       Function topicsDrillDown,
       Function getPeerComparison,
       Function getCloseButtonClick) {
+
+    double buttonSize = MediaQuery.of(context).size.width * 0.1;
     return Column(
       children: [
         Text(
@@ -112,7 +114,7 @@ class TopicSummaryInsights {
           15,
           15,
         ),
-        SizedBox(height: 20),
+        Styles.getSizedHeightBoxByScreen(context, 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -123,12 +125,10 @@ class TopicSummaryInsights {
                 fontSize: 14,
               ),
             ),
-            SizedBox(
-              width: 16,
-            ),
+            Styles.getSizedWidthBoxByScreen(context, 16),
             Container(
-              width: 40.0, // Adjust the width and height for the desired size
-              height: 40.0,
+              width: buttonSize,
+              height: buttonSize,
               decoration: BoxDecoration(
                 color: CustomColors
                     .mainThemeColor, // Background color of the button
@@ -142,10 +142,10 @@ class TopicSummaryInsights {
                 color: Colors.white, // Foreground color of the X icon
               ),
             ),
-            SizedBox(width: 6),
+            Styles.getSizedWidthBoxByScreen(context, 6),
             Container(
-              width: 40.0, // Adjust the width and height for the desired size
-              height: 40.0,
+              width: buttonSize,
+              height: buttonSize,
               decoration: BoxDecoration(
                 color: CustomColors
                     .mainThemeColor, // Background color of the button
@@ -159,10 +159,10 @@ class TopicSummaryInsights {
                 color: Colors.white, // Foreground color of the X icon
               ),
             ),
-            SizedBox(width: 6),
+            Styles.getSizedWidthBoxByScreen(context, 6),
             Container(
-              width: 40.0, // Adjust the width and height for the desired size
-              height: 40.0,
+              width: buttonSize,
+              height: buttonSize,
               decoration: BoxDecoration(
                 color: CustomColors
                     .mainThemeColor, // Background color of the button
@@ -176,10 +176,10 @@ class TopicSummaryInsights {
                 color: Colors.white, // Foreground color of the X icon
               ),
             ),
-            SizedBox(width: 6),
+            Styles.getSizedWidthBoxByScreen(context, 6),
             Container(
-              width: 40.0, // Adjust the width and height for the desired size
-              height: 40.0,
+              width: buttonSize,
+              height: buttonSize,
               decoration: BoxDecoration(
                 color: CustomColors
                     .mainThemeColor, // Background color of the button
@@ -232,9 +232,14 @@ class TopicSummaryInsights {
 
   static _getSummaryChart(
       double easyValue, double mediumValue, double hardValue) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+    double chartSize = screenWidth * 0.5;
+
+    chartSize = chartSize > screenHeight * 0.4 ? screenHeight * 0.4 : chartSize;
     return SizedBox(
-      width: 200,
-      height: 200,
+      width: chartSize,
+      height: chartSize,
       child: Chart(
         layers: _layers(easyValue, mediumValue, hardValue),
       ),
