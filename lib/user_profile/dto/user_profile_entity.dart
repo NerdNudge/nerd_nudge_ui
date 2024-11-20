@@ -2,9 +2,9 @@ import 'package:nerd_nudge/utilities/constants.dart';
 
 
 class UserProfileEntity {
-  String _userFullName = '';
-  String _userEmail = '';
-  String _accountType = Constants.FREEMIUM;
+  static String _userFullName = '';
+  static String _userEmail = '';
+  static String _accountType = Constants.FREEMIUM;
 
   UserProfileEntity._privateConstructor();
   static final UserProfileEntity _instance = UserProfileEntity._privateConstructor();

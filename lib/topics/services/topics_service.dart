@@ -20,27 +20,39 @@ class TopicsService {
   Map<String, String> _topicCodeToNamesMapping = {};
   Map<String, String> _topicNameToCodesMapping = {};
 
+  // New: Subtopics Cache
+  final Map<String, dynamic> _subtopicsCache = {};
+  final Map<String, DateTime> _subtopicsFetchedTime = {};
 
   void invalidateTopicsCache() {
-    print('Invalidating topics cache.');    
+    print('Invalidating topics cache.');
     _lastFetchedTime = null;
   }
 
+  // New: Invalidate Subtopics Cache
+  void invalidateSubtopicsCache() {
+    print('Invalidating subtopics cache.');
+    _subtopicsCache.clear();
+    _subtopicsFetchedTime.clear();
+  }
 
   Future<dynamic> getTopics() async {
     print('getting Topics now..');
-    if(_topicsResult == null || ! isWithinRetentionTime()) {
+    if (_topicsResult == null || !isWithinRetentionTime()) {
       await _updateTopicCache();
     }
-
     return _topicsResult;
   }
 
-
   Future<void> _updateTopicCache() async {
     try {
-      print(APIEndpoints.CONTENT_MANAGER_BASE_URL + APIEndpoints.TOPICS + "/" + UserProfileEntity().getUserEmail());
-      _topicsResult = await _apiService.getRequest(APIEndpoints.CONTENT_MANAGER_BASE_URL, APIEndpoints.TOPICS + "/" + UserProfileEntity().getUserEmail());
+      print(APIEndpoints.CONTENT_MANAGER_BASE_URL +
+          APIEndpoints.TOPICS +
+          "/" +
+          UserProfileEntity().getUserEmail());
+      _topicsResult = await _apiService.getRequest(
+          APIEndpoints.CONTENT_MANAGER_BASE_URL,
+          APIEndpoints.TOPICS + "/" + UserProfileEntity().getUserEmail());
       _lastFetchedTime = DateTime.now();
       print('API Result: $_topicsResult');
 
@@ -65,9 +77,24 @@ class TopicsService {
     return now.difference(_lastFetchedTime!).compareTo(_cacheDuration) < 0;
   }
 
-  void _updateTopicCodesAndNamesMapping() {
-    if (_topicsResult != null && _topicsResult is Map<String, dynamic> && _topicsResult.containsKey('data') && _topicsResult['data'] is Map<String, dynamic> && _topicsResult['data'].containsKey('topics')) {
+  // New: Check Retention Time for Subtopics
+  bool isSubtopicWithinRetentionTime(String topic) {
+    if (!_subtopicsFetchedTime.containsKey(topic)) {
+      return false;
+    }
+    final now = DateTime.now();
+    return now
+        .difference(_subtopicsFetchedTime[topic]!)
+        .compareTo(_cacheDuration) <
+        0;
+  }
 
+  void _updateTopicCodesAndNamesMapping() {
+    if (_topicsResult != null &&
+        _topicsResult is Map<String, dynamic> &&
+        _topicsResult.containsKey('data') &&
+        _topicsResult['data'] is Map<String, dynamic> &&
+        _topicsResult['data'].containsKey('topics')) {
       Map<String, dynamic> topicsMap = _topicsResult['data']['topics'];
       _topicNameToCodesMapping['global'] = 'global';
       _topicCodeToNamesMapping['global'] = 'global';
@@ -87,7 +114,7 @@ class TopicsService {
   }
 
   Future<Map<String, String>> getTopicNamesToCodesMapping() async {
-    if(! isWithinRetentionTime()) {
+    if (!isWithinRetentionTime()) {
       await _updateTopicCache();
     }
 
@@ -95,31 +122,38 @@ class TopicsService {
   }
 
   Future<Map<String, String>> getTopicCodesToNamesMapping() async {
-    if(! isWithinRetentionTime()) {
+    if (!isWithinRetentionTime()) {
       await _updateTopicCache();
     }
 
     return _topicCodeToNamesMapping;
   }
 
-
   Future<dynamic> getSubtopics(String topic) async {
     print('getting Quizflex Subtopics data now..');
-    dynamic result;
+    if (_subtopicsCache.containsKey(topic) &&
+        isSubtopicWithinRetentionTime(topic)) {
+      // Return cached subtopics if valid
+      print('Returning cached subtopics for topic: $topic');
+      return _subtopicsCache[topic];
+    }
+
     try {
       print(APIEndpoints.CONTENT_MANAGER_BASE_URL +
           APIEndpoints.SUB_TOPICS +
           "/" +
           topic);
-      result = await _apiService.getRequest(
+      dynamic result = await _apiService.getRequest(
           APIEndpoints.CONTENT_MANAGER_BASE_URL,
           APIEndpoints.SUB_TOPICS + "/" + topic);
       print('API Result: $result');
 
       if (result is Map<String, dynamic> && result.containsKey('data')) {
         List<dynamic> subtopicsList = result['data'];
-        return List<Map<String, String>>.from(
+        _subtopicsCache[topic] = List<Map<String, String>>.from(
             subtopicsList.map((item) => Map<String, String>.from(item)));
+        _subtopicsFetchedTime[topic] = DateTime.now(); // Update cache time
+        return _subtopicsCache[topic];
       } else {
         throw const FormatException("Unexpected response format");
       }

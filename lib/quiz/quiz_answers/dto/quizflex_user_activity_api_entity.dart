@@ -12,8 +12,6 @@ class QuizflexUserActivityAPIEntity {
     _initialize();
   }
 
-  final String _id = UserProfileEntity().getUserEmail();
-  final String _fullName = UserProfileEntity().getUserFullName();
   int _timestamp = 0;
   static Map<String, Map<String, List<String>>> _quizflex = {};
   static List<String> _likes = [];
@@ -137,8 +135,8 @@ class QuizflexUserActivityAPIEntity {
 
   Map<String, dynamic> toJson() {
     return {
-      'userId': _id,
-      'userFullName': _fullName,
+      'userId': UserProfileEntity().getUserEmail(),
+      'userFullName': UserProfileEntity().getUserFullName(),
       'timestamp': _timestamp,
       'quizflex': _quizflex,
       'favorites': _favorites,
@@ -153,8 +151,8 @@ class QuizflexUserActivityAPIEntity {
   String toString() {
     return '''
 QuizflexUserActivityAPIEntity {
-  userId: $_id,
-  userFullName: $_fullName,
+  userId: ${UserProfileEntity().getUserEmail()},
+  userFullName: ${UserProfileEntity().getUserFullName()},
   timestamp: $_timestamp,
   quizflex: $_quizflex,
   likes: $_likes,

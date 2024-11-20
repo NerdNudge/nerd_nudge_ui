@@ -65,9 +65,7 @@ class _HomePageState extends State<HomePage> {
       _currentLockKey = CacheLockKeys().getCurrentKey();
     });
 
-    print('Home Stats Insights: $homeStats');
     print('under insighst: $_currentLockKey');
-
     return homeStats;
   }
 

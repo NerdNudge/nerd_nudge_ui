@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:nerd_nudge/explore_menu/screens/explore_home_page.dart';
 import 'package:nerd_nudge/insights/screens/topics_insights/topics_insights_main_page.dart';
@@ -85,7 +86,8 @@ class PaywallPanel {
                 child: ListView.builder(
                   itemCount: _packages.length,
                   itemBuilder: (context, index) {
-                    final package = _packages[index];
+                    final Package package = _packages[index];
+                    print('Packages: ${package.storeProduct}');
                     return Card(
                       elevation: 4,
                       color: Colors.white38,
@@ -129,6 +131,7 @@ class PaywallPanel {
                           ),
                         ),
                         onTap: () {
+                          print('Purchasing package: $package');
                           _purchasePackage(package, context);
                         },
                       ),
@@ -142,16 +145,41 @@ class PaywallPanel {
 
   static void _purchasePackage(Package package, BuildContext context) async {
     try {
-      CustomerInfo customerInfo = await Purchases.purchasePackage(package);
-      await Future.delayed(const Duration(seconds: 1));
+      print('Checking if Purchases SDK is configured...');
+      CustomerInfo customerInfo = await Purchases.getCustomerInfo();
+      print('Purchases SDK is configured. $customerInfo');
 
-      if (customerInfo.entitlements.all['nerdnudgepro_399_1m']?.isActive ==
+
+      print('purchasing now1.. $package');
+      /*bool isPurchasesConfigured = await Purchases.isConfigured;
+      if(! isPurchasesConfigured) {
+        print('Purchase API is not configured, configuring now..');
+        PurchaseAPI.configurePurchases();
+      }
+      else {
+        print('Its configured');
+        final offerings = await Purchases.getOfferings();
+        print('updated offerings new: $offerings');
+      }*/
+      CustomerInfo purchaseInfo = await Purchases.purchasePackage(package);
+      print('purchasing now2..');
+      bool isPro = purchaseInfo.entitlements.all['pro_entitlement_id']?.isActive ?? false;
+      if(isPro) {
+        print('User is pro now !!!');
+      } else {
+        print('Still a freemium user');
+      }
+      
+      await Future.delayed(const Duration(seconds: 1));
+      print('purchasing now3..');
+
+      if (purchaseInfo.entitlements.all['nerdnudgepro_399_1m']?.isActive ==
               true ||
-          customerInfo.entitlements.all['nerdnudgepro_3999_1y']?.isActive ==
+          purchaseInfo.entitlements.all['nerdnudgepro_3999_1y']?.isActive ==
               true ||
-          customerInfo.entitlements.all['nerdnudgepro_399_1m_ios']?.isActive ==
+          purchaseInfo.entitlements.all['nerdnudgepro_399_1m_ios']?.isActive ==
               true ||
-          customerInfo.entitlements.all['nerdnudgepro_3999_1y_ios']?.isActive ==
+          purchaseInfo.entitlements.all['nerdnudgepro_3999_1y_ios']?.isActive ==
               true) {
         //if (!context.mounted) return;
         Styles.showMessageDialog(
@@ -187,6 +215,17 @@ class PaywallPanel {
             context, 'No Entitlements', 'No active Pro entitlement found.');
         Styles.showGlobalSnackbarMessage('No active Pro entitlement found.');
       }
+    } on PlatformException catch (e) {
+      var errorCode = PurchasesErrorHelper.getErrorCode(e);
+      print('Purchase failed with error code: $errorCode');
+      print('Error details: ${e.message}');
+      if (!context.mounted) return;
+      Styles.showGlobalSnackbarMessage('Purchase failed: ${e.message}');
+      Styles.showMessageDialog(
+        context,
+        'Purchase Failure',
+        'Purchase failed with error code: $errorCode\n${e.message}',
+      );
     } catch (e) {
       Styles.showGlobalSnackbarMessage('Purchase failed: $e');
       Styles.showMessageDialog(

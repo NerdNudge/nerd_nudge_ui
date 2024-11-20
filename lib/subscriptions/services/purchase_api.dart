@@ -1,11 +1,13 @@
 import 'package:flutter/services.dart';
-import 'package:nerd_nudge/user_home_page/dto/user_home_stats.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
+import 'dart:io' show Platform;
 
 import '../../utilities/constants.dart';
 
 class PurchaseAPI {
-  static const _apikey = 'goog_bcIotbsIPCTidmmXUaBxzGKHFYu';
+  static const _apikeyAndroid = 'goog_bcIotbsIPCTidmmXUaBxzGKHFYu';
+  static const _apikeyIOS = 'appl_BhHEoHAfyozvdsLdyCmtozzwgxc';
+
   static List<Offering> _offerings = [];
   static String _userCurrentOffering = '';
 
@@ -13,10 +15,26 @@ class PurchaseAPI {
   static get userCurrentOffering => _userCurrentOffering;
 
   static Future init() async {
-    PurchasesConfiguration configuration = PurchasesConfiguration(_apikey);
-    await Purchases.configure(configuration);
+    print('initializing purchase api');
+    await configurePurchases();
     await updateNerdNudgeOfferings();
     await updateCurrentOffer();
+  }
+
+  static Future<void> configurePurchases() async {
+    PurchasesConfiguration configuration;
+    if (Platform.isAndroid) {
+      print('Its android');
+      configuration = PurchasesConfiguration(_apikeyAndroid);
+    } else if (Platform.isIOS) {
+      print('Its ios');
+      configuration = PurchasesConfiguration(_apikeyIOS);
+    } else {
+      throw UnsupportedError('Unsupported platform');
+    }
+
+    await Purchases.configure(configuration);
+    print('purchase api configured');
   }
 
   static Future<void> updateNerdNudgeOfferings() async {

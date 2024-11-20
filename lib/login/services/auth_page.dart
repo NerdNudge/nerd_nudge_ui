@@ -14,17 +14,17 @@ class Authpage extends StatelessWidget {
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
-        print('Clearing cache now.');
+        /*print('Clearing cache now.');
         CacheLockKeys cacheLockKeys = CacheLockKeys();
-        cacheLockKeys.updateQuizFlexShotsKey();
-        if (snapshot.hasData) {
+        cacheLockKeys.updateQuizFlexShotsKey();*/
+        if (snapshot.hasData && UserProfileEntity().getUserEmail() != '') {
           print('user data present');
           UserProfileEntity userProfileEntity = UserProfileEntity();
           return HomePage(userFullName: userProfileEntity.getUserFullName(), userEmail: userProfileEntity.getUserEmail(),);
         } else {
           print('no user data present');
-          CacheLockKeys cacheLockKeys = CacheLockKeys();
-          cacheLockKeys.updateQuizFlexShotsKey();
+          /*CacheLockKeys cacheLockKeys = CacheLockKeys();
+          cacheLockKeys.updateQuizFlexShotsKey();*/
           return const LoginOrRegister();
         }
       },

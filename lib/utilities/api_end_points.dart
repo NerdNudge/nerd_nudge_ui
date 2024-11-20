@@ -28,4 +28,8 @@ class APIEndpoints {
 
   static const String ANDROID_SUBSCRIPTIONS_URL = 'https://play.google.com/store/account/subscriptions';
   static const String IOS_SUBSCRIPTIONS_URL = 'https://apps.apple.com/account/subscriptions';
+
+  static const String INVITE_NERDS_URL = '/api/nerdnudge/invitenerds/invite';
+  static const String PLAYSTORE_LINK = 'https://play.google.com/store/apps/details?id=com.neurospark.nerdnudge';
+  static const String APPSTORE_LINK = 'https://play.google.com/store/apps/details?id=com.neurospark.nerdnudge';
 }

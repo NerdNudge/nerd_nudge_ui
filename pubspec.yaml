@@ -3,7 +3,7 @@ description: "A new way of learning and retaining what is learnt. Master Tech Co
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0+32
+version: 1.0.0+42
 
 environment:
   sdk: '>=3.4.4 <4.0.0'
@@ -37,6 +37,7 @@ dependencies:
   purchases_flutter: ^8.1.1
   sliding_up_panel: ^2.0.0+1
   url_launcher: ^6.0.9
+  flutter_native_splash: ^2.3.0
 
 dev_dependencies:
   flutter_test:
@@ -69,3 +70,11 @@ flutter_launcher_icons:
   remove_alpha_ios: true
   adaptive_icon_background: "#000000"
   adaptive_icon_foreground: "images/app_logo_black_bg_1024.png"
+
+flutter_native_splash:
+  android: true
+  ios: true
+  web: false
+  color: "#ffffff" # Background color for splash screen
+  image: assets/splash_logo.png # Path to your splash logo
+  android_gravity: center # Ensures proper placement of the logo

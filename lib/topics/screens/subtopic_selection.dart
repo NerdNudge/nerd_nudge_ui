@@ -30,19 +30,25 @@ class SubtopicSelectionPage extends StatefulWidget {
 class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
   late List<Map<String, String>> subtopics = [];
   bool isLoading = true;
+  bool isError = false; // Flag to check if there's an error
   final PanelController _panelController = PanelController();
 
   _getSubtopics() async {
     try {
       final result = await TopicsService().getSubtopics(ExploreTopicSelection.selectedTopic);
+      if (result == null || result.isEmpty) {
+        throw Exception('No subtopics found'); // Handling the case where the result is empty
+      }
       setState(() {
         subtopics = result;
         isLoading = false;
+        isError = false; // Reset error state on success
       });
     } catch (e) {
-      print('Error loading topics: $e');
+      print('Error loading topics: $e'); // Logs error
       setState(() {
         isLoading = false;
+        isError = true; // Set error state to true
       });
     }
   }
@@ -82,6 +88,26 @@ class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
   Widget _getBody() {
     if (isLoading) {
       return const Center(child: CircularProgressIndicator());
+    }
+
+    if (isError) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('Error loading subtopics. Please try again.'),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  isLoading = true;
+                  _getSubtopics(); // Retry fetching subtopics
+                });
+              },
+              child: const Text('Retry'),
+            ),
+          ],
+        ),
+      );
     }
 
     if (subtopics.isEmpty) {
