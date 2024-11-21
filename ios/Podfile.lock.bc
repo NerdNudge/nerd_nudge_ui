@@ -32,7 +32,7 @@ PODS:
   - FirebaseCoreInternal (10.29.0):
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
   - Flutter (1.0.0)
-  - flutter_native_splash (2.4.3):
+  - flutter_native_splash (0.0.1):
     - Flutter
   - Google-Mobile-Ads-SDK (9.14.0):
     - GoogleAppMeasurement (< 11.0, >= 7.0)
@@ -70,7 +70,7 @@ PODS:
     - AppAuth (< 2.0, >= 1.7.3)
     - GTMAppAuth (< 5.0, >= 4.1.1)
     - GTMSessionFetcher/Core (~> 3.3)
-  - GoogleUserMessagingPlatform (2.7.0)
+  - GoogleUserMessagingPlatform (2.5.0)
   - GoogleUtilities/AppDelegateSwizzler (7.13.3):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
@@ -113,16 +113,14 @@ PODS:
     - Flutter
     - FlutterMacOS
   - PromisesObjC (2.4.0)
-  - purchases_flutter (8.2.2):
+  - purchases_flutter (8.1.1):
     - Flutter
-    - PurchasesHybridCommon (= 13.9.0)
-  - PurchasesHybridCommon (13.9.0):
-    - RevenueCat (= 5.8.0)
+    - PurchasesHybridCommon (= 13.2.0)
+  - PurchasesHybridCommon (13.2.0):
+    - RevenueCat (= 5.3.1)
   - RecaptchaInterop (100.0.0)
-  - RevenueCat (5.8.0)
+  - RevenueCat (5.3.1)
   - share_plus (0.0.1):
-    - Flutter
-  - sign_in_with_apple (0.0.1):
     - Flutter
   - url_launcher_ios (0.0.1):
     - Flutter
@@ -137,7 +135,6 @@ DEPENDENCIES:
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - purchases_flutter (from `.symlinks/plugins/purchases_flutter/ios`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
-  - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
@@ -180,8 +177,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/purchases_flutter/ios"
   share_plus:
     :path: ".symlinks/plugins/share_plus/ios"
-  sign_in_with_apple:
-    :path: ".symlinks/plugins/sign_in_with_apple/ios"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
 
@@ -195,25 +190,24 @@ SPEC CHECKSUMS:
   FirebaseCore: 7ec4d0484817f12c3373955bc87762d96842d483
   FirebaseCoreInternal: df84dd300b561c27d5571684f389bf60b0a5c934
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  flutter_native_splash: e8a1e01082d97a8099d973f919f57904c925008a
+  flutter_native_splash: edf599c81f74d093a4daf8e17bd7a018854bc778
   Google-Mobile-Ads-SDK: 4fe6304b771f8467d29978cb790ec1e56e646946
   google_mobile_ads: 528ab4673c5b5fd36321b7e90fc585064cdbaf2b
   google_sign_in_ios: 07375bfbf2620bc93a602c0e27160d6afc6ead38
   GoogleAppMeasurement: f9de05ee17401e3355f68e8fc8b5064d429f5918
   GoogleSignIn: d4281ab6cf21542b1cfaff85c191f230b399d2db
-  GoogleUserMessagingPlatform: a8b56893477f67212fbc8411c139e61d463349f5
+  GoogleUserMessagingPlatform: 6b4f48a370e77ce121d034c908cc6ee4fdafaf13
   GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
   GTMAppAuth: f69bd07d68cd3b766125f7e072c45d7340dea0de
   GTMSessionFetcher: 5aea5ba6bd522a239e236100971f10cb71b96ab6
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
-  purchases_flutter: 279ea4decfaaa493fe32dcc88efb74c30d13f98c
-  PurchasesHybridCommon: 2e684a22e4aaf33c5fc10fd9e2ca2e27e6b7abff
+  purchases_flutter: 71bf40d5f70c4653df8a53ef3819b6bfe08d86d3
+  PurchasesHybridCommon: 20acf98303a9593f5d56b449459dcf16ea581a99
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
-  RevenueCat: 4cd1daad3a57d2b4015ed2b4aef0a0f24ffce0a1
+  RevenueCat: b2d2555cbb1f4116d341af4c5f82269c8e4e499a
   share_plus: 056a1e8ac890df3e33cb503afffaf1e9b4fbae68
-  sign_in_with_apple: f3bf75217ea4c2c8b91823f225d70230119b8440
   url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
 
 PODFILE CHECKSUM: 351dbda8241c6ae667acbc7bc0353a0d9978d7f1

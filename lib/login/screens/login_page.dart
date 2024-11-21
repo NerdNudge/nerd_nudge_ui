@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:nerd_nudge/utilities/styles.dart';
@@ -122,20 +124,15 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(
                       height: 30,
                     ),
-                    GestureDetector(
-                      onTap: _signInWithGoogle,
-                      child: Container(
-                        padding: EdgeInsets.all(14),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(16),
-                          color: Colors.white24,
-                        ),
-                        child: Image.asset(
-                          'images/google.png',
-                          height: 40,
-                        ),
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _getThirdPartySignIn(_signInWithGoogle, 'images/google.png'),
+                        if (Platform.isIOS) ...[
+                          Styles.getSizedWidthBoxByScreen(context, 20),
+                          _getThirdPartySignIn(_signInWithApple, 'images/apple.png'),
+                        ],
+                      ],
                     ),
                     const SizedBox(
                       height: 30,
@@ -169,35 +166,38 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _showMessageDialog(BuildContext context, String title, String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
+  Widget _getThirdPartySignIn(GestureTapCallback signInFunction, String image) {
+    return GestureDetector(
+      onTap: signInFunction,
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey),
+          borderRadius: BorderRadius.circular(16),
+          color: Colors.white24,
+        ),
+        child: Image.asset(
+          image,
+          height: 40,
+        ),
+      ),
     );
   }
 
   _signInWithGoogle() async {
     AuthService authService = AuthService();
     User? user = await authService.signInWithGoogle();
-    _showMessageDialog(context, 'Google sign in check', 'User: $user');
-    Navigator.pop(context);
+    _validateUserAndNavigateToHome(user);
+  }
 
+  _signInWithApple() async {
+    AuthService authService = AuthService();
+    User? user = await authService.signInWithApple();
+    _validateUserAndNavigateToHome(user);
+  }
+
+  _validateUserAndNavigateToHome(User? user) {
     if (user != null) {
-      _showMessageDialog(context, 'Google sign in check', 'Sign-in successful: ${user.displayName}');
-      print('Sign-in successful: ${user.displayName}');
       String userFullName = user.displayName ?? user.email ?? '';
       String email = user.email ?? '';
       Navigator.push(
@@ -207,7 +207,6 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
     } else {
-      _showMessageDialog(context, 'Google sign in check', 'Sign-in failed or canceled.');
       print('Sign-in failed or canceled');
       Navigator.pushNamed(context, '/startpage');
     }
