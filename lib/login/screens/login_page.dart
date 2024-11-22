@@ -1,8 +1,11 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:nerd_nudge/utilities/api_end_points.dart';
 import 'package:nerd_nudge/utilities/styles.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../cache_and_lock_manager/cache_locks_keys.dart';
 import '../../user_home_page/screens/home_page.dart';
@@ -155,7 +158,51 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         )
                       ],
-                    )
+                    ),
+                    Styles.getSizedHeightBoxByScreen(context, 30),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: RichText(
+                        //textAlign: TextAlign.center,
+                        text: TextSpan(
+                          text: "* By continuing, you agree to ",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: 'Terms of Use',
+                              style: const TextStyle(
+                                color: Colors.blue,
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  launchUrl(Uri.parse(APIEndpoints.TERMS_OF_USE_LINK));
+                                },
+                            ),
+                            const TextSpan(
+                              text: ' and ',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            TextSpan(
+                              text: 'Privacy Policy',
+                              style: const TextStyle(
+                                color: Colors.blue,
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  launchUrl(Uri.parse(APIEndpoints.PRIVACY_POLICY_LINK));
+                                },
+                            ),
+                            const TextSpan(
+                              text: '.',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),

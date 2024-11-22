@@ -1,4 +1,8 @@
 class APIEndpoints {
+
+  static const PRIVACY_POLICY_LINK = 'https://nerdnudge.github.io/nerd-nudge-site/privacy-policy.html';
+  static const TERMS_OF_USE_LINK = 'https://nerdnudge.github.io/nerd-nudge-site/terms-of-use.html';
+
   static const String USER_INSIGHTS_BASE_URL = 'http://NerdNudge-ALB-Public-437225434.ap-southeast-1.elb.amazonaws.com';
   static const String CONTENT_MANAGER_BASE_URL = 'http://NerdNudge-ALB-Public-437225434.ap-southeast-1.elb.amazonaws.com';
   static const String USER_ACTIVITY_BASE_URL = 'http://NerdNudge-ALB-Public-437225434.ap-southeast-1.elb.amazonaws.com';
