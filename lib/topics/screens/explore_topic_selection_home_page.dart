@@ -36,6 +36,7 @@ class _ExploreTopicSelectionHomePageState
   static PanelController _topicSelectionPanelController = PanelController();
   static PanelController _challengesPaywallPanelController = PanelController();
   late Map<String, dynamic> userStats = {};
+  static late Map<String, dynamic> topicsConfig = {'rwcDailyQuizLimit': '10', 'rwcDailyQuizTime': '8'};
 
   static List<Map<String, dynamic>> topicSelectionActions = [
     {
@@ -89,6 +90,8 @@ class _ExploreTopicSelectionHomePageState
         userStats = data['userStats'] as Map<String, dynamic>;
 
         setState(() {
+          topicsConfig = data['config'] as Map<String, dynamic>;
+          print('topics Config: $topicsConfig');
           topics = topicsData.entries.map((entry) {
             final topicCode = entry.key;
             final topicDetails = entry.value;
@@ -272,13 +275,13 @@ class _ExploreTopicSelectionHomePageState
       return _buildTopicSelectionActionsPaywallPanel(context);
     }
     else {
-      //return PaywallPanel.buildDailyChallengePaywallPanel(context, ExploreTopicSelection.selectedTopic, ExploreTopicSelection.selectedTopicCode, userStats);
+      //return PaywallPanel.buildDailyChallengePaywallPanel(context, ExploreTopicSelection.selectedTopic, ExploreTopicSelection.selectedTopicCode, userStats, int.parse(topicsConfig['rwcDailyQuizLimit']), int.parse(topicsConfig['rwcDailyQuizTime']));
       if (PurchaseAPI.userCurrentOffering == Constants.FREEMIUM) {
         return PaywallPanel.buildUpgradeAccountPaywallPanel(context,
             'Upgrade your account to enjoy daily real-world challenges across topics.');
       }
       else {
-        return PaywallPanel.buildDailyChallengePaywallPanel(context, ExploreTopicSelection.selectedTopic, ExploreTopicSelection.selectedTopicCode, userStats);
+        return PaywallPanel.buildDailyChallengePaywallPanel(context, ExploreTopicSelection.selectedTopic, ExploreTopicSelection.selectedTopicCode, userStats, int.parse(topicsConfig['rwcDailyQuizLimit']), int.parse(topicsConfig['rwcDailyQuizTime']));
       }
     }
   }
@@ -296,7 +299,7 @@ class _ExploreTopicSelectionHomePageState
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Colors.black54,
+                color: Colors.black,
               ),
             ),
           ),
@@ -332,7 +335,7 @@ class _ExploreTopicSelectionHomePageState
                             child: Icon(
                               transaction['icon']!,
                               size: 40, // Icon size
-                              color: Colors.black54,
+                              color: Colors.black87,
                             ),
                           ),
                         ),
@@ -346,7 +349,7 @@ class _ExploreTopicSelectionHomePageState
                                 style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.black54,
+                                  color: Colors.black,
                                 ),
                               ),
                               const SizedBox(height: 4),
@@ -354,7 +357,7 @@ class _ExploreTopicSelectionHomePageState
                                 transaction['subtitle']!,
                                 style: const TextStyle(
                                   fontSize: 14,
-                                  color: Colors.black54,
+                                  color: Colors.black87,
                                 ),
                               ),
                             ],

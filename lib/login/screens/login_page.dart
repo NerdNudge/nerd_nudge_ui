@@ -89,7 +89,8 @@ class _LoginPageState extends State<LoginPage> {
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
+                              MaterialPageRoute(
+                                  builder: (context) => ForgotPasswordPage()),
                             );
                           },
                           child: Text(
@@ -130,10 +131,12 @@ class _LoginPageState extends State<LoginPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        _getThirdPartySignIn(_signInWithGoogle, 'images/google.png'),
+                        _getThirdPartySignIn(
+                            _signInWithGoogle, 'images/google.png'),
                         if (Platform.isIOS) ...[
                           Styles.getSizedWidthBoxByScreen(context, 20),
-                          _getThirdPartySignIn(_signInWithApple, 'images/apple.png'),
+                          _getThirdPartySignIn(
+                              _signInWithApple, 'images/apple.png'),
                         ],
                       ],
                     ),
@@ -160,49 +163,52 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                     ),
                     Styles.getSizedHeightBoxByScreen(context, 30),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: RichText(
-                        //textAlign: TextAlign.center,
-                        text: TextSpan(
-                          text: "* By continuing, you agree to ",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
+                    if (Platform.isIOS)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: RichText(
+                          //textAlign: TextAlign.center,
+                          text: TextSpan(
+                            text: "* By continuing, you agree to ",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                            children: [
+                              TextSpan(
+                                text: 'Terms of Use',
+                                style: const TextStyle(
+                                  color: Colors.blue,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    launchUrl(Uri.parse(
+                                        APIEndpoints.TERMS_OF_USE_LINK));
+                                  },
+                              ),
+                              const TextSpan(
+                                text: ' and ',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              TextSpan(
+                                text: 'Privacy Policy',
+                                style: const TextStyle(
+                                  color: Colors.blue,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    launchUrl(Uri.parse(
+                                        APIEndpoints.PRIVACY_POLICY_LINK));
+                                  },
+                              ),
+                              const TextSpan(
+                                text: '.',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
                           ),
-                          children: [
-                            TextSpan(
-                              text: 'Terms of Use',
-                              style: const TextStyle(
-                                color: Colors.blue,
-                              ),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  launchUrl(Uri.parse(APIEndpoints.TERMS_OF_USE_LINK));
-                                },
-                            ),
-                            const TextSpan(
-                              text: ' and ',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            TextSpan(
-                              text: 'Privacy Policy',
-                              style: const TextStyle(
-                                color: Colors.blue,
-                              ),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  launchUrl(Uri.parse(APIEndpoints.PRIVACY_POLICY_LINK));
-                                },
-                            ),
-                            const TextSpan(
-                              text: '.',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
                         ),
                       ),
-                    ),
                   ],
                 ),
               ),
@@ -250,7 +256,10 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => HomePage(userFullName: userFullName, userEmail: email,),
+          builder: (context) => HomePage(
+            userFullName: userFullName,
+            userEmail: email,
+          ),
         ),
       );
     } else {
@@ -297,8 +306,8 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       // Sign in with email and password
-      UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: usernameController.text,
         password: passwordController.text,
       );
@@ -320,8 +329,8 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) =>
-              HomePage(userFullName: userFullName, userEmail: usernameController.text),
+          builder: (context) => HomePage(
+              userFullName: userFullName, userEmail: usernameController.text),
         ),
       );
     } on FirebaseAuthException catch (e) {

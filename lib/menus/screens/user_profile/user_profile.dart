@@ -25,7 +25,6 @@ class _ProfilePageState extends State<ProfilePage> {
   late String userName;
   late String userEmail;
   final PanelController _panelController = PanelController();
-  List<Package> _packages = [];
 
   @override
   void initState() {
@@ -109,7 +108,7 @@ class _ProfilePageState extends State<ProfilePage> {
         Styles.getDivider(),
         const SizedBox(height: 10),
         Text(
-          'version: 1.0.0+46'
+          'version: 1.0.0+54'
         ),
         const SizedBox(height: 10),
         _buildAccountTypeSection(context),
