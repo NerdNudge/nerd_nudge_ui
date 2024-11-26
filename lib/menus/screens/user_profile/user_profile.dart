@@ -16,6 +16,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
+import '../../../utilities/logger.dart';
+
 class ProfilePage extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -107,8 +109,8 @@ class _ProfilePageState extends State<ProfilePage> {
         const SizedBox(height: 20),
         Styles.getDivider(),
         const SizedBox(height: 10),
-        Text(
-          'version: 1.0.0+54'
+        const Text(
+          'version: 1.0.0+59'
         ),
         const SizedBox(height: 10),
         _buildAccountTypeSection(context),
@@ -119,7 +121,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildAccountTypeSection(BuildContext context) {
     final String currentOffer = PurchaseAPI.userCurrentOffering;
-    print('Current offer of user: $currentOffer');
+    NerdLogger.logger.d('Current offer of user: $currentOffer');
 
     if (currentOffer == 'Freemium') {
       return _displayFreemiumAccountDetails();
@@ -166,7 +168,7 @@ class _ProfilePageState extends State<ProfilePage> {
       PurchaseAPI.updateNerdNudgeOfferings();
       PurchaseAPI.updateCurrentOffer();
     } catch (e) {
-      print('Error opening subscription management page: $e');
+      NerdLogger.logger.e('Error opening subscription management page: $e');
       Styles.showGlobalSnackbarMessage(
           'Unable to open subscription management page.');
     }
@@ -187,19 +189,19 @@ class _ProfilePageState extends State<ProfilePage> {
         ElevatedButton(
           onPressed: () async {
             final List<Offering> offerings = PurchaseAPI.offerings;
-            print('Offerings: $offerings');
+            NerdLogger.logger.d('Offerings: $offerings');
 
-            if (offerings == null || offerings.isEmpty) {
+            if (offerings.isEmpty) {
               Styles.showGlobalSnackbarMessage('No Offers found!');
             } else {
               _panelController.open();
             }
           },
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.black54),
           child: const Text(
             'Upgrade Account',
             style: TextStyle(color: Colors.white70),
           ),
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.black54),
         ),
       ],
     );

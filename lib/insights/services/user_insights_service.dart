@@ -3,6 +3,7 @@ import 'dart:convert';
 import '../../user_profile/dto/user_profile_entity.dart';
 import '../../utilities/api_end_points.dart';
 import '../../utilities/api_service.dart';
+import '../../utilities/logger.dart';
 
 class UserInsightsService {
   UserInsightsService._privateConstructor();
@@ -14,13 +15,11 @@ class UserInsightsService {
   }
 
   Future<Map<String, dynamic>> getUserInsights() async {
-    print('getting User Insights now..');
     final ApiService apiService = ApiService();
     dynamic result;
     try {
-      print(APIEndpoints.USER_INSIGHTS_BASE_URL + APIEndpoints.USER_INSIGHTS + "/" + UserProfileEntity().getUserEmail());
-      result = await apiService.getRequest(APIEndpoints.USER_INSIGHTS_BASE_URL, APIEndpoints.USER_INSIGHTS + "/" + UserProfileEntity().getUserEmail());
-      print('API Result: $result');
+      result = await apiService.getRequest(APIEndpoints.USER_INSIGHTS_BASE_URL, "${APIEndpoints.USER_INSIGHTS}/" + UserProfileEntity().getUserEmail());
+      NerdLogger.logger.d('API Result: $result');
 
       if (result is Map<String, dynamic>) {
         return result['data'];
@@ -30,19 +29,17 @@ class UserInsightsService {
         throw const FormatException("Unexpected response format");
       }
     } catch (e) {
-      print(e);
+      NerdLogger.logger.e(e);
       return {};
     }
   }
 
   Future<List<dynamic>> getLeaderBoard(String topic, int limit) async {
-    print('getting Leaderboard for topic: $topic');
     final ApiService apiService = ApiService();
     dynamic result;
     try {
-      print(APIEndpoints.USER_RANK_SERVICE_BASE_URL + APIEndpoints.LEADERBOARD + "?topic=" + topic + "&limit=" + limit.toString());
-      result = await apiService.getRequest(APIEndpoints.USER_RANK_SERVICE_BASE_URL, APIEndpoints.LEADERBOARD + "?topic=" + topic + "&limit=" + limit.toString());
-      print('API Result: $result');
+      result = await apiService.getRequest(APIEndpoints.USER_RANK_SERVICE_BASE_URL, "${APIEndpoints.LEADERBOARD}?topic=$topic&limit=$limit");
+      NerdLogger.logger.d('API Result: $result');
 
       if (result is Map<String, dynamic>) {
         return result['data'];
@@ -52,7 +49,7 @@ class UserInsightsService {
         throw const FormatException("Unexpected response format");
       }
     } catch (e) {
-      print(e);
+      NerdLogger.logger.e(e);
       return [];
     }
   }

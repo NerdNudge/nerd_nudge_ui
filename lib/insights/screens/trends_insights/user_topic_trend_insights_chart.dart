@@ -3,6 +3,7 @@ import 'package:nerd_nudge/insights/screens/trends_insights/user_trend_insights_
 import 'package:nerd_nudge/insights/screens/trends_insights/user_trends_bar_chart_creator.dart';
 import 'package:nerd_nudge/utilities/styles.dart';
 import '../../../utilities/colors.dart';
+import '../../../utilities/logger.dart';
 import '../../services/insights_duration_state.dart';
 import '../../services/topic_trend_insights_service.dart';
 
@@ -19,7 +20,7 @@ class UserTrendDataChart {
     String trendType =
     InsightsDurationState.last30DaysFlag ? 'Daily' : 'Daily';
     bool isScore = (type == 'Score');
-    print('isScore: $isScore, type: $type');
+    NerdLogger.logger.d('isScore: $isScore, type: $type');
 
     return Stack(
       children: [
@@ -28,7 +29,7 @@ class UserTrendDataChart {
             Center(
               child: Text(
                 '$type Trend - $trendType',
-                style: TextStyle(
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                 ),
@@ -38,7 +39,7 @@ class UserTrendDataChart {
             Center(
               child: Text(
                 'Topic: $selectedTopic',
-                style: TextStyle(
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 12,
                 ),
@@ -60,12 +61,12 @@ class UserTrendDataChart {
               children: [
                 Text(
                   '$alternativeTrendType Trend: ',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 16,
                 ),
                 Container(
@@ -76,7 +77,7 @@ class UserTrendDataChart {
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: IconButton(
-                    icon: Icon(Icons.swap_horiz),
+                    icon: const Icon(Icons.swap_horiz),
                     onPressed: () => {
                       _onAlternateTrendSelection(
                           context,
@@ -106,7 +107,7 @@ class UserTrendDataChart {
               borderRadius: BorderRadius.circular(8.0),
             ),
             child: IconButton(
-              icon: Icon(Icons.close),
+              icon: const Icon(Icons.close),
               onPressed: () => closeButtonFunction(),
               color: Colors.white,
             ),
@@ -125,7 +126,6 @@ class UserTrendDataChart {
       Function closeButtonFunction,
       Function updateCurrentTopicScreen // Accept the callback function
       ) {
-    print('hello clicked swipe');
     final newScreen = getSelectedTopicTrend(
         context, selectedTopic, _getToggledTrend(alternativeTrendType), actualTopicNamesToCodesMapping, alternativeTrendType, closeButtonFunction, updateCurrentTopicScreen);
 

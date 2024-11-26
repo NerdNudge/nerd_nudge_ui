@@ -1,5 +1,7 @@
 import 'package:nerd_nudge/user_profile/dto/user_profile_entity.dart';
 
+import '../../../utilities/logger.dart';
+
 class QuizflexUserActivityAPIEntity {
 
   static final QuizflexUserActivityAPIEntity _instance = QuizflexUserActivityAPIEntity._internal();
@@ -32,15 +34,17 @@ class QuizflexUserActivityAPIEntity {
 
   void clearData() {
     _initialize();
-    print('Data cleared: $this');
+    NerdLogger.logger.d('Data cleared: $this');
   }
 
   bool isFavoriteByUser(String topic, String subtopic, String id) {
-    if(! _favorites.containsKey(topic))
+    if(! _favorites.containsKey(topic)) {
       return false;
+    }
 
-    if(! _favorites[topic]!.containsKey(subtopic))
+    if(! _favorites[topic]!.containsKey(subtopic)) {
       return false;
+    }
 
     return _favorites[topic]?[subtopic]?.contains(id) ?? false;
   }
@@ -65,7 +69,7 @@ class QuizflexUserActivityAPIEntity {
     _favorites[topic] ??= {};
     _favorites[topic]![subtopic] ??= [];
     _favorites[topic]![subtopic]!.add(id);
-    print('a fav: $_favorites');
+    NerdLogger.logger.d('a fav: $_favorites');
   }
 
   void removeFavorite(String topic, String subtopic, String id) {
@@ -73,7 +77,6 @@ class QuizflexUserActivityAPIEntity {
     if (_favorites[topic]?[subtopic]?.isEmpty ?? true) {
       _favorites[topic]?[subtopic]?.remove(id);
     }
-    print('r fav: $_favorites');
   }
 
   void addQuizflex(String topic, String subtopic, String quizId,
@@ -89,38 +92,30 @@ class QuizflexUserActivityAPIEntity {
 
     topicObject[quizId] = currentQuizflex!;
     _quizflex[topic] = topicObject;
-    print('a qf: $_quizflex');
   }
 
   void addLike(String id) {
     _addToArray(_likes, id);
-    print('a like: $_likes');
-    print(this);
   }
 
   void removeLike(String id) {
     _likes.remove(id);
-    print('r like: $_likes');
   }
 
   void addDislike(String id) {
     _addToArray(_dislikes, id);
-    print('a dislike: $_dislikes');
   }
 
   void removeDislike(String id) {
     _dislikes.remove(id);
-    print('r dislike: $_dislikes');
   }
 
   void addShare(String id) {
     _addToArray(_shares, id);
-    print('a share: $_shares');
   }
 
   void removeShare(String id) {
     _shares.remove(id);
-    print('r share: $_shares');
   }
 
   void _addToArray(List<String> array, String id) {

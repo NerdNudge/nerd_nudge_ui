@@ -5,6 +5,7 @@ import 'package:nerd_nudge/insights/screens/summary_insights/summary_insights.da
 import 'package:nerd_nudge/insights/screens/trends_insights/user_trend_insights_main_page.dart';
 import '../../cache_and_lock_manager/cache_locks_keys.dart';
 import '../../menus/screens/menu_options.dart';
+import '../../utilities/logger.dart';
 import '../../utilities/styles.dart';
 import '../../bottom_menus/screens/bottom_menu_options.dart';
 import '../services/insights_duration_state.dart';
@@ -31,16 +32,12 @@ class _UserInsightsState extends State<UserInsights> {
 
   Future<Map<String, dynamic>> _fetchUserInsights() async {
     UserInsightsCacheManager cacheManager = UserInsightsCacheManager();
-    print('Current local key: $_currentLockKey');
-    print('cache key: ${CacheLockKeys().getCurrentKey()}');
     Map<String, dynamic> userInsights = await cacheManager.fetchUserInsights(_currentLockKey);
     setState(() {
       _currentLockKey = CacheLockKeys().getCurrentKey();
     });
 
-    print('User Insights: $userInsights');
-    print('under insighst: $_currentLockKey');
-
+    NerdLogger.logger.d('User Insights: $userInsights');
     return userInsights;
   }
 
@@ -57,9 +54,9 @@ class _UserInsightsState extends State<UserInsights> {
             future: userInsightsFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
-                return Center(child: Text('Error loading insights.', style: TextStyle(color: Colors.white)));
+                return const Center(child: Text('Error loading insights.', style: TextStyle(color: Colors.white)));
               } else {
                 return _getDashboardBody(snapshot.data!);
               }
@@ -76,13 +73,13 @@ class _UserInsightsState extends State<UserInsights> {
       decoration: Styles.getBackgroundBoxDecoration(),
       child: Column(
         children: [
-          SizedBox(height: 50.0),
+          const SizedBox(height: 50.0),
           Column(
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     'Lifetime   ',
                     style: TextStyle(
                       color: Colors.white,
@@ -90,7 +87,7 @@ class _UserInsightsState extends State<UserInsights> {
                     ),
                   ),
                   _getToggleButtonOptions(userInsights),
-                  Text(
+                  const Text(
                     '   Last 30 days',
                     style: TextStyle(
                       color: Colors.white,
@@ -99,7 +96,7 @@ class _UserInsightsState extends State<UserInsights> {
                   ),
                 ],
               ),
-              SizedBox(height: 30.0),
+              const SizedBox(height: 30.0),
               SummaryInsights(key: UniqueKey(), userInsights: userInsights,), // Pass the data here
               TopicsInsights(userInsights: userInsights,),
               UserTrendsMainPage(key: UniqueKey(), userInsights: userInsights,),
@@ -131,11 +128,9 @@ class _UserInsightsState extends State<UserInsights> {
           //UserTrendsMainPage.setValues(userInsights);
         });
         bool val = InsightsDurationState.last30DaysFlag;
-        print('Value changed to $val');
       },
       onTap: (bool _) {
         bool val = InsightsDurationState.last30DaysFlag;
-        print('Tapping while value is $val');
       },
     );
   }

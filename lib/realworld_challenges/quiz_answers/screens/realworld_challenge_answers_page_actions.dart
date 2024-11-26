@@ -27,8 +27,8 @@ class RealworldChallengeAnswersPageActionButtons extends StatelessWidget {
               ),
             );
           },
-          icon: Icon(Icons.info_outline, color: Colors.white),
-          label: Text(
+          icon: const Icon(Icons.info_outline, color: Colors.white),
+          label: const Text(
             'Info',
             style: TextStyle(
               fontWeight: FontWeight.bold,
@@ -38,7 +38,7 @@ class RealworldChallengeAnswersPageActionButtons extends StatelessWidget {
           ),
           style: ElevatedButton.styleFrom(
             backgroundColor: CustomColors.mainThemeColor,
-            padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
+            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8.0),
             ),
@@ -51,12 +51,12 @@ class RealworldChallengeAnswersPageActionButtons extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => RealworldChallengeCompletionScreen(),
+                  builder: (context) => const RealworldChallengeCompletionScreen(),
                 ),
               );
             },
-            icon: Icon(Icons.flag, color: Colors.white),
-            label: Text(
+            icon: const Icon(Icons.flag, color: Colors.white),
+            label: const Text(
               'Finish',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
@@ -66,7 +66,7 @@ class RealworldChallengeAnswersPageActionButtons extends StatelessWidget {
             ),
             style: ElevatedButton.styleFrom(
               backgroundColor: CustomColors.mainThemeColor,
-              padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
+              padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
               ),
@@ -83,8 +83,8 @@ class RealworldChallengeAnswersPageActionButtons extends StatelessWidget {
                   ),
                 );
               },
-              icon: Icon(Icons.navigate_next, color: Colors.white),
-              label: Text(
+              icon: const Icon(Icons.navigate_next, color: Colors.white),
+              label: const Text(
                 'Next',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
@@ -104,8 +104,8 @@ class RealworldChallengeAnswersPageActionButtons extends StatelessWidget {
               onPressed: () {
                 _onClose(context);
               },
-              icon: Icon(Icons.close, color: Colors.white),
-              label: Text(
+              icon: const Icon(Icons.close, color: Colors.white),
+              label: const Text(
                 'Close',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
@@ -115,7 +115,7 @@ class RealworldChallengeAnswersPageActionButtons extends StatelessWidget {
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.redAccent,
-                padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
+                padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
@@ -140,7 +140,7 @@ class RealworldChallengeAnswersPageActionButtons extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => RealworldChallengeCompletionScreen(),
+        builder: (context) => const RealworldChallengeCompletionScreen(),
       ),
     );
   }

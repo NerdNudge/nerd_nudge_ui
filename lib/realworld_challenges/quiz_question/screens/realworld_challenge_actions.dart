@@ -20,7 +20,6 @@ class RealworldChallengeActionButtons extends StatelessWidget {
         TextButton(
           onPressed: () {
             var sub = completeQuiz['selected_answers'];
-            print('submit pressed: $sub');
 
             bool isAnswerCorrect = QuestionUtils.isAnswerCorrect(completeQuiz, false);
             UserScores.updateUserScore(completeQuiz['difficulty_level'], isAnswerCorrect);
@@ -45,7 +44,7 @@ class RealworldChallengeActionButtons extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 15.0,
           width: 25.0,
         ),

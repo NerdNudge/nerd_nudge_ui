@@ -1,4 +1,5 @@
 import '../insights/services/user_insights_service.dart';
+import '../utilities/logger.dart';
 import 'cache_locks_keys.dart';
 
 class UserInsightsCacheManager {
@@ -27,15 +28,15 @@ class UserInsightsCacheManager {
 
   Future<Map<String, dynamic>> fetchUserInsights(String currentLocalLockKey) async {
     if (isUserInsightsCacheExpired(const Duration(minutes: 5)) || cacheLockKeys.isKeyChanged(currentLocalLockKey)) {
-      print("Cache is expired, key changed or it's the first time. Fetching data from API...");
+      NerdLogger.logger.d("Cache is expired, key changed or it's the first time. Fetching data from API...");
       _cachedUserInsights = await _fetchUserInsightsFromAPI();
       updateUserInsightsLastUpdatedTime(DateTime.now());
     } else {
       if (_cachedUserInsights != null && _cachedUserInsights!.isNotEmpty) {
-        print("Cache is still valid. Using cached data.");
+        NerdLogger.logger.d("Cache is still valid. Using cached data.");
         return _cachedUserInsights!;
       } else {
-        print("Cache was expected but is missing, fetching from API...");
+        NerdLogger.logger.d("Cache was expected but is missing, fetching from API...");
         _cachedUserInsights = await _fetchUserInsightsFromAPI();
         updateUserInsightsLastUpdatedTime(DateTime.now());
       }
@@ -47,7 +48,7 @@ class UserInsightsCacheManager {
     try {
       return await UserInsightsService().getUserInsights();
     } catch (e) {
-      print('Error fetching user insights: $e');
+      NerdLogger.logger.e('Error fetching user insights: $e');
       return {};
     }
   }

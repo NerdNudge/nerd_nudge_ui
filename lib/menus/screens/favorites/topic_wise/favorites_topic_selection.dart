@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../utilities/logger.dart';
 import '../../../../utilities/quiz_topics.dart';
 import '../../../../utilities/styles.dart';
 import '../../../Utilities/favorites_utilities.dart';
@@ -26,25 +27,25 @@ class _FavoritesTopicSelectionPageState
   }
 
   Future<List<Map<String, dynamic>>> _loadTopics() async {
-    print('Starting to load topics...');
+    NerdLogger.logger.d('Starting to load topics...');
     try {
       final loadedTopics = await FavoriteTopicsService().getFavoritesTopics();
-      print('Topics loaded successfully.');
+      NerdLogger.logger.d('Topics loaded successfully.');
       return loadedTopics;
     } catch (e) {
-      print('Error loading topics: $e');
+      NerdLogger.logger.e('Error loading topics: $e');
       return [];
     }
   }
 
   Future<List<Map<String, dynamic>>> _fetchSubtopics(String topic, String subtopic) async {
-    print('Starting to load subtopics...');
+    NerdLogger.logger.d('Starting to load subtopics...');
     try {
       final fetchedSubtopicsData = await FavoriteTopicsService().getFavoritesSubtopics(topic, subtopic);
-      print('Subtopics loaded successfully.');
+      NerdLogger.logger.d('Subtopics loaded successfully.');
       return fetchedSubtopicsData;
     } catch (e) {
-      print('Error loading subtopics: $e');
+      NerdLogger.logger.e('Error loading subtopics: $e');
       return [];
     }
   }
@@ -146,11 +147,11 @@ class _FavoritesTopicSelectionPageState
       future: _futureTopics,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return Center(child: Text('Error loading topics.'));
+          return const Center(child: Text('Error loading topics.'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text('No topics available.'));
+          return const Center(child: Text('No topics available.'));
         } else {
           topics = snapshot.data!;
           return Stack(
@@ -216,13 +217,13 @@ class _FavoritesTopicSelectionPageState
                                               const SizedBox(height: 10),
                                               Row(
                                                 children: [
-                                                  Icon(Icons.favorite,
+                                                  const Icon(Icons.favorite,
                                                       size: 16,
                                                       color: Colors.red),
-                                                  SizedBox(width: 5),
+                                                  const SizedBox(width: 5),
                                                   Text(
                                                     "Favorite Count: $favoritesCount",
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                       fontSize: 12,
                                                       fontWeight:
                                                           FontWeight.bold,
@@ -234,13 +235,13 @@ class _FavoritesTopicSelectionPageState
                                               const SizedBox(height: 10),
                                               Row(
                                                 children: [
-                                                  Icon(Icons.list_alt,
+                                                  const Icon(Icons.list_alt,
                                                       size: 16,
                                                       color: Colors.blueAccent),
-                                                  SizedBox(width: 5),
+                                                  const SizedBox(width: 5),
                                                   Text(
                                                     "Favorite Subtopics: ${subtopics.length}",
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                       fontSize: 12,
                                                       fontWeight:
                                                           FontWeight.bold,

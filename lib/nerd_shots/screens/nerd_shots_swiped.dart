@@ -11,6 +11,7 @@ import '../../../user_home_page/dto/user_home_stats.dart';
 import '../../cache_and_lock_manager/cache_locks_keys.dart';
 import '../../subscriptions/services/purchase_api.dart';
 import '../../topics/screens/subtopic_selection.dart';
+import '../../utilities/logger.dart';
 import '../dto/shots_user_activity_api_entity.dart';
 
 class NerdShotsSwiped extends StatefulWidget {
@@ -43,7 +44,7 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
   void initState() {
     super.initState();
     _shotsUserActivityAPIEntity = ShotsUserActivityAPIEntity();
-    print('Inited. $_shotsUserActivityAPIEntity');
+    NerdLogger.logger.d('Inited. $_shotsUserActivityAPIEntity');
     _updateCurrentQuiz();
     CacheLockKeys cacheLockKeys = CacheLockKeys();
     cacheLockKeys.updateQuizFlexShotsKey();
@@ -66,7 +67,7 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
     var nextQuizList = await _getNextQuizzes();
     if (nextQuizList.isEmpty) {
       if (!_shotsSubmitted && !_shotsUserActivityAPIEntity.isShotsEmpty()) {
-        print('User has exhausted the shots counts.');
+        NerdLogger.logger.d('User has exhausted the shots counts.');
         await NerdShotsService().shotsSubmission(_shotsUserActivityAPIEntity);
         _shotsUserActivityAPIEntity.clear();
         _shotsSubmitted = true; // Set the flag to true after submission
@@ -92,9 +93,7 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
   }
 
   startShots() {
-    Styles.showGlobalSnackbarMessageAndIcon(
-        'Swipe Right for the next shot!', Icons.swipe, Colors.black);
-    print('Start Shots home');
+    Styles.showGlobalSnackbarMessageAndIcon('Swipe Right for the next shot!', Icons.swipe, Colors.black);
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -105,12 +104,11 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
 
   Future<List<dynamic>> _getNextQuizzes() async {
     if (UserHomeStats().hasUserExhaustedNerdShots()) {
-      print('User has exhausted the shots counts.');
+      NerdLogger.logger.d('User has exhausted the shots counts.');
       return [];
     } else {
-      var nextQuestions = await NerdShotsService().getNextQuizflexes(
-          ExploreTopicSelection.selectedTopic, ExploreTopicSelection.selectedSubtopic, 10);
-      print('$nextQuestions');
+      var nextQuestions = await NerdShotsService().getNextQuizflexes(ExploreTopicSelection.selectedTopic, ExploreTopicSelection.selectedSubtopic, 10);
+      NerdLogger.logger.d('$nextQuestions');
       return nextQuestions['data'];
     }
   }
@@ -118,7 +116,6 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
   void _updateLike(String id) {
     setState(() {
       if (_likesIcon == Icons.thumb_up_alt_outlined) {
-        print('updating likes');
         _likesIcon = Icons.thumb_up;
         _likeCount++;
         _shotsUserActivityAPIEntity.addLike(id);
@@ -177,18 +174,18 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
   bool _shotsSubmitted = false;
 
   Widget? _getNextShot() {
-    print('index: $_currentIndex, shots count: ${UserHomeStats().getUserShotsCountToday()}, ${_shotsUserActivityAPIEntity.isShotsEmpty()}');
+    NerdLogger.logger.d('index: $_currentIndex, shots count: ${UserHomeStats().getUserShotsCountToday()}, ${_shotsUserActivityAPIEntity.isShotsEmpty()}');
 
     if (UserHomeStats().hasUserExhaustedNerdShots()) {
       if (!_shotsSubmitted && !_shotsUserActivityAPIEntity.isShotsEmpty()) {
-        print('User has exhausted the shots counts.');
+        NerdLogger.logger.d('User has exhausted the shots counts.');
         NerdShotsService().shotsSubmission(_shotsUserActivityAPIEntity);
         _shotsUserActivityAPIEntity.clear();
         _shotsSubmitted = true; // Set the flag to true after submission
       }
 
       if (PurchaseAPI.userCurrentOffering == Constants.FREEMIUM) {
-        print('Freemium user.');
+        NerdLogger.logger.d('Freemium user.');
         WidgetsBinding.instance.addPostFrameCallback((_) {
             Navigator.push(
               context,
@@ -206,7 +203,7 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
       return Container();
     } else {
       _shotsSubmitted = false;
-      print('Last shown Quiz count: ${NerdAdManager.lastShownShotsCount}, Quiz count today: ${UserHomeStats().getUserShotsCountToday()}');
+      NerdLogger.logger.d('Last shown Quiz count: ${NerdAdManager.lastShownShotsCount}, Quiz count today: ${UserHomeStats().getUserShotsCountToday()}');
 
       // Handle ad logic safely
       if (UserHomeStats().getUserAccountType() == Constants.FREEMIUM &&
@@ -243,7 +240,6 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
   }
 
   Widget _getCard(dynamic quiz) {
-    print('get card called');
     String title = quiz['sub_topic'] + ': ' + quiz['title'];
     String quizId = quiz['id'];
 

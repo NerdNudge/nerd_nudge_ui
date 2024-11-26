@@ -13,8 +13,8 @@ class MenuUtils {
     final String difficulty_level = recentFavorite['difficulty_level'];
 
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 1.0, horizontal: 15.0),
-      padding: EdgeInsets.all(15.0),
+      margin: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 15.0),
+      padding: const EdgeInsets.all(15.0),
       decoration: _getChallengeCardBoxDecoration(),
       child: GestureDetector(
         onTap: () => onTap(),
@@ -68,7 +68,7 @@ class MenuUtils {
           color: Colors.grey.withOpacity(0.5),
           spreadRadius: 2,
           blurRadius: 5,
-          offset: Offset(0, 3),
+          offset: const Offset(0, 3),
         ),
       ],
     );
@@ -86,7 +86,7 @@ class MenuUtils {
     return Row(
       children: [
         Icon(icon, size: 16.0, color: Colors.grey[700]),
-        SizedBox(width: 15.0),
+        const SizedBox(width: 15.0),
         Expanded(child: textValue,
 
         ),
@@ -104,8 +104,8 @@ class MenuUtils {
     final String description = subtopics['description'];
 
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 1.0, horizontal: 15.0),
-      padding: EdgeInsets.all(15.0),
+      margin: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 15.0),
+      padding: const EdgeInsets.all(15.0),
       decoration: _getChallengeCardBoxDecoration(),
       child: GestureDetector(
         onTap: () => onTap(),
@@ -134,14 +134,14 @@ class MenuUtils {
                       ),
                     ],
                   ),
-                  SizedBox(height: 15.0),
+                  const SizedBox(height: 15.0),
                   _getCardRowForText('Description: ', description, Icons.category),
                   /*SizedBox(height: 5.0),
                   _getCardRowForText('Sub-Topic: ', topic, Icons.topic),
                   SizedBox(height: 5.0),
                   _getCardRowForText(
                       'Difficulty Level: ', difficulty_level, Icons.assessment),*/
-                  SizedBox(height: 10.0),
+                  const SizedBox(height: 10.0),
                 ],
               ),
             ),

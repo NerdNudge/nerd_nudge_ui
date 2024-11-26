@@ -7,7 +7,6 @@ import 'package:flutter/rendering.dart';
 import 'package:nerd_nudge/utilities/constants.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:purchases_flutter/models/offering_wrapper.dart';
-import 'package:purchases_flutter/models/package_wrapper.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import '../bottom_menus/screens/bottom_menu_options.dart';
@@ -18,6 +17,8 @@ import 'api_service.dart';
 import 'colors.dart';
 import 'dart:ui' as ui;
 import 'package:cross_file/cross_file.dart';
+
+import 'logger.dart';
 
 class Styles {
   static final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
@@ -41,7 +42,7 @@ class Styles {
 
   static ThemeData getThemeData() {
     return ThemeData(
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         backgroundColor: CustomColors.mainThemeColor,
         titleTextStyle: const TextStyle(
           color: Colors.white,
@@ -59,7 +60,7 @@ class Styles {
       leading: Builder(
         builder: (BuildContext context) {
           return IconButton(
-            icon: Icon(Icons.menu),
+            icon: const Icon(Icons.menu),
             onPressed: () {
               Scaffold.of(context).openDrawer();
             },
@@ -71,7 +72,7 @@ class Styles {
 
   static IconButton getIconButton() {
     return IconButton(
-      icon: Icon(
+      icon: const Icon(
         Icons.menu,
       ),
       onPressed: () {
@@ -88,22 +89,22 @@ class Styles {
       Function(BuildContext) onButtonTap) {
     return ElevatedButton(
       onPressed: () => onButtonTap(context),
-      child: Text(
-        text,
-        style: TextStyle(
-          color: textColor,
-        ),
-      ),
       style: TextButton.styleFrom(
         backgroundColor: buttonColor,
-        padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
+        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
         ),
         elevation: 2.0,
-        textStyle: TextStyle(
+        textStyle: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 20.0,
+        ),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          color: textColor,
         ),
       ),
     );
@@ -116,17 +117,17 @@ class Styles {
       obscureText: obscureText,
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: TextStyle(color: Colors.white54, fontSize: 12),
+        hintStyle: const TextStyle(color: Colors.white54, fontSize: 12),
         labelText: labelText,
-        labelStyle: TextStyle(color: Colors.white),
-        enabledBorder: UnderlineInputBorder(
+        labelStyle: const TextStyle(color: Colors.white),
+        enabledBorder: const UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.white),
         ),
-        focusedBorder: UnderlineInputBorder(
+        focusedBorder: const UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.blue),
         ),
       ),
-      style: TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.white),
     );
   }
 
@@ -210,9 +211,7 @@ class Styles {
 
   static getSliderColorForPercentageCorrect(double percentage) {
     if (percentage >= 90) return Colors.green;
-
     if (percentage >= 75) return Colors.orange;
-
     return Colors.red;
   }
 
@@ -234,7 +233,7 @@ class Styles {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             colors: [Colors.white54, Colors.white70],
@@ -242,7 +241,7 @@ class Styles {
             end: Alignment.bottomCenter,
           ),
           borderRadius: BorderRadius.circular(20),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.black12,
               blurRadius: 4,
@@ -253,7 +252,7 @@ class Styles {
         child: Row(
           children: [
             Icon(icon, color: color),
-            SizedBox(width: 4),
+            const SizedBox(width: 4),
             Text('$count'),
           ],
         ),
@@ -271,7 +270,7 @@ class Styles {
           content: Text(message),
           actions: <Widget>[
             TextButton(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -305,7 +304,7 @@ class Styles {
         ),
         child: Text(
           textMessage,
-          style: TextStyle(
+          style: const TextStyle(
             color: CustomColors.purpleButtonColor,
             fontWeight: FontWeight.bold,
           ),
@@ -322,7 +321,7 @@ class Styles {
         onPressed: () async {
           try {
             final List<Offering> offerings = PurchaseAPI.offerings;
-            print('Offerings: $offerings');
+            NerdLogger.logger.d('Offerings: $offerings');
 
             if (offerings.isEmpty) {
               Styles.showGlobalSnackbarMessage('No Offers found!');
@@ -330,8 +329,7 @@ class Styles {
               panelController.open();
             }
           } catch (e) {
-            // Handle errors
-            print('Error fetching offerings: $e');
+            NerdLogger.logger.e('Error fetching offerings: $e');
             Styles.showGlobalSnackbarMessage('Failed to fetch offers, please try again later.');
           }
         },
@@ -345,7 +343,7 @@ class Styles {
         ),
         child: Text(
           textMessage,
-          style: TextStyle(color: CustomColors.purpleButtonColor, fontWeight: FontWeight.bold),
+          style: const TextStyle(color: CustomColors.purpleButtonColor, fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -353,7 +351,6 @@ class Styles {
 
 
   static Map<String, dynamic> favoriteQuoteToJson(int timestamp, String quoteId, bool add) {
-    String type = add ? 'add' : 'delete';
     return {
       'userId': UserProfileEntity().getUserEmail(),
       'quoteId': quoteId,
@@ -365,15 +362,14 @@ class Styles {
     final ApiService apiService = ApiService();
     dynamic result;
     try {
-      final String url = APIEndpoints.USER_ACTIVITY_BASE_URL +
-          APIEndpoints.FAVORITES_QUOTE_SUBMISSION;
+      const String url = APIEndpoints.USER_ACTIVITY_BASE_URL + APIEndpoints.FAVORITES_QUOTE_SUBMISSION;
 
       final Map<String, dynamic> jsonBody =
           favoriteQuoteToJson(0, quoteId, add);
 
-      print('Sending PUT request to: $url, value: $jsonBody');
+      NerdLogger.logger.d('Sending PUT request to: $url, value: $jsonBody');
       result = await apiService.putRequest(url, jsonBody);
-      print('API Result: $result');
+      NerdLogger.logger.d('API Result: $result');
 
       if (result is Map<String, dynamic>) {
         return result;
@@ -383,7 +379,7 @@ class Styles {
         throw const FormatException("Unexpected response format");
       }
     } catch (e) {
-      print('Error during shotsSubmission: $e');
+      NerdLogger.logger.e('Error during shotsSubmission: $e');
       return '{}';
     }
   }
@@ -463,7 +459,7 @@ class Styles {
             Expanded(
               child: Text(
                 message,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black,
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -478,8 +474,8 @@ class Styles {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        duration: Duration(seconds: 3),
-        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        duration: const Duration(seconds: 3),
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       ),
     );
   }
@@ -491,7 +487,7 @@ class Styles {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, color: color),
-            SizedBox(width: 8.0),
+            const SizedBox(width: 8.0),
             Text(
               message,
               style: TextStyle(
@@ -508,8 +504,8 @@ class Styles {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        duration: Duration(seconds: 3),
-        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        duration: const Duration(seconds: 3),
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       ),
     );
   }
@@ -517,17 +513,17 @@ class Styles {
   static Future<void> shareCardContent(GlobalKey key) async {
     try {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
-        await Future.delayed(Duration(milliseconds: 300)); // Delay to ensure rendering
+        await Future.delayed(const Duration(milliseconds: 300)); // Delay to ensure rendering
 
         if (key.currentContext == null) {
-          print('Error: key.currentContext is still null after waiting.');
+          NerdLogger.logger.i('Error: key.currentContext is still null after waiting.');
           return;
         }
 
         RenderRepaintBoundary? boundary = key.currentContext!.findRenderObject() as RenderRepaintBoundary?;
 
         if (boundary == null) {
-          print('Error: RenderRepaintBoundary is null');
+          NerdLogger.logger.e('Error: RenderRepaintBoundary is null');
           return;
         }
 
@@ -535,7 +531,7 @@ class Styles {
         ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
 
         if (byteData == null) {
-          print('Error: byteData is null');
+          NerdLogger.logger.e('Error: byteData is null');
           return;
         }
 
@@ -551,7 +547,7 @@ class Styles {
         Share.shareXFiles([xFile], text: '\n\n$shareMessage');
       });
     } catch (e) {
-      print('Error capturing screenshot: $e');
+      NerdLogger.logger.e('Error capturing screenshot: $e');
     }
   }
 

@@ -39,7 +39,7 @@ class InviteNerdsPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(
+          const Icon(
             Icons.group_add,
             size: 80,
             color: Colors.black54,

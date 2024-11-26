@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mrx_charts/mrx_charts.dart';
 
 import '../../../utilities/colors.dart';
+import '../../../utilities/logger.dart';
 import '../../../utilities/styles.dart';
 import '../../services/user_insights_service.dart';
 import 'package:nerd_nudge/utilities/leaderboard_page.dart';
@@ -14,7 +15,6 @@ class TopicSummaryInsights {
 
   static getSelectedTopicSummary(BuildContext context, dynamic topicObject, String selectedTopic,
       Function getDetails, Function getPeerComparison, Function getCloseButtonClick, int topicRank) {
-    print('Under topic summary details: $topicObject');
     TopicSummaryInsights.context = context;
     return Column(
       children: [
@@ -200,19 +200,17 @@ class TopicSummaryInsights {
   }
 
   static void getLeaderBoardPage(String topic) async {
-    print('Topic Insights: Leaderboard details clicked.');
     try {
       List<dynamic> leaderboardList = await _fetchLeaderBoard(topic, 100);
       Navigator.push(context, MaterialPageRoute(
         builder: (context) => LeaderboardPage(leaderBoardList: leaderboardList, buttonClick: getLeaderPageCloseButtonClick, topic: topic,),
       ),);
     } catch (e) {
-      print('Error fetching leaderboard data: $e');
+      NerdLogger.logger.e('Error fetching leaderboard data: $e');
     }
   }
 
   static void getLeaderPageCloseButtonClick() {
-    print('Close button clicked. under leader page');
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -225,7 +223,7 @@ class TopicSummaryInsights {
     try {
       return await UserInsightsService().getLeaderBoard(topic, limit);
     } catch (e) {
-      print('Error fetching user insights: $e');
+      NerdLogger.logger.e('Error fetching user insights: $e');
       return [];
     }
   }

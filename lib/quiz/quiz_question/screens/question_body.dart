@@ -13,7 +13,7 @@ class QuestionContainer extends StatelessWidget {
       //height: 270.0,
       child: Card(
         color: CustomColors.mainThemeColor,
-        margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+        margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
         child: ListTile(
           title: Center(
             child: MarkdownBody(
@@ -28,7 +28,7 @@ class QuestionContainer extends StatelessWidget {
 
   MarkdownStyleSheet customMarkdownStyle(BuildContext context) {
     return MarkdownStyleSheet(
-      p: TextStyle(
+      p: const TextStyle(
         fontSize: 18,
         color: Colors.white,
         fontWeight: FontWeight.bold,

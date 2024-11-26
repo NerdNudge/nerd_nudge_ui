@@ -13,14 +13,14 @@ class SummaryDetails {
 
     return Column(
       children: [
-        Text(
+        const Text(
           'Summary Drill Down',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
         Container(
@@ -40,7 +40,7 @@ class SummaryDetails {
             ],
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
         Row(
@@ -53,7 +53,7 @@ class SummaryDetails {
               15,
               15,
             ),
-            SizedBox(width: 40),
+            const SizedBox(width: 40),
             Container(
               width: 40.0, // Adjust the width and height for the desired size
               height: 40.0,
@@ -63,7 +63,7 @@ class SummaryDetails {
                     8.0), // Adjust the border radius for a square shape
               ),
               child: IconButton(
-                icon: Icon(Icons.close),
+                icon: const Icon(Icons.close),
                 onPressed: () => buttonClick(), // Ensure the buttonClick function accepts BuildContext as a parameter
                 color: Colors.white, // Foreground color of the X icon
               ),

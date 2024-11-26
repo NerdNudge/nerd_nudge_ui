@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import '../../../utilities/api_end_points.dart';
 import '../../../utilities/api_service.dart';
+import '../../../utilities/logger.dart';
 
 class RealworldChallengeService {
   RealworldChallengeService._privateConstructor();
@@ -14,28 +15,13 @@ class RealworldChallengeService {
 
   Future<dynamic> getNextQuizflexes(
       String topic, String subtopic, int limit) async {
-    print('getting Quizflex data now..');
     final ApiService apiService = ApiService();
     dynamic result;
     try {
-      print(APIEndpoints.CONTENT_MANAGER_BASE_URL +
-          APIEndpoints.QUIZFLEXES +
-          "?topic=" +
-          topic +
-          "&subtopic=" +
-          subtopic +
-          "&limit=" +
-          limit.toString());
       result = await apiService.getRequest(
           APIEndpoints.CONTENT_MANAGER_BASE_URL,
-          APIEndpoints.QUIZFLEXES +
-              "?topic=" +
-              topic +
-              "&subtopic=" +
-              subtopic +
-              "&limit=" +
-              limit.toString());
-      print('API Result: $result');
+          "${APIEndpoints.QUIZFLEXES}?topic=$topic&subtopic=$subtopic&limit=$limit");
+      NerdLogger.logger.d('API Result: $result');
 
       if (result is Map<String, dynamic>) {
         return result;
@@ -45,7 +31,7 @@ class RealworldChallengeService {
         throw const FormatException("Unexpected response format");
       }
     } catch (e) {
-      print(e);
+      NerdLogger.logger.e(e);
       return '{}';
     }
   }

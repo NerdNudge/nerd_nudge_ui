@@ -7,6 +7,7 @@ import 'package:nerd_nudge/utilities/quiz_topics.dart';
 import '../../../../utilities/styles.dart';
 import '../../../bottom_menus/screens/bottom_menu_options.dart';
 import '../../../menus/screens/menu_options.dart';
+import '../../utilities/logger.dart';
 
 class TopicSelection {
   static String selectedTopic = '';
@@ -40,7 +41,7 @@ class _TopicSelectionHomePageState extends State<TopicSelectionHomePage> {
   @override
   Widget build(BuildContext context) {
     String title = widget.title;
-    print('Topic selection home for $title');
+    NerdLogger.logger.d('Topic selection home for $title');
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -80,7 +81,7 @@ class _TopicSelectionHomePageState extends State<TopicSelectionHomePage> {
         });
       }
     } catch (e) {
-      print('Error loading topics: $e');
+      NerdLogger.logger.e('Error loading topics: $e');
     }
   }
 
@@ -99,7 +100,7 @@ class _TopicSelectionHomePageState extends State<TopicSelectionHomePage> {
                   Center(
                     child: Text(
                       '$title Topics',
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
@@ -119,7 +120,7 @@ class _TopicSelectionHomePageState extends State<TopicSelectionHomePage> {
                         return GestureDetector(
                           onTap: () {
                             setState(() {
-                              print('selected topic: $topicName');
+                              NerdLogger.logger.d('selected topic: $topicName');
                               TopicSelection.selectedTopic = topicName;
                               ExploreTopicSelection.selectedTopic = topicName;
                               ExploreTopicSelection.selectedTopicCode = topic['topicCode'];
@@ -162,25 +163,25 @@ class _TopicSelectionHomePageState extends State<TopicSelectionHomePage> {
                                         const SizedBox(height: 8),
                                         Row(
                                           children: [
-                                            Icon(Icons.people, size: 16, color: Colors.black54),
-                                            SizedBox(width: 5),
-                                            Text(_getNumPeopleText(numPeople), style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black54)),
+                                            const Icon(Icons.people, size: 16, color: Colors.black54),
+                                            const SizedBox(width: 5),
+                                            Text(_getNumPeopleText(numPeople), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black54)),
                                           ],
                                         ),
                                         const SizedBox(height: 5),
                                         Row(
                                           children: [
-                                            Icon(Icons.speed, size: 16, color: Colors.black54),
-                                            SizedBox(width: 5),
-                                            Text("Personal Score Indicator: $scoreIndicator%", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black54)),
+                                            const Icon(Icons.speed, size: 16, color: Colors.black54),
+                                            const SizedBox(width: 5),
+                                            Text("Personal Score Indicator: $scoreIndicator%", style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black54)),
                                           ],
                                         ),
                                         const SizedBox(height: 5),
                                         Row(
                                           children: [
-                                            Icon(Icons.timer, size: 16, color: Colors.black54),
-                                            SizedBox(width: 5),
-                                            Text("Last Taken: $lastTakenByUser", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black54)),
+                                            const Icon(Icons.timer, size: 16, color: Colors.black54),
+                                            const SizedBox(width: 5),
+                                            Text("Last Taken: $lastTakenByUser", style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black54)),
                                           ],
                                         ),
                                       ],
@@ -230,7 +231,7 @@ class _TopicSelectionHomePageState extends State<TopicSelectionHomePage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => QuizService(),
+          builder: (context) => const QuizService(),
         ),
       );
     }

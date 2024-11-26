@@ -3,6 +3,7 @@ import 'package:nerd_nudge/utilities/api_end_points.dart';
 
 import '../../user_profile/dto/user_profile_entity.dart';
 import '../../utilities/api_service.dart';
+import '../../utilities/logger.dart';
 
 class HomePageService {
   HomePageService._privateConstructor();
@@ -14,16 +15,14 @@ class HomePageService {
   }
 
   Future<UserHomeStats> getUserHomePageStats() async {
-    print('getting user home data now..');
     final ApiService apiService = ApiService();
     Map<String, dynamic> result = {};
     try {
-      print(APIEndpoints.USER_INSIGHTS_BASE_URL + APIEndpoints.USER_HOME_STATS + "/" + UserProfileEntity().getUserEmail());
       result = await apiService.getRequest(APIEndpoints.USER_INSIGHTS_BASE_URL, APIEndpoints.USER_HOME_STATS + "/" + UserProfileEntity().getUserEmail());
-      print('API Result: $result');
+      NerdLogger.logger.d('API Result: $result');
       return UserHomeStats.fromJson(result);
     } catch (e) {
-      print(e);
+      NerdLogger.logger.e(e);
       return UserHomeStats();
     }
   }

@@ -4,6 +4,7 @@ import 'package:nerd_nudge/login/screens/login_or_register.dart';
 
 import '../../cache_and_lock_manager/cache_locks_keys.dart';
 import '../../utilities/colors.dart';
+import '../../utilities/logger.dart';
 import '../../utilities/styles.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -18,7 +19,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   void initState() {
     super.initState();
-    print('Clearing cache now.');
+    NerdLogger.logger.d('Clearing cache now.');
     CacheLockKeys cacheLockKeys = CacheLockKeys();
     cacheLockKeys.updateQuizFlexShotsKey();
   }
@@ -41,13 +42,13 @@ class _RegisterPageState extends State<RegisterPage> {
                   color: Colors.black.withOpacity(0.2),
                   spreadRadius: 5,
                   blurRadius: 7,
-                  offset: Offset(0, 3), // Shadow position
+                  offset: const Offset(0, 3), // Shadow position
                 ),
               ],
             ),
             // Content of the container could be more widgets here
             child: Padding(
-              padding: EdgeInsets.only(
+              padding: const EdgeInsets.only(
                 bottom: 120.0,
                 right: 40.0,
                 left: 40.0,
@@ -63,7 +64,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       height: 120,
                     ),
                     Styles.getSizedHeightBox(20),
-                    Text(
+                    const Text(
                       'Let\'s create your account.',
                       style: TextStyle(
                         color: Colors.white,
@@ -72,7 +73,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
                     Styles.getSizedHeightBox(20),
-                    Center(
+                    const Center(
                       child: Text(
                         'It\'s time to create your account to start your learning and save your progress.',
                         style: TextStyle(
@@ -88,8 +89,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     Styles.getTextFormField(emailController,
                         'Enter your e-mail', 'E-mail', false),
                     Styles.getSizedHeightBox(20),
-                    /*Styles.getTextFormField('Enter your Name', 'Name', false),
-                    Styles.getSizedHeightBox(20),*/
                     Styles.getTextFormField(passwordController,
                         'Enter your password', 'Password', true),
                     Styles.getSizedHeightBox(20),
@@ -131,10 +130,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
 
   Future<void> createNewAccount() async {
-    print('creating new account now.');
+    NerdLogger.logger.d('creating new account now.');
     User? user = FirebaseAuth.instance.currentUser;
     if(user != null) {
-      print('singning out now: ${user.email}');
+      NerdLogger.logger.d('singning out now: ${user.email}');
       FirebaseAuth.instance.signOut();
     }
 
@@ -149,7 +148,7 @@ class _RegisterPageState extends State<RegisterPage> {
     }
 
     try {
-      print('starting to create account in firebase now');
+      NerdLogger.logger.d('starting to create account in firebase now');
       UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
@@ -157,13 +156,13 @@ class _RegisterPageState extends State<RegisterPage> {
 
       User? user = userCredential.user;
       if(user == null) {
-        print('user is null');
+        NerdLogger.logger.d('user is null');
         Styles.showGlobalSnackbarMessage('User is null. Please try again.');
         return;
       }
 
       if (!user.emailVerified) {
-        print('user is not verified already');
+        NerdLogger.logger.d('user is not verified already');
         await user.sendEmailVerification();
         Styles.showGlobalSnackbarMessage('A verification link has been sent to your email.');
 
@@ -172,21 +171,21 @@ class _RegisterPageState extends State<RegisterPage> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => LoginOrRegister(),
+              builder: (context) => const LoginOrRegister(),
             ),
           );
         }
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
-        print('Email is already in use');
+        NerdLogger.logger.e('Email is already in use');
         Styles.showGlobalSnackbarMessage('Email is already in use. Please try logging in.');
       } else {
-        print('FirebaseAuthException: ${e.message}');
+        NerdLogger.logger.e('FirebaseAuthException: ${e.message}');
         Styles.showGlobalSnackbarMessage(e.message!);
       }
     } catch (e) {
-      print('Error: $e');
+      NerdLogger.logger.e('Error: $e');
       Styles.showGlobalSnackbarMessage('An error occurred. Please try again.');
     }
   }
@@ -204,7 +203,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Nerd Nudge'),
+        title: const Text('Nerd Nudge'),
       ),
       body: getBody(context),
     );

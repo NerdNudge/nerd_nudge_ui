@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:nerd_nudge/explore_menu/screens/explore_home_page.dart';
 import 'package:nerd_nudge/menus/screens/favorites/favorites_main_page.dart';
 
-import '../../quiz/home/screens/quiz_home_page.dart';
 import '../../user_home_page/screens/home_page.dart';
 import '../../user_profile/dto/user_profile_entity.dart';
 import '../../utilities/colors.dart';
-import '../../challenges/screens/main_challenge_page.dart';
 import '../../insights/screens/user_insights_main_page.dart';
-import '../../nerd_shots/screens/shots_home.dart';
 
 class BottomMenu extends StatefulWidget {
   const BottomMenu({super.key});
@@ -53,27 +50,27 @@ class _BottomMenuState extends State<BottomMenu> {
       BottomMenu.selectedIndex = index;
     });
 
-    var navigateScreen;
+    StatefulWidget navigateScreen;
     switch (index) {
       case 0:
         UserProfileEntity userProfileEntity = UserProfileEntity();
         navigateScreen = HomePage(userFullName: userProfileEntity.getUserFullName(), userEmail: userProfileEntity.getUserEmail(),);
         break;
       case 1:
-        navigateScreen = ExplorePage();
+        navigateScreen = const ExplorePage();
         break;
       case 2:
-        navigateScreen = UserInsights();
+        navigateScreen = const UserInsights();
         break;
       case 3:
-        navigateScreen = Favorites();
+        navigateScreen = const Favorites();
         break;
       /*case 4:
         navigateScreen = ProfileHome();
         break;*/
       case 4:
         //TODO: Replace with the Leaderboard page
-        navigateScreen = UserInsights();
+        navigateScreen = const UserInsights();
         break;
       /*case 4:
         //TODO: Replace with the Profile page

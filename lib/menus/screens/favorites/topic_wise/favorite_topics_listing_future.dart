@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../utilities/logger.dart';
 import '../../../services/favorites/favorite_topics_service.dart';
 
 class FutureFavoriteTopicsListing extends StatefulWidget {
@@ -19,13 +20,13 @@ class _FutureFavoriteTopicsListingState extends State<FutureFavoriteTopicsListin
   }
 
   Future<List<Map<String, dynamic>>> _loadTopics() async {
-    print('Starting to load topics...');
+    NerdLogger.logger.d('Starting to load topics...');
     try {
       final loadedTopics = await FavoriteTopicsService().getFavoritesTopics();
-      print('Topics loaded successfully.');
+      NerdLogger.logger.d('Topics loaded successfully.');
       return loadedTopics;
     } catch (e) {
-      print('Error loading topics: $e');
+      NerdLogger.logger.d('Error loading topics: $e');
       return [];  // Return an empty list in case of error
     }
   }
@@ -34,20 +35,20 @@ class _FutureFavoriteTopicsListingState extends State<FutureFavoriteTopicsListin
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Topics'),
+        title: const Text('Topics'),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _futureTopics,  // Pass the Future to FutureBuilder
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // While the Future is loading
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             // If the Future completed with an error
-            return Center(child: Text('Error loading topics.'));
+            return const Center(child: Text('Error loading topics.'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             // If the Future completed but returned no data
-            return Center(child: Text('No topics available.'));
+            return const Center(child: Text('No topics available.'));
           } else {
             // If the Future completed successfully with data
             final topics = snapshot.data!;
@@ -55,11 +56,11 @@ class _FutureFavoriteTopicsListingState extends State<FutureFavoriteTopicsListin
               itemCount: topics.length,
               itemBuilder: (BuildContext context, int index) {
                 final topicName = topics[index]['topicName'];
-                print('Topic: $topicName');
+                NerdLogger.logger.d('Topic: $topicName');
                 return ListTile(
                   title: Text(
                     topicName,
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                   ),
                 );
               },

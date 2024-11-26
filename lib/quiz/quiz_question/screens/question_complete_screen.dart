@@ -17,7 +17,7 @@ class QuestionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (completeQuiz == null) {
-      return Center(
+      return const Center(
         child: Text(
           'No more questions available.',
           style: TextStyle(fontSize: 20, color: Colors.white),

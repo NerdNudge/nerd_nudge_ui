@@ -1,3 +1,5 @@
+import '../utilities/logger.dart';
+
 class CacheLockKeys {
   String _quizFlexShotsKey = DateTime.now().toIso8601String();
 
@@ -14,7 +16,7 @@ class CacheLockKeys {
 
   void updateQuizFlexShotsKey() {
     _quizFlexShotsKey = DateTime.now().toIso8601String();
-    print('Cache keys changed: $_quizFlexShotsKey');
+    NerdLogger.logger.d('Cache keys changed: $_quizFlexShotsKey');
   }
 
   bool isKeyChanged(String lastKnownKey) {

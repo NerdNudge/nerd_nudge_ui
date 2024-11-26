@@ -21,13 +21,13 @@ class FavoriteSubTopicSelectionPage extends StatelessWidget {
                     color: Colors.black.withOpacity(0.2),
                     spreadRadius: 5,
                     blurRadius: 7,
-                    offset: Offset(0, 3), // Shadow position
+                    offset: const Offset(0, 3), // Shadow position
                   ),
                 ],
               ),
               // Content of the container could be more widgets here
               child: Padding(
-                padding: EdgeInsets.only(
+                padding: const EdgeInsets.only(
                   bottom: 300.0,
                   right: 40.0,
                   left: 40.0,
@@ -36,7 +36,7 @@ class FavoriteSubTopicSelectionPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
+                    const Text(
                       'Select a Sub-Topic.',
                       style: TextStyle(
                         color: Colors.white,
@@ -44,7 +44,7 @@ class FavoriteSubTopicSelectionPage extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 40),
+                    const SizedBox(height: 40),
                     Wrap(
                       spacing: 8.0,
                       runSpacing: 4.0,
@@ -53,7 +53,6 @@ class FavoriteSubTopicSelectionPage extends StatelessWidget {
                           label: Text(option),
                           onSelected: (bool val) {
                             //var key = option['id'];
-                            print('$option');
                           },
                           selectedColor: Colors.white,
                           checkmarkColor: Colors.green,

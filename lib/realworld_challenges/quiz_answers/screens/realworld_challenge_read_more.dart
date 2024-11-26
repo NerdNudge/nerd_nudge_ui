@@ -11,6 +11,7 @@ import '../../../menus/screens/menu_options.dart';
 import '../../../topics/screens/topic_selection_home_page.dart';
 import '../../../utilities/colors.dart';
 import '../../../utilities/constants.dart';
+import '../../../utilities/logger.dart';
 import '../../../utilities/styles.dart';
 import '../../quiz_question/screens/realworld_challenge_header.dart';
 
@@ -192,10 +193,10 @@ class _RealworldChallengeReadMorePageState extends State<RealworldChallengeReadM
       final imagePath = File('${directory.path}/screenshot.png');
       await imagePath.writeAsBytes(pngBytes);
 
-      final String shareMessage = Constants.shareQuoteMessage;
+      const String shareMessage = Constants.shareQuoteMessage;
       Share.shareFiles([imagePath.path], text: '\n\n$shareMessage');
     } catch (e) {
-      print('Error capturing screenshot: $e');
+      NerdLogger.logger.e('Error capturing screenshot: $e');
     }
   }
 

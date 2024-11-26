@@ -11,8 +11,8 @@ import '../../../bottom_menus/screens/bottom_menu_options.dart';
 import '../../../menus/screens/menu_options.dart';
 import '../../nerd_shots/screens/nerd_shots_swiped.dart';
 import '../../subscriptions/services/purchase_api.dart';
-import '../../user_home_page/dto/user_home_stats.dart';
 import '../../utilities/constants.dart';
+import '../../utilities/logger.dart';
 
 class ExploreTopicSelection {
   static String selectedTopic = '';
@@ -69,7 +69,7 @@ class _ExploreTopicSelectionHomePageState
 
   @override
   Widget build(BuildContext context) {
-    print('Topic selection home for Explore Topics');
+    NerdLogger.logger.d('Topic selection home for Explore Topics');
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -91,7 +91,7 @@ class _ExploreTopicSelectionHomePageState
 
         setState(() {
           topicsConfig = data['config'] as Map<String, dynamic>;
-          print('topics Config: $topicsConfig');
+          NerdLogger.logger.d('topics Config: $topicsConfig');
           topics = topicsData.entries.map((entry) {
             final topicCode = entry.key;
             final topicDetails = entry.value;
@@ -113,7 +113,7 @@ class _ExploreTopicSelectionHomePageState
         });
       }
     } catch (e) {
-      print('Error loading topics: $e');
+      NerdLogger.logger.e('Error loading topics: $e');
       Styles.showGlobalSnackbarMessage('Failed to load topics. Please try again.');
     }
   }
@@ -143,7 +143,7 @@ class _ExploreTopicSelectionHomePageState
                         return GestureDetector(
                           onTap: () {
                             setState(() {
-                              print('selected topic: $topicName');
+                              NerdLogger.logger.d('selected topic: $topicName');
                               ExploreTopicSelection.selectedTopic = topicName;
                               ExploreTopicSelection.selectedTopicCode = topic['topicCode'];
                               TopicSelection.selectedTopic = topicName;
@@ -187,12 +187,12 @@ class _ExploreTopicSelectionHomePageState
                                         const SizedBox(height: 8),
                                         Row(
                                           children: [
-                                            Icon(Icons.people,
+                                            const Icon(Icons.people,
                                                 size: 16,
                                                 color: Colors.black54),
-                                            SizedBox(width: 5),
+                                            const SizedBox(width: 5),
                                             Text(_getNumPeopleText(numPeople),
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     fontSize: 12,
                                                     fontWeight: FontWeight.bold,
                                                     color: Colors.black54)),
@@ -201,13 +201,13 @@ class _ExploreTopicSelectionHomePageState
                                         const SizedBox(height: 5),
                                         Row(
                                           children: [
-                                            Icon(Icons.speed,
+                                            const Icon(Icons.speed,
                                                 size: 16,
                                                 color: Colors.black54),
-                                            SizedBox(width: 5),
+                                            const SizedBox(width: 5),
                                             Text(
                                                 "Personal Score Indicator: $scoreIndicator%",
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     fontSize: 12,
                                                     fontWeight: FontWeight.bold,
                                                     color: Colors.black54)),
@@ -216,12 +216,12 @@ class _ExploreTopicSelectionHomePageState
                                         const SizedBox(height: 5),
                                         Row(
                                           children: [
-                                            Icon(Icons.timer,
+                                            const Icon(Icons.timer,
                                                 size: 16,
                                                 color: Colors.black54),
-                                            SizedBox(width: 5),
+                                            const SizedBox(width: 5),
                                             Text("Last Taken: $lastTakenByUser",
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     fontSize: 12,
                                                     fontWeight: FontWeight.bold,
                                                     color: Colors.black54)),
@@ -296,7 +296,7 @@ class _ExploreTopicSelectionHomePageState
           child: Center(
             child: Text(
               ExploreTopicSelection.selectedTopic,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
@@ -314,7 +314,6 @@ class _ExploreTopicSelectionHomePageState
               return GestureDetector(
                 onTap: () {
                   handleTopicAction(context, transaction['id'] ?? 'NS');
-                  print('Selected: ${transaction['title']}');
                 },
                 child: Card(
                   elevation: 4,
@@ -331,7 +330,7 @@ class _ExploreTopicSelectionHomePageState
                         ClipOval(
                           child: Container(
                             color: Colors.white24,
-                            padding: EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(8.0),
                             child: Icon(
                               transaction['icon']!,
                               size: 40, // Icon size
@@ -376,7 +375,6 @@ class _ExploreTopicSelectionHomePageState
   }
 
   handleTopicAction(BuildContext context, String id) {
-    print('handling action: $id');
     if(id == 'NQ') {
       Navigator.push(
         context,
@@ -400,7 +398,6 @@ class _ExploreTopicSelectionHomePageState
 
   startShots() {
     Styles.showGlobalSnackbarMessageAndIcon('Swipe Right for the next shot!', Icons.swipe, Colors.black);
-    print('Start Shots home');
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -427,11 +424,10 @@ class _ExploreTopicSelectionHomePageState
         ),
       );
     } else {
-      print('pushing for quiz service');
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => QuizService(),
+          builder: (context) => const QuizService(),
         ),
       );
     }

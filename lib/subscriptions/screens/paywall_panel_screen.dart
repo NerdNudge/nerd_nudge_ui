@@ -13,6 +13,7 @@ import '../../realworld_challenges/quiz_question/services/start_realworld_challe
 import '../../user_home_page/screens/home_page.dart';
 import '../../user_profile/dto/user_profile_entity.dart';
 import '../../utilities/api_end_points.dart';
+import '../../utilities/logger.dart';
 import '../../utilities/styles.dart';
 import '../services/purchase_api.dart';
 
@@ -22,7 +23,7 @@ class PaywallPanel {
   static Widget getSlidingPanel(
       BuildContext context, PanelController panelController, String page) {
     final List<Offering> offerings = PurchaseAPI.offerings;
-    print('Offerings under Paywall Panel: $offerings');
+    NerdLogger.logger.i('Offerings under Paywall Panel: $offerings');
 
     _packages = offerings
         .map((offering) {
@@ -52,7 +53,7 @@ class PaywallPanel {
   static Widget buildUpgradeAccountPaywallPanel(
       BuildContext context, String upgradeMessage) {
     return _packages.isEmpty
-        ? Center(child: CircularProgressIndicator())
+        ? const Center(child: CircularProgressIndicator())
         : Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -67,29 +68,27 @@ class PaywallPanel {
                       color: Colors.black),
                 ),
               ),
-              Styles.getSizedHeightBox(4),
+              Styles.getSizedHeightBox(2),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 2.0),
                 child: Text(
                   upgradeMessage,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                       color: Colors.black,
                       height: 1.5),
                 ),
               ),
-              Styles.getSizedHeightBox(20),
-              // Add the required information here
-              //_buildSubscriptionInfo(context),
+              Styles.getSizedHeightBox(10),
               Expanded(
                 child: ListView.builder(
                   itemCount: _packages.length,
                   itemBuilder: (context, index) {
                     final Package package = _packages[index];
-                    print('Packages: ${package.storeProduct}');
+                    NerdLogger.logger.i('Packages: ${package.storeProduct}');
                     String? subscriptionPeriod =
                         package.storeProduct.subscriptionPeriod;
                     String packageDurationPriceString =
@@ -124,7 +123,6 @@ class PaywallPanel {
                                 color: Colors.black,
                               ),
                             ),
-                            //Styles.getSizedHeightBox(5),
                             const Text(
                               'Real-world daily challenges.',
                               style: TextStyle(
@@ -132,14 +130,6 @@ class PaywallPanel {
                                 color: Colors.black,
                               ),
                             ),
-                            /*Styles.getSizedHeightBox(15),
-                            Text(
-                              'Length of subscription: $packageDurationString',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.black54,
-                              ),
-                            ),*/
                             Styles.getSizedHeightBoxByScreen(context, 10),
                             Text(
                               'Price: ${package.storeProduct.priceString}${packageDurationPriceString}',
@@ -152,7 +142,7 @@ class PaywallPanel {
                           ],
                         ),
                         onTap: () {
-                          print('Purchasing package: $package');
+                          NerdLogger.logger.i('Purchasing package: $package');
                           _purchasePackage(package, context);
                         },
                       ),
@@ -160,27 +150,22 @@ class PaywallPanel {
                   },
                 ),
               ),
-              // Add the Restore Purchases button if applicable
-              //if (Platform.isIOS)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: ElevatedButton(
                   onPressed: () {
                     _restorePurchases(context);
                   },
-                  child: Text('Restore Purchases'),
+                  child: const Text('Restore Purchases'),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: _buildTermsAndPrivacyLinks(),
               ),
+              Styles.getSizedHeightBoxByScreen(context, 10),
             ],
           );
-  }
-
-  static String _getPackageDurationDisplayString(String? duration) {
-    return duration == 'P1M' ? '1 Month' : '1 Year';
   }
 
   static String _getPackageDurationPriceString(String? duration) {
@@ -235,19 +220,18 @@ class PaywallPanel {
 // Implement the restore functionality
   static void _restorePurchases(BuildContext context) async {
     try {
-      // Show a loading indicator
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => Center(
+        builder: (context) => const Center(
           child: CircularProgressIndicator(),
         ),
       );
 
-      // Call RevenueCat's restorePurchases method
       CustomerInfo restoredInfo = await Purchases.restorePurchases();
-      Navigator.of(context).pop(); // Close the loading indicator
+      Navigator.of(context).pop();
       bool hasActiveEntitlements = restoredInfo.entitlements.active.isNotEmpty;
+      NerdLogger.logger.i('entitlements: ${restoredInfo.entitlements}');
 
       if (hasActiveEntitlements) {
         _showRestoreSuccessDialog(context);
@@ -258,23 +242,20 @@ class PaywallPanel {
       Navigator.of(context).pop(); // Close the loading indicator
 
       var errorCode = PurchasesErrorHelper.getErrorCode(e);
-      _showErrorDialog(
-          context, 'Restore Failed', 'Error code: $errorCode\n${e.message}');
+      _showErrorDialog(context, 'Restore Failed', 'Error code: $errorCode\n${e.message}');
     } catch (e) {
       Navigator.of(context).pop(); // Close the loading indicator
 
-      _showErrorDialog(
-          context, 'Restore Failed', 'An unexpected error occurred.');
+      _showErrorDialog(context, 'Restore Failed', 'An unexpected error occurred.');
     }
   }
 
-// Dialog methods
   static void _showRestoreSuccessDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Restore Successful'),
-        content: Text('Your purchases have been restored successfully.'),
+        title: const Text('Restore Successful'),
+        content: const Text('Your purchases have been restored successfully.'),
         actions: [
           TextButton(
             onPressed: () async {
@@ -293,7 +274,7 @@ class PaywallPanel {
                         userEmail: userProfileEntity.getUserEmail())),
               );
             },
-            child: Text('OK'),
+            child: const Text('OK'),
           ),
         ],
       ),
@@ -304,12 +285,12 @@ class PaywallPanel {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('No Purchases Found'),
-        content: Text('No previous purchases were found to restore.'),
+        title: const Text('No Purchases Found'),
+        content: const Text('No previous purchases were found to restore.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text('OK'),
+            child: const Text('OK'),
           ),
         ],
       ),
@@ -326,7 +307,7 @@ class PaywallPanel {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text('OK'),
+            child: const Text('OK'),
           ),
         ],
       ),
@@ -335,14 +316,14 @@ class PaywallPanel {
 
   static void _purchasePackage(Package package, BuildContext context) async {
     try {
-      print('Purchasing a package $package...');
+      NerdLogger.logger.i('Purchasing a package $package...');
       CustomerInfo purchaseInfo = await Purchases.purchasePackage(package);
       await Future.delayed(const Duration(seconds: 1));
       _verifyPurchaseAndNavigate(context);
     } on PlatformException catch (e) {
       var errorCode = PurchasesErrorHelper.getErrorCode(e);
-      print('Purchase failed with error code: $errorCode');
-      print('Error details: ${e.message}');
+      NerdLogger.logger.e('Purchase failed with error code: $errorCode');
+      NerdLogger.logger.e('Error details: ${e.message}');
       if (!context.mounted) return;
       Styles.showGlobalSnackbarMessage('Purchase failed: ${e.message}');
       Styles.showMessageDialog(
@@ -359,14 +340,24 @@ class PaywallPanel {
 
   static Future<void> _verifyPurchaseAndNavigate(BuildContext context) async {
     CustomerInfo customerPurchaseInfo = await Purchases.getCustomerInfo();
-    print('Customer Purchases: $customerPurchaseInfo');
-    if (customerPurchaseInfo.entitlements.all['nerdnudgepro_399_1m']?.isActive == true ||
-        customerPurchaseInfo.entitlements.all['nerdnudgepro_3999_1y']?.isActive == true ||
-        customerPurchaseInfo.entitlements.all['nerdnudgepro_399_1m_ios']?.isActive == true ||
-        customerPurchaseInfo.entitlements.all['nerdnudgepro_3999_1y_ios']?.isActive == true) {
+    NerdLogger.logger.i('Customer Purchases: $customerPurchaseInfo');
+    if (customerPurchaseInfo
+                .entitlements.all['nerdnudgepro_399_1m']?.isActive ==
+            true ||
+        customerPurchaseInfo
+                .entitlements.all['nerdnudgepro_3999_1y']?.isActive ==
+            true ||
+        customerPurchaseInfo
+                .entitlements.all['nerdnudgepro_399_1m_ios']?.isActive ==
+            true ||
+        customerPurchaseInfo
+                .entitlements.all['nerdnudgepro_3999_1y_ios']?.isActive ==
+            true) {
       //if (!context.mounted) return;
-      Styles.showMessageDialog(context, 'Purchase successful!', 'You are now a pro user.');
-      Styles.showGlobalSnackbarMessage('Purchase successful! You are now a pro user.');
+      Styles.showMessageDialog(
+          context, 'Purchase successful!', 'You are now a pro user.');
+      Styles.showGlobalSnackbarMessage(
+          'Purchase successful! You are now a pro user.');
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -392,7 +383,8 @@ class PaywallPanel {
                 userEmail: userProfileEntity.getUserEmail())),
       );
     } else {
-      Styles.showMessageDialog(context, 'No Entitlements', 'No active Pro entitlement found.');
+      Styles.showMessageDialog(
+          context, 'No Entitlements', 'No active Pro entitlement found.');
       Styles.showGlobalSnackbarMessage('No active Pro entitlement found.');
     }
   }
@@ -415,8 +407,7 @@ class PaywallPanel {
     final today = Utils.getDaystamp();
     Map<String, dynamic> rwc = userStats[topicCode]?['rwc'] ?? {};
     final challengeTakenToday = rwc.containsKey(today);
-    print(
-        'Under paywall: $today, $rwc, $topic, $topicCode, $userStats, $challengeTakenToday');
+    NerdLogger.logger.d('Under paywall: $today, $rwc, $topic, $topicCode, $userStats, $challengeTakenToday');
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -426,7 +417,7 @@ class PaywallPanel {
         Center(
           child: Text(
             topic,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
               color: Colors.black54,
@@ -451,7 +442,7 @@ class PaywallPanel {
         Styles.getDivider(),
         Styles.getSizedHeightBoxByScreen(context, 10),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 12),
           child: _getChallengePaywallMessage(challengeTakenToday),
         ),
         Styles.getSizedHeightBoxByScreen(context, 30),
@@ -459,34 +450,34 @@ class PaywallPanel {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(Icons.menu_book, size: 24, color: Colors.white54),
+            const Icon(Icons.menu_book, size: 24, color: Colors.white54),
             Styles.getSizedWidthBoxByScreen(context, 10),
             Text(
               '$numQuestions Questions',
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                   color: Colors.white54,
                   height: 1.5),
             ),
             Styles.getSizedWidthBoxByScreen(context, 20),
-            Text(
+            const Text(
               '|',
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                   color: Colors.white54,
                   height: 1.5),
             ),
             Styles.getSizedWidthBoxByScreen(context, 20),
-            Icon(Icons.timer_outlined, size: 24, color: Colors.white54),
+            const Icon(Icons.timer_outlined, size: 24, color: Colors.white54),
             Styles.getSizedWidthBoxByScreen(context, 10),
             Text(
               '$approxTime Minutes',
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                   color: Colors.white54,
@@ -510,7 +501,7 @@ class PaywallPanel {
       context,
       'START NOW',
       3,
-      RealworldChallengeServiceMainPage(),
+      const RealworldChallengeServiceMainPage(),
     );
   }
 
@@ -534,7 +525,6 @@ class PaywallPanel {
                   date); // Get daystamp for each date
               bool challengeTaken = rwc.containsKey(daystamp);
 
-              // Retrieve total questions and correct answers, then calculate percentage
               final challengeData = rwc[daystamp] ?? [0, 0];
               final totalQuestions = challengeData[0];
               final correctAnswers = challengeData[1];
@@ -545,8 +535,8 @@ class PaywallPanel {
               return Column(
                 children: [
                   Text(
-                    dayOfWeek, // Display as short weekday format, e.g., "Mon", "Tue"
-                    style: TextStyle(
+                    dayOfWeek,
+                    style: const TextStyle(
                       color: Colors.white54,
                       fontWeight: FontWeight.bold,
                     ),
@@ -578,7 +568,7 @@ class PaywallPanel {
                   Styles.getSizedHeightBoxByScreen(context, 8),
                   Text(
                     '$percentage%', // Display the calculated percentage
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white70,
                       fontWeight: FontWeight.w500,
                       fontSize: 12,
@@ -605,7 +595,7 @@ class PaywallPanel {
     return Text(
       textMessage,
       textAlign: TextAlign.center,
-      style: TextStyle(
+      style: const TextStyle(
           fontSize: 17,
           fontWeight: FontWeight.w500,
           color: Colors.white54,

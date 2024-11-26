@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nerd_nudge/insights/screens/trends_insights/user_topic_trend_insights_chart.dart';
 import '../../../topics/services/topics_service.dart';
 import '../../../utilities/colors.dart';
+import '../../../utilities/logger.dart';
 
 class UserTrendsMainPage extends StatefulWidget {
   const UserTrendsMainPage({super.key, required this.userInsights});
@@ -30,10 +31,9 @@ class UserTrendsMainPage extends StatefulWidget {
         }).toList();
       }
 
-      print('returning now: $userTopics');
       return userTopics;
     }).catchError((error) {
-      print('Error occurred: $error');
+      NerdLogger.logger.e('Error occurred: $error');
       return userTopics;
     });
   }
@@ -58,7 +58,7 @@ class _UserTrendsMainPageState extends State<UserTrendsMainPage> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+      margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
       color: Colors.white,
       child: ListTile(
         title: _currentTopicScreen,
@@ -72,7 +72,7 @@ class _UserTrendsMainPageState extends State<UserTrendsMainPage> {
       future: topicNamesToCodesMapping,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
@@ -81,7 +81,7 @@ class _UserTrendsMainPageState extends State<UserTrendsMainPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Center(
+              const Center(
                 child: Text(
                   'Trend Insights',
                   style: TextStyle(
@@ -91,8 +91,8 @@ class _UserTrendsMainPageState extends State<UserTrendsMainPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 'Select a Topic: ',
                 style: TextStyle(
                   color: Colors.black,
@@ -100,20 +100,20 @@ class _UserTrendsMainPageState extends State<UserTrendsMainPage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 13),
+              const SizedBox(height: 13),
               Wrap(
                 spacing: 8.0,
                 runSpacing: 4.0,
                 children: UserTrendsMainPage.userTopics.map((String option) {
                   return FilterChip(
                     label: Text(option),
-                    labelStyle: TextStyle(
+                    labelStyle: const TextStyle(
                       color: Colors.black54,
                       fontWeight: FontWeight.bold,
                     ),
                     onSelected: (bool selected) {
-                      print(option);
-                      print(actualTopicNamesToCodesMapping[option]!);
+                      NerdLogger.logger.d(option);
+                      NerdLogger.logger.d(actualTopicNamesToCodesMapping[option]!);
                       setState(() {
                         selectedTopic = option;
                         _currentTopicScreen = UserTrendDataChart.getSelectedTopicTrend(
@@ -139,11 +139,11 @@ class _UserTrendsMainPageState extends State<UserTrendsMainPage> {
                   );
                 }).toList(),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
             ],
           );
         } else {
-          return Center(child: Text('No mappings available'));
+          return const Center(child: Text('No mappings available'));
         }
       },
     );

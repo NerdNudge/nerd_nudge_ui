@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:mrx_charts/mrx_charts.dart';
 import 'package:nerd_nudge/insights/screens/summary_insights/summary_details.dart';
@@ -8,7 +6,7 @@ import 'package:nerd_nudge/utilities/leaderboard_page.dart';
 
 import '../../../../utilities/colors.dart';
 import '../../../../utilities/styles.dart';
-import '../../../cache_and_lock_manager/cache_locks_keys.dart';
+import '../../../utilities/logger.dart';
 import '../../services/insights_duration_state.dart';
 import '../../services/user_insights_service.dart';
 import '../Utilities/PeerComparisonInsights.dart';
@@ -26,16 +24,12 @@ class SummaryInsights extends StatefulWidget {
   static var overallSummaryObject;
 
   static void setValues(Map<String, dynamic> userInsights) {
-    print('Under set values: ');
-    print(userInsights);
+    NerdLogger.logger.d(userInsights);
     overallSummaryObject = userInsights['overallSummary'];
-    print(overallSummaryObject);
     userSummaryInsightsObject = InsightsDurationState.last30DaysFlag
         ? overallSummaryObject['last30Days']
         : overallSummaryObject['lifetime'];
-    print(userSummaryInsightsObject);
     summaryObject = userSummaryInsightsObject['summary'];
-    print(summaryObject);
     peerComparisonDataObject = overallSummaryObject['peerComparison'];
   }
 }
@@ -61,7 +55,7 @@ class _SummaryInsightsState extends State<SummaryInsights> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+      margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
       color: Colors.white,
       child: ListTile(
         onTap: () {},
@@ -80,11 +74,10 @@ class _SummaryInsightsState extends State<SummaryInsights> {
     int topicRank = (widget.userInsights.containsKey('rankings') && widget.userInsights['rankings'].containsKey('global'))
         ? widget.userInsights['rankings']['global'] as int
         : 0;
-    print('Topic rank: $topicRank');
 
     return Column(
       children: [
-        Text(
+        const Text(
           'Summary',
           style: TextStyle(
             fontWeight: FontWeight.bold,
@@ -93,7 +86,7 @@ class _SummaryInsightsState extends State<SummaryInsights> {
         ),
         Text(
           'Global Rank: $topicRank',
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 14,
           ),
@@ -130,18 +123,18 @@ class _SummaryInsightsState extends State<SummaryInsights> {
           15,
           15,
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Details: ',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 16,
             ),
             Container(
@@ -153,12 +146,12 @@ class _SummaryInsightsState extends State<SummaryInsights> {
                     8.0),
               ),
               child: IconButton(
-                icon: Icon(Icons.light_mode),
+                icon: const Icon(Icons.light_mode),
                 onPressed: () => getSummaryDetails(),
                 color: Colors.white,
               ),
             ),
-            SizedBox(width: 6),
+            const SizedBox(width: 6),
             Container(
               width: 40.0, // Adjust the width and height for the desired size
               height: 40.0,
@@ -168,12 +161,12 @@ class _SummaryInsightsState extends State<SummaryInsights> {
                     8.0),
               ),
               child: IconButton(
-                icon: Icon(Icons.group),
+                icon: const Icon(Icons.group),
                 onPressed: () => _getPeerComparison(),
                 color: Colors.white,
               ),
             ),
-            SizedBox(width: 6),
+            const SizedBox(width: 6),
             Container(
               width: 40.0,
               height: 40.0,
@@ -183,7 +176,7 @@ class _SummaryInsightsState extends State<SummaryInsights> {
                     8.0),
               ),
               child: IconButton(
-                icon: Icon(Icons.leaderboard),
+                icon: const Icon(Icons.leaderboard),
                 onPressed: () => getLeaderBoardPage(),
                 color: Colors.white,
               ),
@@ -195,16 +188,15 @@ class _SummaryInsightsState extends State<SummaryInsights> {
   }
 
   void getLeaderBoardPage() async {
-    print('Summary Insights: Leaderboard details clicked.');
     try {
       List<dynamic> leaderboardList = await _fetchLeaderBoard('global', 100);
       Navigator.push(context, MaterialPageRoute(
         builder: (context) => LeaderboardPage(leaderBoardList: leaderboardList, buttonClick: getLeaderPageCloseButtonClick, topic: 'Global',),
       ),);
     } catch (e) {
-      print('Error fetching leaderboard data: $e');
+      NerdLogger.logger.e('Error fetching leaderboard data: $e');
       setState(() {
-        cardDetails = Center(child: Text('Failed to load leaderboard data.'));
+        cardDetails = const Center(child: Text('Failed to load leaderboard data.'));
       });
     }
   }
@@ -213,20 +205,18 @@ class _SummaryInsightsState extends State<SummaryInsights> {
     try {
       return await UserInsightsService().getLeaderBoard(topic, limit);
     } catch (e) {
-      print('Error fetching user insights: $e');
+      NerdLogger.logger.e('Error fetching user insights: $e');
       return [];
     }
   }
 
   void getSummaryDetails() {
-    print('User summary details clicked.');
     setState(() {
       cardDetails = SummaryDetails.getQuestionSummaryDrillDown(SummaryInsights.summaryObject['accuracy'], getCloseButtonClick);
     });
   }
 
   void _getPeerComparison() {
-    print('Peer comparison called.');
     setState(() {
       SummaryInsights.peerComparisonDataObject = SummaryInsights.overallSummaryObject['peerComparison'];
       cardDetails = PeerComparisonInsights(
@@ -238,17 +228,15 @@ class _SummaryInsightsState extends State<SummaryInsights> {
   }
 
   void getLeaderPageCloseButtonClick() {
-    print('Close button clicked. under leader page');
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => UserInsights(),
+        builder: (context) => const UserInsights(),
       ),
     );
   }
 
   void getCloseButtonClick() {
-    print('Close button clicked.');
     setState(() {
       cardDetails = _getSummaryInsights();
     });

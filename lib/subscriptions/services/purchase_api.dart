@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:nerd_nudge/utilities/logger.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'dart:io' show Platform;
 
@@ -14,40 +15,39 @@ class PurchaseAPI {
   static get offerings => _offerings;
   static get userCurrentOffering => _userCurrentOffering;
 
+
   static Future init() async {
-    print('initializing purchase api');
+    NerdLogger.logger.d('initializing purchase api');
     await configurePurchases();
-    await updateNerdNudgeOfferings();
     await updateCurrentOffer();
+    updateNerdNudgeOfferings();
   }
 
   static Future<void> configurePurchases() async {
     PurchasesConfiguration configuration;
     if (Platform.isAndroid) {
-      print('Its android');
       configuration = PurchasesConfiguration(_apikeyAndroid);
     } else if (Platform.isIOS) {
-      print('Its ios');
       configuration = PurchasesConfiguration(_apikeyIOS);
     } else {
       throw UnsupportedError('Unsupported platform');
     }
 
     await Purchases.configure(configuration);
-    print('purchase api configured');
+    NerdLogger.logger.d('purchase api configured');
   }
 
   static Future<void> updateNerdNudgeOfferings() async {
     try {
       final offerings = await Purchases.getOfferings();
-      print('updated offerings: $offerings');
+      NerdLogger.logger.d('updated offerings: $offerings');
       _offerings = offerings.all.values.toList();
     } on PlatformException catch (e) {
-      print('Error fetching offerings: $e');
+      NerdLogger.logger.e('Error fetching offerings: $e');
     }
   }
 
-  static Future<String?> updateCurrentOffer() async {
+  static Future<void> updateCurrentOffer() async {
     try {
       CustomerInfo customerInfo = await Purchases.getCustomerInfo();
       if (customerInfo.entitlements.active.isNotEmpty) {
@@ -55,11 +55,10 @@ class PurchaseAPI {
         _userCurrentOffering = _getOfferDisplayName(activeEntitlement.identifier);
       } else {
         _userCurrentOffering = Constants.FREEMIUM;
-        //_userCurrentOffering = 'Nerd Nudge Pro';
       }
-      print('updated current offering: $_userCurrentOffering');
+      NerdLogger.logger.d('updated current offering: $_userCurrentOffering');
     } catch (e) {
-      print('Error fetching customer info: $e');
+      NerdLogger.logger.e('Error fetching customer info: $e');
       _userCurrentOffering = Constants.FREEMIUM;
     }
   }

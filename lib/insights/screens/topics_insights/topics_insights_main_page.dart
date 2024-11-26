@@ -6,6 +6,7 @@ import 'package:nerd_nudge/insights/screens/topics_insights/topics_summary_insig
 import '../../../../utilities/styles.dart';
 import '../../../topics/services/topics_service.dart';
 import '../../../utilities/colors.dart';
+import '../../../utilities/logger.dart';
 import '../../services/insights_duration_state.dart';
 import '../Utilities/PeerComparisonInsights.dart';
 
@@ -30,18 +31,14 @@ class TopicsInsights extends StatefulWidget {
   static Future<void> updateTopics(Map<String, dynamic> userInsights) async {
     userTopicsInsightsObject = userInsights['topicSummary'];
     if (userTopicsInsightsObject == null) {
-      print('userTopicsInsightsObject is null');
+      NerdLogger.logger.d('userTopicsInsightsObject is null');
     } else {
-
-      print('user insights: $userInsights');
-      print('user topics insights: $userTopicsInsightsObject');
-
       topicsToDisplay = [];
       topicCodesToNamesMap = await _getTopicCodesToNamesMap();
       topicNamesToCodesMap = await _getTopicNamesToCodesMap();
 
-      print('topic codes to names mapping: $topicCodesToNamesMap');
-      print('topic names to codes mapping: $topicNamesToCodesMap');
+      NerdLogger.logger.d('topic codes to names mapping: $topicCodesToNamesMap');
+      NerdLogger.logger.d('topic names to codes mapping: $topicNamesToCodesMap');
 
       summaryToDisplay = InsightsDurationState.last30DaysFlag ? userTopicsInsightsObject['last30Days'] : userTopicsInsightsObject['lifetime'];
 
@@ -57,7 +54,7 @@ class TopicsInsights extends StatefulWidget {
     return TopicsService().getTopicCodesToNamesMapping().then((topicCodesToNamesMapping) {
       return topicCodesToNamesMapping;
     }).catchError((error) {
-      print('Error occurred: $error');
+      NerdLogger.logger.e('Error occurred: $error');
       return <String, String>{};
     });
   }
@@ -66,7 +63,7 @@ class TopicsInsights extends StatefulWidget {
     return TopicsService().getTopicNamesToCodesMapping().then((topicNamesToCodesMapping) {
       return topicNamesToCodesMapping;
     }).catchError((error) {
-      print('Error occurred: $error');
+      NerdLogger.logger.e('Error occurred: $error');
       return <String, String>{};
     });
   }
@@ -94,7 +91,7 @@ class _TopicsInsightsState extends State<TopicsInsights> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+      margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
       color: Colors.white,
       child: ListTile(
         title: _currentTopicScreen,
@@ -103,14 +100,13 @@ class _TopicsInsightsState extends State<TopicsInsights> {
   }
 
   _getUserTopicsSummary() {
-    print('Topics under summary(): ${TopicsInsights.topicsToDisplay}');
-    print('Topics summary under summary(): ${TopicsInsights.summaryToDisplay}');
+    NerdLogger.logger.d('Topics under summary(): ${TopicsInsights.topicsToDisplay}');
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Center(
+        const Center(
           child: Text(
             'Topic Insights',
             style: TextStyle(
@@ -139,7 +135,7 @@ class _TopicsInsightsState extends State<TopicsInsights> {
           15,
         ),
         Styles.getSizedHeightBoxByScreen(context, 20),
-        Text(
+        const Text(
           'Select a Topic: ',
           style: TextStyle(
             color: Colors.black,
@@ -152,20 +148,19 @@ class _TopicsInsightsState extends State<TopicsInsights> {
           spacing: 8.0,
           runSpacing: 4.0,
           children: TopicsInsights.topicsToDisplay.map((String option) {
-            print('topic in card: $option');
+            NerdLogger.logger.d('topic in card: $option');
             return FilterChip(
               label: Text(option),
-              labelStyle: TextStyle(
+              labelStyle: const TextStyle(
                 color: Colors.black54,
                 fontWeight: FontWeight.bold,
               ),
               onSelected: (bool selected) {
-                print(option);
+                NerdLogger.logger.d(option);
                 setState(() {
                   TopicsInsights.selectedTopic = option;
                   String? topicCode = TopicsInsights.topicNamesToCodesMap[option];
                   int topicRank = widget.userInsights['rankings']?[topicCode] ?? 0;
-                  print('Topic rank: $topicRank');
                   _currentTopicScreen = TopicSummaryInsights.getSelectedTopicSummary(context, TopicsInsights.summaryToDisplay[topicCode], TopicsInsights.selectedTopic, topicsDrillDown, getPeerComparison, closeButtonToTopicInsightsMainPage, topicRank);
                 });
               },
@@ -185,24 +180,21 @@ class _TopicsInsightsState extends State<TopicsInsights> {
 
   getPeerComparison() async {
     String? topicCode = TopicsInsights.topicNamesToCodesMap[TopicsInsights.selectedTopic];
-    print('Selected topic: ${TopicsInsights.selectedTopic}, topic code: $topicCode');
     var topicSummary = TopicsInsights.summaryToDisplay[topicCode];
 
     if (topicSummary == null) {
-      print('No data available for the selected topic.');
+      NerdLogger.logger.d('No data available for the selected topic.');
       return;
     }
 
     var peerComparison = topicSummary['peerComparison'];
 
     if (peerComparison == null) {
-      print('No peer comparison data available for the selected topic.');
+      NerdLogger.logger.d('No peer comparison data available for the selected topic.');
       return;
     }
 
-    print('Peer comparison called.');
     peerComparisonData = peerComparison;
-    print('Peer comparison data for topic: $peerComparisonData');
     setState(() {
       _currentTopicScreen = PeerComparisonInsights(
         closeButton: closeButtonToTopicInsightsSummaryPage,
@@ -213,7 +205,6 @@ class _TopicsInsightsState extends State<TopicsInsights> {
   }
 
   topicsDrillDown() {
-    print('details clicked.');
     setState(() {
       String? topicCode = TopicsInsights.topicNamesToCodesMap[TopicsInsights.selectedTopic];
       _currentTopicScreen = TopicDrillDown.getTopicDrillDown(context, TopicsInsights.summaryToDisplay, topicCode, closeButtonToTopicInsightsSummaryPage);
@@ -227,11 +218,9 @@ class _TopicsInsightsState extends State<TopicsInsights> {
   }
 
   closeButtonToTopicInsightsSummaryPage() {
-    print('Close button clicked.');
     setState(() {
       String? topicCode = TopicsInsights.topicNamesToCodesMap[TopicsInsights.selectedTopic];
       int topicRank = widget.userInsights['rankings']?[topicCode] ?? 0;
-      print('Topic rank: $topicRank');
       _currentTopicScreen = TopicSummaryInsights.getSelectedTopicSummary(context, TopicsInsights.summaryToDisplay[topicCode], TopicsInsights.selectedTopic, topicsDrillDown, getPeerComparison, closeButtonToTopicInsightsMainPage, topicRank);
     });
   }

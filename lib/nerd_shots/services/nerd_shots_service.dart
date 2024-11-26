@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import '../../utilities/api_end_points.dart';
 import '../../utilities/api_service.dart';
+import '../../utilities/logger.dart';
 import '../dto/shots_user_activity_api_entity.dart';
 
 class NerdShotsService {
@@ -14,13 +15,12 @@ class NerdShotsService {
   }
 
   Future<dynamic> getNextQuizflexes(String topic, String subtopic, int limit) async {
-    print('getting user home data now..');
     final ApiService apiService = ApiService();
     dynamic result;
     try {
-      print(APIEndpoints.CONTENT_MANAGER_BASE_URL + APIEndpoints.QUIZFLEXES + "?topic=" + topic + "&subtopic=" + subtopic + "&limit=" + limit.toString());
-      result = await apiService.getRequest(APIEndpoints.CONTENT_MANAGER_BASE_URL, APIEndpoints.QUIZFLEXES + "?topic=" + topic + "&subtopic=" + subtopic + "&limit=" + limit.toString());
-      print('API Result: $result');
+      NerdLogger.logger.d("${APIEndpoints.CONTENT_MANAGER_BASE_URL}${APIEndpoints.QUIZFLEXES}?topic=$topic&subtopic=$subtopic&limit=$limit");
+      result = await apiService.getRequest(APIEndpoints.CONTENT_MANAGER_BASE_URL, "${APIEndpoints.QUIZFLEXES}?topic=$topic&subtopic=$subtopic&limit=$limit");
+      NerdLogger.logger.d('API Result: $result');
 
       if (result is Map<String, dynamic>) {
         return result;
@@ -30,7 +30,7 @@ class NerdShotsService {
         throw const FormatException("Unexpected response format");
       }
     } catch (e) {
-      print(e);
+      NerdLogger.logger.e(e);
       return '{}';
     }
   }
@@ -40,14 +40,14 @@ class NerdShotsService {
     final ApiService apiService = ApiService();
     dynamic result;
     try {
-      final String url = APIEndpoints.USER_ACTIVITY_BASE_URL + APIEndpoints.SHOTS_SUBMISSION;
+      const String url = APIEndpoints.USER_ACTIVITY_BASE_URL + APIEndpoints.SHOTS_SUBMISSION;
       final Map<String, dynamic> jsonBody = entity.toJson();
 
-      print('Sending PUT request to: $url');
-      print('Request Body: ${json.encode(jsonBody)}');
+      NerdLogger.logger.d('Sending PUT request to: $url');
+      NerdLogger.logger.d('Request Body: ${json.encode(jsonBody)}');
 
       result = await apiService.putRequest(url, jsonBody);
-      print('API Result: $result');
+      NerdLogger.logger.d('API Result: $result');
 
       if (result is Map<String, dynamic>) {
         return result;
@@ -57,7 +57,7 @@ class NerdShotsService {
         throw const FormatException("Unexpected response format");
       }
     } catch (e) {
-      print('Error during shotsSubmission: $e');
+      NerdLogger.logger.e('Error during shotsSubmission: $e');
       return '{}';
     }
   }

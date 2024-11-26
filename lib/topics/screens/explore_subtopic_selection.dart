@@ -6,6 +6,7 @@ import '../../../../utilities/styles.dart';
 import '../../../bottom_menus/screens/bottom_menu_options.dart';
 import '../../../menus/screens/menu_options.dart';
 import '../../subscriptions/screens/paywall_panel_screen.dart';
+import '../../utilities/logger.dart';
 import '../services/topics_service.dart';
 
 class ExploreSubtopicSelectionPage extends StatefulWidget {
@@ -39,7 +40,7 @@ class _ExploreSubtopicSelectionPageState extends State<ExploreSubtopicSelectionP
         isLoading = false;
       });
     } catch (e) {
-      print('Error loading topics: $e');
+      NerdLogger.logger.e('Error loading topics: $e');
       setState(() {
         isLoading = false;
       });
@@ -54,9 +55,6 @@ class _ExploreSubtopicSelectionPageState extends State<ExploreSubtopicSelectionP
 
   @override
   Widget build(BuildContext context) {
-    String topicsel = TopicSelection.selectedTopic;
-    print('Subtopics called for topic: $topicsel');
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_panelController.isAttached) {
         if (widget.isPaywallOpen) {

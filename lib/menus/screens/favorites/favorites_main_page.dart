@@ -55,7 +55,7 @@ class _FavoritesState extends State<Favorites> with SingleTickerProviderStateMix
                   color: Colors.black.withOpacity(0.2),
                   spreadRadius: 5,
                   blurRadius: 7,
-                  offset: Offset(0, 3), // Shadow position
+                  offset: const Offset(0, 3), // Shadow position
                 ),
               ],
             ),
@@ -70,11 +70,11 @@ class _FavoritesState extends State<Favorites> with SingleTickerProviderStateMix
                     indicatorPadding: const EdgeInsets.all(4),
                     squeezeIntensity: 2,
                     tabPadding: const EdgeInsets.symmetric(horizontal: 8),
-                    textStyle: TextStyle(
+                    textStyle: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
-                    tabs: [
+                    tabs: const [
                       SegmentTab(
                         label: 'Recent',
                         backgroundColor: Colors.black,
@@ -106,24 +106,24 @@ class _FavoritesState extends State<Favorites> with SingleTickerProviderStateMix
                     children: [
                       Container(
                         alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.vertical(
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.vertical(
                               top: Radius.circular(10)),
                         ),
                         child: RecentFavorites(),
                       ),
                       Container(
                         alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.vertical(
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.vertical(
                               top: Radius.circular(10)),
                         ),
-                        child: FavoritesTopicSelectionPage(),
+                        child: const FavoritesTopicSelectionPage(),
                       ),
                       Container(
                         alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.vertical(
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.vertical(
                               top: Radius.circular(10)),
                         ),
                         child: FavoriteQuotes(),

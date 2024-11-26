@@ -3,7 +3,6 @@ import 'package:nerd_nudge/quiz/quiz_answers/screens/answers_page_actions.dart';
 import 'package:nerd_nudge/quiz/quiz_answers/screens/read_more.dart';
 import 'package:nerd_nudge/quiz/quiz_question/services/nerd_quizflex_service.dart';
 import 'package:nerd_nudge/topics/screens/explore_topic_selection_home_page.dart';
-import 'package:nerd_nudge/topics/screens/topic_selection_home_page.dart';
 import 'package:nerd_nudge/ads_manager/ads_manager.dart';
 
 import '../../../../utilities/constants.dart';
@@ -12,6 +11,7 @@ import '../../../cache_and_lock_manager/cache_locks_keys.dart';
 import '../../../menus/screens/menu_options.dart';
 import '../../../topics/screens/subtopic_selection.dart';
 import '../../../user_home_page/dto/user_home_stats.dart';
+import '../../../utilities/logger.dart';
 import '../screens/question_complete_screen.dart';
 
 class QuizService extends StatefulWidget {
@@ -41,14 +41,12 @@ class _QuizServiceState extends State<QuizService> {
 
   @override
   Widget build(BuildContext context) {
-    int l = _currentQuizzes.length;
-    print('length of current quizzes: $l');
     var nextQuiz = _getNextQuiz();
     if (nextQuiz == null) {
       return Scaffold(
         appBar: Styles.getAppBar(Constants.title),
         drawer: MenuOptions.getMenuDrawer(context),
-        body: Center(
+        body: const Center(
           child: Text(
             'You have exhausted your daily quiz quota. Please upgrade to continue.',
             style: TextStyle(fontSize: 20, color: Colors.white),
@@ -70,11 +68,10 @@ class _QuizServiceState extends State<QuizService> {
   }
 
   startQuiz() {
-    print('pushing for quiz service');
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => QuizService(),
+        builder: (context) => const QuizService(),
       ),
     );
   }
@@ -87,9 +84,8 @@ class _QuizServiceState extends State<QuizService> {
         _quizSubmitted = true;
       }
 
-      print('User has exhausted the quiz counts.');
+      NerdLogger.logger.d('User has exhausted the quiz counts.');
       if (UserHomeStats().getUserAccountType() == Constants.FREEMIUM) {
-        print('Freemium user.');
         WidgetsBinding.instance.addPostFrameCallback((_) {
           Navigator.push(
             context,
@@ -102,7 +98,7 @@ class _QuizServiceState extends State<QuizService> {
       return null;
     } else {
       _quizSubmitted = false;
-      print('Last shown Quiz count: ${NerdAdManager.lastShownQuizCount}, Quiz count today: ${UserHomeStats().getUserQuizCountToday()}');
+      NerdLogger.logger.d('Last shown Quiz count: ${NerdAdManager.lastShownQuizCount}, Quiz count today: ${UserHomeStats().getUserQuizCountToday()}');
       if (UserHomeStats().getUserAccountType() == Constants.FREEMIUM && NerdAdManager.lastShownQuizCount != UserHomeStats().getUserQuizCountToday() &&
           UserHomeStats().adsFrequencyQuizFlex != 0 &&
           UserHomeStats().getUserQuizCountToday() != 0 &&
@@ -116,7 +112,7 @@ class _QuizServiceState extends State<QuizService> {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => QuizService(),
+                    builder: (context) => const QuizService(),
                   ),
                 );
               }
@@ -158,11 +154,9 @@ class _QuizServiceState extends State<QuizService> {
         );
       });
     } else {
+      NerdLogger.logger.d('adding new list of quizflexes');
       setState(() {
-        print('adding new list of quizflexes');
         _currentQuizzes.addAll(nextQuizList);
-        int len = _currentQuizzes.length;
-        print('current quizzes length: $len');
 
         if (_currentIndex >= _currentQuizzes.length) {
           _currentIndex = _currentQuizzes.length - 1;
@@ -173,13 +167,13 @@ class _QuizServiceState extends State<QuizService> {
 
   Future<List<dynamic>> _getNextQuizzes() async {
     if (UserHomeStats().hasUserExhaustedNerdQuiz()) {
-      print('User has exhausted the quiz counts.');
+      NerdLogger.logger.d('User has exhausted the quiz counts.');
       return [];
     } else {
-      print('Fetching the next quizzes set.');
+      NerdLogger.logger.d('Fetching the next quizzes set.');
       var nextQuestions = await NerdQuizflexService().getNextQuizflexes(
           ExploreTopicSelection.selectedTopic, ExploreTopicSelection.selectedSubtopic, 10);
-      print('Fetched Quizzes: $nextQuestions');
+      NerdLogger.logger.d('Fetched Quizzes: $nextQuestions');
       return nextQuestions['data'] ?? [];
     }
   }

@@ -18,25 +18,24 @@ class FavoriteQuotes extends StatelessWidget {
           SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 FutureBuilder<List<Map<String, dynamic>>>(
                   future: FavoriteQuotesService().getFavoriteQuotes(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
+                      return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return Center(child: Text('No favorite quotes found.'));
+                      return const Center(child: Text('No favorite quotes found.'));
                     } else {
                       return Column(
                         children: snapshot.data!.asMap().entries.map((entry) {
                           int index = entry.key;
                           Map<String, dynamic> thisQuote = entry.value;
 
-                          // Assign a unique GlobalKey for each card
                           _cardKeys[index] = GlobalKey();
 
                           return Column(
@@ -45,9 +44,7 @@ class FavoriteQuotes extends StatelessWidget {
                                   thisQuote['quote'],
                                   thisQuote['author'],
                                   _cardKeys[index]!),
-                              SizedBox(
-                                height: 8,
-                              ),
+                              const SizedBox(height: 8),
                             ],
                           );
                         }).toList(),
@@ -81,7 +78,7 @@ class FavoriteQuotes extends StatelessWidget {
                     fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
                 '~ $author',
                 style: const TextStyle(
@@ -90,18 +87,18 @@ class FavoriteQuotes extends StatelessWidget {
                     fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IconButton(
-                    icon: Icon(Icons.favorite_outlined, color: Colors.white),
+                    icon: const Icon(Icons.favorite_outlined, color: Colors.white),
                     onPressed: () {
                       // Handle favorite action
                     },
                   ),
                   IconButton(
-                    icon: Icon(Icons.share, color: Colors.white),
+                    icon: const Icon(Icons.share, color: Colors.white),
                     onPressed: () {
                       Styles.shareCardContent(key);
                     },

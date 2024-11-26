@@ -12,6 +12,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../../../utilities/colors.dart';
 import '../../../../utilities/constants.dart';
+import '../../../../utilities/logger.dart';
 import '../../../../utilities/styles.dart';
 import '../../menu_options.dart';
 
@@ -125,7 +126,7 @@ class _FavoritesDetailsSwipedState extends State<FavoritesDetailsSwiped> {
   void _updateLike(String id) {
     setState(() {
       if (_likesIcon == Icons.thumb_up_alt_outlined) {
-        print('updating likes');
+        NerdLogger.logger.d('updating likes');
         _likesIcon = Icons.thumb_up;
         _likeCount++;
         _favoriteUserActivityEntity.addLike(id);
@@ -153,16 +154,15 @@ class _FavoritesDetailsSwipedState extends State<FavoritesDetailsSwiped> {
 
   void _updateFavorite(dynamic quiz) {
     setState(() {
-      print('updating favorites');
       if (_favoriteIcon == Icons.favorite_border_outlined) {
         _favoriteIcon = Icons.favorite;
         _favoriteCount = _favoriteCount + 1;
-        print('fav count ++: $_favoriteCount');
+        NerdLogger.logger.d('fav count ++: $_favoriteCount');
         _favoriteUserActivityEntity.undoDeleteFavorite(quiz['topic_name'], quiz['sub_topic'], quiz['id']);
       } else {
         _favoriteIcon = Icons.favorite_border_outlined;
         _favoriteCount = _favoriteCount - 1;
-        print('fav count --: $_favoriteCount');
+        NerdLogger.logger.d('fav count --: $_favoriteCount');
         _favoriteUserActivityEntity.addToDeleteFavorites(quiz['topic_name'], quiz['sub_topic'], quiz['id']);
       }
     });
@@ -178,27 +178,6 @@ class _FavoritesDetailsSwipedState extends State<FavoritesDetailsSwiped> {
     });
 
     Styles.shareCardContent(_repaintBoundaryKey);
-    //_shareContent();
-  }
-
-  Future<void> _shareContent() async {
-    try {
-      RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext!
-          .findRenderObject() as RenderRepaintBoundary;
-      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      ByteData? byteData =
-      await image.toByteData(format: ui.ImageByteFormat.png);
-      Uint8List pngBytes = byteData!.buffer.asUint8List();
-
-      final directory = await getApplicationDocumentsDirectory();
-      final imagePath = File('${directory.path}/screenshot.png');
-      await imagePath.writeAsBytes(pngBytes as List<int>);
-
-      String shareMessage = Constants.shareQuoteMessage;
-      Share.shareFiles([imagePath.path], text: '\n\n$shareMessage');
-    } catch (e) {
-      print('Error capturing screenshot: $e');
-    }
   }
 
   @override
@@ -244,13 +223,13 @@ class _FavoritesDetailsSwipedState extends State<FavoritesDetailsSwiped> {
                 verticalThresholdPercentage,
                 ) =>
                 SingleChildScrollView(
-                  child: _getCard(), //_getCard(_currentQuizzes[index]),
+                  child: _getCard(),
                 ),
           ),
         ),
         Padding(
           padding: const EdgeInsets.only(
-              bottom: 20.0), // Adjust the padding as needed
+              bottom: 20.0),
           child: Container(
             child: Styles.getElevatedButton(
               'CLOSE',
@@ -292,7 +271,7 @@ class _FavoritesDetailsSwipedState extends State<FavoritesDetailsSwiped> {
               ),
             ),
             Container(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
                   colors: [Colors.white, Colors.white70],

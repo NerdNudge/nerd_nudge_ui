@@ -1,8 +1,7 @@
-import 'dart:convert';
-
 import 'package:nerd_nudge/utilities/api_end_points.dart';
 
 import '../../../utilities/api_service.dart';
+import '../../../utilities/logger.dart';
 
 class UserProfileService {
   UserProfileService._privateConstructor();
@@ -21,10 +20,10 @@ class UserProfileService {
 
     try {
       result = await apiService.putRequest(apiUrl, data);
-      print('API Result: $result');
+      NerdLogger.logger.d('API Result: $result');
       return true;
     } catch (e) {
-      print('Error calling delete account API: $e');
+      NerdLogger.logger.e('Error calling delete account API: $e');
       return false;
     }
   }

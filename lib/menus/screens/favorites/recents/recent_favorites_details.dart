@@ -3,6 +3,7 @@ import 'package:nerd_nudge/menus/screens/favorites/favorites_main_page.dart';
 
 import '../../../../quiz/quiz_question/screens/question_header.dart';
 import '../../../../utilities/colors.dart';
+import '../../../../utilities/logger.dart';
 import '../../../../utilities/styles.dart';
 import '../../menu_options.dart';
 
@@ -71,15 +72,15 @@ class _RecentFavoritesDetailsState extends State<RecentFavoritesDetails> {
 
   void _updateFavorite() {
     setState(() {
-      print('updating favorite count');
+      NerdLogger.logger.d('updating favorite count');
       if (_favoriteIcon == Icons.favorite_border_outlined) {
         _favoriteIcon = Icons.favorite;
         _favoriteCount = _favoriteCount + 1;
-        print('count fav ++: $_favoriteCount');
+        NerdLogger.logger.d('count fav ++: $_favoriteCount');
       } else {
         _favoriteIcon = Icons.favorite_border_outlined;
         _favoriteCount = _favoriteCount - 1;
-        print('count fav --: $_favoriteCount');
+        NerdLogger.logger.d('count fav --: $_favoriteCount');
       }
     });
   }
@@ -201,9 +202,7 @@ class _RecentFavoritesDetailsState extends State<RecentFavoritesDetails> {
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -222,9 +221,7 @@ class _RecentFavoritesDetailsState extends State<RecentFavoritesDetails> {
                                   )
                                 }),
                       ),
-                      SizedBox(
-                        width: 10,
-                      ),
+                      const SizedBox(width: 10),
                       Container(
                         child: Styles.getElevatedButton(
                             '<<',
@@ -245,9 +242,7 @@ class _RecentFavoritesDetailsState extends State<RecentFavoritesDetails> {
                                   )
                                 }),
                       ),
-                      SizedBox(
-                        width: 10,
-                      ),
+                      const SizedBox(width: 10),
                       Container(
                         child: Styles.getElevatedButton(
                             '>>',

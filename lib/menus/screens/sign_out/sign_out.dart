@@ -9,6 +9,6 @@ class SignOut extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FirebaseAuth.instance.signOut();
-    return Authpage();
+    return const Authpage();
   }
 }

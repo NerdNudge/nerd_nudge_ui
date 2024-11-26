@@ -1,3 +1,5 @@
+import 'package:nerd_nudge/utilities/logger.dart';
+
 import '../user_home_page/dto/user_home_stats.dart';
 import '../user_home_page/services/home_page_service.dart';
 import 'cache_locks_keys.dart';
@@ -27,17 +29,17 @@ class UserHomePageCacheManager {
   }
 
   Future<UserHomeStats> fetchUserHomePageStats(String currentLocalLockKey) async {
-    print('getting user home data now..');
+    NerdLogger.logger.d('getting user home data now..');
     if (isUserHomeStatsCacheExpired(const Duration(minutes: 5)) || cacheLockKeys.isKeyChanged(currentLocalLockKey)) {
-      print("Cache is expired, key changed or it's the first time. Fetching data from API...");
+      NerdLogger.logger.d("Cache is expired, key changed or it's the first time. Fetching data from API...");
       _futureUserHomeStats = HomePageService().getUserHomePageStats();
       updateUserHomeStatsLastUpdatedTime(DateTime.now());
     } else {
       if (_futureUserHomeStats != null) {
-        print("Cache is still valid. Using cached data.");
+        NerdLogger.logger.d("Cache is still valid. Using cached data.");
         return _futureUserHomeStats!;
       } else {
-        print("Cache was expected but is missing, fetching from API...");
+        NerdLogger.logger.d("Cache was expected but is missing, fetching from API...");
         _futureUserHomeStats = HomePageService().getUserHomePageStats();
         updateUserHomeStatsLastUpdatedTime(DateTime.now());
       }

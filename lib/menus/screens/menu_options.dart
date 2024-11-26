@@ -7,11 +7,11 @@ import 'package:nerd_nudge/utilities/api_end_points.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../utilities/colors.dart';
+import '../../utilities/logger.dart';
 
 class MenuOptions {
   static Drawer getMenuDrawer(BuildContext context) {
     final userName = UserProfileEntity().getUserFullName();
-    print('Under menu: $userName');
     const title = 'Nerd Menu';
     return Drawer(
       child: ListView(
@@ -70,16 +70,16 @@ class MenuOptions {
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     } else {
-      print('Could not launch $url');
+      NerdLogger.logger.e('Could not launch $url');
     }
   }
 
   static _getSignOutTile(BuildContext context) {
     return ListTile(
-      leading: Icon(Icons.exit_to_app),
-      title: Text(
+      leading: const Icon(Icons.exit_to_app),
+      title: const Text(
         'Sign Out',
-        style: const TextStyle(
+        style: TextStyle(
           fontWeight: FontWeight.bold,
         ),
       ),

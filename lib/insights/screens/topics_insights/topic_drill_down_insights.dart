@@ -5,11 +5,10 @@ import '../../../utilities/styles.dart';
 
 class TopicDrillDown {
   static getTopicDrillDown(BuildContext context, lifetimeSummary, selectedTopic, Function getCloseButtonClick) {
-    print('drill down clicked.');
     final subtopics = lifetimeSummary[selectedTopic]?['subtopics'] as Map<String, dynamic>? ?? {};
     return Column(
       children: [
-        Text(
+        const Text(
           'Sub-Topic Performance',
           style: TextStyle(
             fontWeight: FontWeight.bold,
@@ -72,7 +71,7 @@ class TopicDrillDown {
                 borderRadius: BorderRadius.circular(8.0),
               ),
               child: IconButton(
-                icon: Icon(Icons.close),
+                icon: const Icon(Icons.close),
                 onPressed: () => getCloseButtonClick(),
                 color: Colors.white,
               ),

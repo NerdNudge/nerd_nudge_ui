@@ -28,7 +28,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Feedback'),
+        title: const Text('Feedback'),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -37,12 +37,12 @@ class _FeedbackPageState extends State<FeedbackPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              SizedBox(height: 20,),
-              Text(
+              const SizedBox(height: 20,),
+              const Text(
                 'Select Feedback Type: ',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 20,),
+              const SizedBox(height: 20,),
               DropdownButtonFormField<String>(
                 value: _selectedFeedbackType,
                 onChanged: (String? newValue) {
@@ -57,21 +57,21 @@ class _FeedbackPageState extends State<FeedbackPage> {
                   );
                 }).toList(),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
                 _feedbackDescriptions[_selectedFeedbackType]!,
                 style: TextStyle(fontSize: 14, color: Colors.grey[600]),
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 'Comments: ',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 10,),
+              const SizedBox(height: 10,),
               TextFormField(
                 controller: _commentsController,
                 maxLines: 5,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: 'Enter your comments here',
                 ),
@@ -82,7 +82,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Center(
                 child: ElevatedButton.icon(
                   onPressed: () {
@@ -92,7 +92,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                       _commentsController.clear();
                     }
                   },
-                  label: Text(
+                  label: const Text(
                     'Submit Feedback',
                     style: TextStyle(
                         color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold),
@@ -103,7 +103,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                       borderRadius: BorderRadius.circular(16),
                     ),
                   ),
-                  icon: Icon(Icons.add, color: Colors.white),
+                  icon: const Icon(Icons.add, color: Colors.white),
                 ),
               ),
             ],

@@ -22,12 +22,12 @@ class _AnswerWithStatsState extends State<AnswerWithStats> {
     color: Colors.blueGrey.shade100,
   );
 
-  Icon selectedIcon = Icon(
+  Icon selectedIcon = const Icon(
     Icons.check_circle_rounded,
     color: Colors.green,
   );
 
-  Icon wrongIcon = Icon(
+  Icon wrongIcon = const Icon(
     Icons.check_circle_rounded,
     color: Colors.red,
   );
@@ -110,7 +110,7 @@ class _AnswerWithStatsState extends State<AnswerWithStats> {
         children: allAnswers.map((answer) {
           return Card.outlined(
             elevation: 2.0,
-            margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+            margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
             shape: RoundedRectangleBorder(
               side: BorderSide(
                 color: answer.color,
@@ -160,7 +160,7 @@ class _AnswerWithStatsState extends State<AnswerWithStats> {
                           child: getAnswerIcon(answer.sequence),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 12,
                       ),
                       Container(

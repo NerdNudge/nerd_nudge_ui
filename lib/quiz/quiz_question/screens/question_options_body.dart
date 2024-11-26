@@ -20,7 +20,7 @@ class _PossibleAnswersContainerState extends State<PossibleAnswersContainer> {
     color: Colors.blueGrey.shade100,
   );
 
-  Icon selectedIcon = Icon(
+  Icon selectedIcon = const Icon(
     Icons.check_circle_rounded,
     color: Colors.green,
   );
@@ -71,7 +71,7 @@ class _PossibleAnswersContainerState extends State<PossibleAnswersContainer> {
         children: allAnswers.map((answer) {
           return Card.outlined(
             elevation: 2.0,
-            margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+            margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
             shape: RoundedRectangleBorder(
               side: BorderSide(
                 color: answer.color,

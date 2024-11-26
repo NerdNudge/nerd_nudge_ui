@@ -48,7 +48,7 @@ class AnswerScreen extends StatelessWidget {
           Container(
             height: 4, // Height of the horizontal bar
             width: double.infinity, // Width of the horizontal bar
-            color: Color(0xFF252d3c),
+            color: const Color(0xFF252d3c),
           ),
           Styles.getSizedHeightBox(15.0),
           _getTimerEndedInfo(didTimerEnd),

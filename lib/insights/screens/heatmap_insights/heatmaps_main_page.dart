@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
 import 'package:nerd_nudge/user_profile/dto/user_profile_entity.dart';
+import 'package:nerd_nudge/utilities/logger.dart';
 import 'package:nerd_nudge/utilities/styles.dart';
 
 class HeatmapsMainPage extends StatefulWidget {
@@ -17,13 +18,13 @@ class _HeatmapsMainPageState extends State<HeatmapsMainPage> {
   void initState() {
     super.initState();
     UserProfileEntity userProfileEntity = UserProfileEntity();
-    print('User fullName: ${userProfileEntity.getUserFullName()}, User Email: ${userProfileEntity.getUserEmail()}');
+    NerdLogger.logger.d('User fullName: ${userProfileEntity.getUserFullName()}, User Email: ${userProfileEntity.getUserEmail()}');
   }
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+      margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
       color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -31,7 +32,7 @@ class _HeatmapsMainPageState extends State<HeatmapsMainPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
+            const Text(
               'Activity Heatmap',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
@@ -39,7 +40,7 @@ class _HeatmapsMainPageState extends State<HeatmapsMainPage> {
                 color: Colors.black,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Flexible(
               fit: FlexFit.loose,
               child: _getPerformanceHeatMap(),
@@ -52,7 +53,6 @@ class _HeatmapsMainPageState extends State<HeatmapsMainPage> {
 
   Widget _getPerformanceHeatMap() {
     var heatmapData = widget.userInsights['heatMap'];
-    print(heatmapData);
 
     DateTime now = DateTime.now();
     DateTime sixMonthsAgo = DateTime(now.year, now.month - 6, now.day);

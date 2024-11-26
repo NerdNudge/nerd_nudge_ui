@@ -32,7 +32,7 @@ class RealworldChallengeCompletionScreen extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(20.0),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: [
             Color(0xFFD1C4E9), // Light purple with a hint of lavender for a soft start
@@ -57,16 +57,14 @@ class RealworldChallengeCompletionScreen extends StatelessWidget {
                 color: Colors.white.withOpacity(0.1),
               ),
               padding: const EdgeInsets.all(20.0),
-              child: Icon(
+              child: const Icon(
                 Icons.emoji_events_rounded,
                 size: 80,
                 color: Color(0xFF7E57C2),
               ),
             ),
             const SizedBox(height: 20),
-
-            // Congratulations Text
-            Text(
+            const Text(
               "Congratulations!",
               style: TextStyle(
                 fontSize: 28,
@@ -78,9 +76,8 @@ class RealworldChallengeCompletionScreen extends StatelessWidget {
             const SizedBox(height: 10),
 
             // Challenge Completion Summary
-            Text(
-              "You completed today’s Real-World Challenge in $topic.",
-              style: TextStyle(
+            Text("You completed today’s Real-World Challenge in $topic.",
+              style: const TextStyle(
                 fontSize: 18,
                 color: Colors.white70,
                 height: 1.5,
@@ -89,7 +86,6 @@ class RealworldChallengeCompletionScreen extends StatelessWidget {
             ),
             const SizedBox(height: 30),
 
-            // Performance Summary
             Container(
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
               decoration: BoxDecoration(
@@ -124,12 +120,12 @@ class RealworldChallengeCompletionScreen extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                    backgroundColor: Color(0xFF6A69EB),
+                    backgroundColor: const Color(0xFF6A69EB),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     "Back to Home",
                     style: TextStyle(
                       fontSize: 16,
@@ -152,7 +148,7 @@ class RealworldChallengeCompletionScreen extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
             color: Colors.white70,
@@ -160,7 +156,7 @@ class RealworldChallengeCompletionScreen extends StatelessWidget {
         ),
         Text(
           value,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
             color: Colors.white,

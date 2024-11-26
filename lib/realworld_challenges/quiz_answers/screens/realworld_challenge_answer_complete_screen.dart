@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nerd_nudge/topics/screens/explore_topic_selection_home_page.dart';
-import 'package:nerd_nudge/topics/screens/topic_selection_home_page.dart';
 import 'package:nerd_nudge/utilities/styles.dart';
 
-import '../../../bottom_menus/screens/bottom_menu_options.dart';
-import '../../../menus/screens/menu_options.dart';
 import '../../quiz_question/screens/realworld_challenge_body.dart';
 import '../../quiz_question/screens/realworld_challenge_header.dart';
 import 'realworld_challenge_answers_page_actions.dart';
@@ -50,9 +47,9 @@ class RealworldChallengeAnswerScreen extends StatelessWidget {
           Container(
             height: 4, // Height of the horizontal bar
             width: double.infinity, // Width of the horizontal bar
-            color: Color(0xFF252d3c),
+            color: const Color(0xFF252d3c),
           ),
-          SizedBox(
+          const SizedBox(
             height: 15.0,
           ),
           _getTimerEndedInfo(didTimerEnd),
@@ -61,7 +58,7 @@ class RealworldChallengeAnswerScreen extends StatelessWidget {
               questionText: completeQuiz['question'],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 15.0,
           ),
           Container(
@@ -70,7 +67,7 @@ class RealworldChallengeAnswerScreen extends StatelessWidget {
               didTimerEnd: didTimerEnd,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 15.0,
           ),
           Container(

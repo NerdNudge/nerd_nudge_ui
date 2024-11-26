@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import '../../../utilities/api_end_points.dart';
 import '../../../utilities/api_service.dart';
+import '../../../utilities/logger.dart';
 
 class NerdQuizflexService {
   NerdQuizflexService._privateConstructor();
@@ -14,28 +15,14 @@ class NerdQuizflexService {
 
   Future<dynamic> getNextQuizflexes(
       String topic, String subtopic, int limit) async {
-    print('getting Quizflex data now..');
+    NerdLogger.logger.d('getting Quizflex data now..');
     final ApiService apiService = ApiService();
     dynamic result;
     try {
-      print(APIEndpoints.CONTENT_MANAGER_BASE_URL +
-          APIEndpoints.QUIZFLEXES +
-          "?topic=" +
-          topic +
-          "&subtopic=" +
-          subtopic +
-          "&limit=" +
-          limit.toString());
       result = await apiService.getRequest(
           APIEndpoints.CONTENT_MANAGER_BASE_URL,
-          APIEndpoints.QUIZFLEXES +
-              "?topic=" +
-              topic +
-              "&subtopic=" +
-              subtopic +
-              "&limit=" +
-              limit.toString());
-      print('API Result: $result');
+          "${APIEndpoints.QUIZFLEXES}?topic=$topic&subtopic=$subtopic&limit=$limit");
+      NerdLogger.logger.d('API Result: $result');
 
       if (result is Map<String, dynamic>) {
         return result;
@@ -45,35 +32,20 @@ class NerdQuizflexService {
         throw const FormatException("Unexpected response format");
       }
     } catch (e) {
-      print(e);
+      NerdLogger.logger.e(e);
       return '{}';
     }
   }
 
   Future<dynamic> getRealWorldChallenges(
       String topic, String subtopic, int limit) async {
-    print('getting Quizflex data now..');
     final ApiService apiService = ApiService();
     dynamic result;
     try {
-      print(APIEndpoints.CONTENT_MANAGER_BASE_URL +
-          APIEndpoints.REAL_WORLD_CHALLENGES +
-          "?topic=" +
-          topic +
-          "&subtopic=" +
-          subtopic +
-          "&limit=" +
-          limit.toString());
       result = await apiService.getRequest(
           APIEndpoints.CONTENT_MANAGER_BASE_URL,
-          APIEndpoints.REAL_WORLD_CHALLENGES +
-              "?topic=" +
-              topic +
-              "&subtopic=" +
-              subtopic +
-              "&limit=" +
-              limit.toString());
-      print('API Result: $result');
+          "${APIEndpoints.REAL_WORLD_CHALLENGES}?topic=$topic&subtopic=$subtopic&limit=$limit");
+      NerdLogger.logger.d('API Result: $result');
 
       if (result is Map<String, dynamic>) {
         return result;
@@ -83,38 +55,8 @@ class NerdQuizflexService {
         throw const FormatException("Unexpected response format");
       }
     } catch (e) {
-      print(e);
+      NerdLogger.logger.e(e);
       return '{}';
     }
   }
-
-  /*Future<dynamic> quizflexSubmission(ShotsUserActivityAPIEntity entity) async {
-    final ApiService apiService = ApiService();
-    dynamic result;
-    try {
-      // Construct the full URL for the PUT request
-      final String url = APIEndpoints.CONTENT_MANAGER_BASE_URL +
-          APIEndpoints.SHOTS_SUBMISSION;
-
-      String jsonBody = json.encode(entity.toJson());
-
-      print('Sending PUT request to: $url');
-      print('Request Body: $jsonBody');
-
-      result = await apiService.putRequest(url, jsonBody as Map<String, dynamic>);
-      print('API Result: $result');
-
-      // Process the response
-      if (result is Map<String, dynamic>) {
-        return result;
-      } else if (result is String) {
-        return json.decode(result);
-      } else {
-        throw const FormatException("Unexpected response format");
-      }
-    } catch (e) {
-      print(e);
-      return '{}';
-    }
-  }*/
 }

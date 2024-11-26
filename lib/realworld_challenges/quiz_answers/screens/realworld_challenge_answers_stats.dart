@@ -23,12 +23,12 @@ class _RealworldChallengeAnswerWithStatsState extends State<RealworldChallengeAn
     color: Colors.blueGrey.shade100,
   );
 
-  Icon selectedIcon = Icon(
+  Icon selectedIcon = const Icon(
     Icons.check_circle_rounded,
     color: Colors.green,
   );
 
-  Icon wrongIcon = Icon(
+  Icon wrongIcon = const Icon(
     Icons.check_circle_rounded,
     color: Colors.red,
   );
@@ -115,7 +115,7 @@ class _RealworldChallengeAnswerWithStatsState extends State<RealworldChallengeAn
         children: allAnswers.map((answer) {
           return Card.outlined(
             elevation: 2.0,
-            margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+            margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
             shape: RoundedRectangleBorder(
               side: BorderSide(
                 color: answer.color,
@@ -139,17 +139,6 @@ class _RealworldChallengeAnswerWithStatsState extends State<RealworldChallengeAn
                         color: Colors.grey[300],
                         width: 30.0,
                       ),
-                      /*Expanded(
-                        child: Container(
-                          height: 20,
-                          width: MediaQuery.of(context).size.width *
-                              (answer.percentage / 100),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      ),*/
                       Expanded(
                         child: Text(
                           answer.text,
@@ -165,7 +154,7 @@ class _RealworldChallengeAnswerWithStatsState extends State<RealworldChallengeAn
                           child: getAnswerIcon(answer.sequence),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 12,
                       ),
                       Container(

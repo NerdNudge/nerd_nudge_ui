@@ -1,4 +1,5 @@
 import '../../user_profile/dto/user_profile_entity.dart';
+import '../../utilities/logger.dart';
 
 class ShotsUserActivityAPIEntity {
 
@@ -47,11 +48,13 @@ class ShotsUserActivityAPIEntity {
   }
 
   bool isFavoriteByUser(String topic, String subtopic, String id) {
-    if(! _favorites.containsKey(topic))
+    if(! _favorites.containsKey(topic)) {
       return false;
+    }
 
-    if(! _favorites[topic]!.containsKey(subtopic))
+    if(! _favorites[topic]!.containsKey(subtopic)) {
       return false;
+    }
 
     return _favorites[topic]?[subtopic]?.contains(id) ?? false;
   }
@@ -70,7 +73,7 @@ class ShotsUserActivityAPIEntity {
       currentSubtopic = topicObject[subtopic];
     }
 
-    topicObject[subtopic] = (currentSubtopic! + 1)!;
+    topicObject[subtopic] = (currentSubtopic! + 1);
     _shots[topic] = topicObject;
   }
 
@@ -81,7 +84,7 @@ class ShotsUserActivityAPIEntity {
       return;
     }
 
-    print('existing: $_shots[$topic]');
+    NerdLogger.logger.d('existing: $_shots[$topic]');
     topicObject = _shots[topic];
 
     if (!topicObject!.containsKey(subtopic)) {
@@ -90,7 +93,7 @@ class ShotsUserActivityAPIEntity {
 
     int? currentSubtopic = topicObject[subtopic];
 
-    topicObject[subtopic] = (currentSubtopic! - 1)!;
+    topicObject[subtopic] = (currentSubtopic! - 1);
     _shots[topic] = topicObject;
   }
 

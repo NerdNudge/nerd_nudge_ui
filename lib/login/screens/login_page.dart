@@ -9,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../cache_and_lock_manager/cache_locks_keys.dart';
 import '../../user_home_page/screens/home_page.dart';
+import '../../utilities/logger.dart';
 import '../services/auth_service.dart';
 import 'forgot_password_page.dart';
 
@@ -35,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
         children: [
           Positioned.fill(
             child: Container(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: Colors.black,
                 borderRadius: BorderRadius.circular(0), // Rounded corners
@@ -44,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
                     color: Colors.black.withOpacity(0.2),
                     spreadRadius: 5,
                     blurRadius: 7,
-                    offset: Offset(0, 3), // Shadow position
+                    offset: const Offset(0, 3), // Shadow position
                   ),
                 ],
               ),
@@ -93,7 +94,7 @@ class _LoginPageState extends State<LoginPage> {
                                   builder: (context) => ForgotPasswordPage()),
                             );
                           },
-                          child: Text(
+                          child: const Text(
                             'Forgot Password?',
                             style: TextStyle(color: Colors.white),
                           ),
@@ -125,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                         )),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
                     Row(
@@ -146,14 +147,14 @@ class _LoginPageState extends State<LoginPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Not a member?',
+                        const Text('Not a member?',
                             style: TextStyle(color: Colors.white)),
-                        SizedBox(
+                        const SizedBox(
                           width: 4,
                         ),
                         GestureDetector(
                           onTap: widget.onRegisterNowTap,
-                          child: Text(
+                          child: const Text(
                             'Register Now',
                             style: TextStyle(
                                 color: Colors.blue,
@@ -263,7 +264,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
     } else {
-      print('Sign-in failed or canceled');
+      NerdLogger.logger.d('Sign-in failed or canceled');
       Navigator.pushNamed(context, '/startpage');
     }
   }
@@ -293,7 +294,7 @@ class _LoginPageState extends State<LoginPage> {
     showDialog(
         context: context,
         builder: (context) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         });
@@ -305,14 +306,12 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     try {
-      // Sign in with email and password
       UserCredential userCredential =
           await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: usernameController.text,
         password: passwordController.text,
       );
 
-      // Reload the user's data to ensure the latest email verification status is fetched
       User? user = userCredential.user;
       await user?.reload();
       user = FirebaseAuth.instance.currentUser;
@@ -334,7 +333,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
     } on FirebaseAuthException catch (e) {
-      print('Error: $e');
+      NerdLogger.logger.e('Error: $e');
       Navigator.pop(context);
 
       if (e.code == 'user-not-found') {

@@ -1,8 +1,7 @@
 import 'package:nerd_nudge/menus/dto/user_feedback_entity.dart';
-import 'package:nerd_nudge/user_profile/dto/user_profile_entity.dart';
-
 import '../../../utilities/api_end_points.dart';
 import '../../../utilities/api_service.dart';
+import '../../../utilities/logger.dart';
 
 class UserFeedbackService {
   UserFeedbackService._privateConstructor();
@@ -13,7 +12,7 @@ class UserFeedbackService {
   }
 
   Future<void> submitUserFeedBack(String feedbackType, String feedback) async {
-    print('Submitting User Feedback now..');
+    NerdLogger.logger.d('Submitting User Feedback now..');
     UserFeedbackEntity userFeedbackEntity = UserFeedbackEntity();
     userFeedbackEntity.feedbackType = feedbackType;
     userFeedbackEntity.feedback = feedback;
@@ -23,11 +22,10 @@ class UserFeedbackService {
     dynamic result;
     String url = APIEndpoints.USER_ACTIVITY_BASE_URL + APIEndpoints.USER_FEEDBACK_SUBMISSION;
     try {
-      print(url);
       result = await apiService.putRequest(url, jsonBody);
-      print('API Result: $result');
+      NerdLogger.logger.d('API Result: $result');
     } catch (e) {
-      print(e);
+      NerdLogger.logger.e(e);
     }
   }
 }

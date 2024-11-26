@@ -104,7 +104,7 @@ class _UserTrendsBarChartCreatorState extends State<UserTrendsBarChartCreator> {
   );
 
   Widget getTitles(double value, TitleMeta meta) {
-    final style = TextStyle(
+    const style = TextStyle(
       color: Colors.blue,
       fontWeight: FontWeight.bold,
       fontSize: 10,
@@ -130,7 +130,7 @@ class _UserTrendsBarChartCreatorState extends State<UserTrendsBarChartCreator> {
 
 
   Widget getLeftTitles(double value, TitleMeta meta) {
-    final style = TextStyle(
+    const style = TextStyle(
       color: Colors.blue,
       fontWeight: FontWeight.bold,
       fontSize: 12,
@@ -182,7 +182,7 @@ class _UserTrendsBarChartCreatorState extends State<UserTrendsBarChartCreator> {
     show: false,
   );
 
-  LinearGradient get _barsGradient => LinearGradient(
+  LinearGradient get _barsGradient => const LinearGradient(
     colors: [
       Colors.blue,
       Colors.cyan,

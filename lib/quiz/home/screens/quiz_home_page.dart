@@ -24,11 +24,10 @@ class _QuizHomePageState extends State<QuizHomePage> {
   }
 
   startQuiz() {
-    print('pushing for quiz service');
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => QuizService(),
+        builder: (context) => const QuizService(),
       ),
     );
   }

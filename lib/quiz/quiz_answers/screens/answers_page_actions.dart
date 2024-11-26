@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:nerd_nudge/explore_menu/screens/explore_home_page.dart';
-import 'package:nerd_nudge/quiz/quiz_answers/dto/quizflex_user_activity_api_entity.dart';
 import 'package:nerd_nudge/quiz/quiz_answers/screens/read_more.dart';
 import 'package:nerd_nudge/quiz/quiz_answers/services/quizflex_submission.dart';
-import '../../../utilities/api_end_points.dart';
-import '../../../utilities/api_service.dart';
 import '../../../utilities/colors.dart';
-import '../../home/screens/quiz_home_page.dart';
 import '../../quiz_question/services/start_quiz.dart';
 
 class AnswersPageActionButtons extends StatelessWidget {
@@ -28,8 +24,8 @@ class AnswersPageActionButtons extends StatelessWidget {
               ),
             );
           },
-          icon: Icon(Icons.info_outline, color: Colors.white),
-          label: Text(
+          icon: const Icon(Icons.info_outline, color: Colors.white),
+          label: const Text(
             'Info',
             style: TextStyle(
               fontWeight: FontWeight.bold,
@@ -39,7 +35,7 @@ class AnswersPageActionButtons extends StatelessWidget {
           ),
           style: ElevatedButton.styleFrom(
             backgroundColor: CustomColors.mainThemeColor,
-            padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
+            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8.0),
             ),
@@ -50,12 +46,12 @@ class AnswersPageActionButtons extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => QuizService(),
+                builder: (context) => const QuizService(),
               ),
             );
           },
-          icon: Icon(Icons.navigate_next, color: Colors.white),
-          label: Text(
+          icon: const Icon(Icons.navigate_next, color: Colors.white),
+          label: const Text(
             'Next',
             style: TextStyle(
               fontWeight: FontWeight.bold,
@@ -65,7 +61,7 @@ class AnswersPageActionButtons extends StatelessWidget {
           ),
           style: ElevatedButton.styleFrom(
             backgroundColor: CustomColors.mainThemeColor,
-            padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
+            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8.0),
             ),
@@ -75,8 +71,8 @@ class AnswersPageActionButtons extends StatelessWidget {
           onPressed: () {
             _onClose(context);
           },
-          icon: Icon(Icons.close, color: Colors.white),
-          label: Text(
+          icon: const Icon(Icons.close, color: Colors.white),
+          label: const Text(
             'Close',
             style: TextStyle(
               fontWeight: FontWeight.bold,
@@ -86,7 +82,7 @@ class AnswersPageActionButtons extends StatelessWidget {
           ),
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.redAccent,
-            padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
+            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8.0),
             ),
@@ -107,7 +103,7 @@ class AnswersPageActionButtons extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ExplorePage(),
+        builder: (context) => const ExplorePage(),
       ),
     );
   }

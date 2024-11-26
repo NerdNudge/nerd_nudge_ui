@@ -37,16 +37,16 @@ class LeaderboardPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Table(
-                    columnWidths: {
+                    columnWidths: const {
                       0: FlexColumnWidth(1),
                       1: FlexColumnWidth(3),
                       2: FlexColumnWidth(1),
                     },
-                    children: [
+                    children: const [
                       TableRow(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Text(
                               'Rank',
                               style: TextStyle(
@@ -57,7 +57,7 @@ class LeaderboardPage extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Text(
                               'User',
                               style: TextStyle(
@@ -68,7 +68,7 @@ class LeaderboardPage extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Text(
                               'Score',
                               style: TextStyle(
@@ -82,14 +82,14 @@ class LeaderboardPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Divider(color: Colors.white),
+                  const Divider(color: Colors.white),
                   Expanded(  // Ensure ListView expands properly within available space
                     child: ListView.builder(
                       itemCount: leaderBoardList.length,
                       itemBuilder: (context, index) {
                         final entry = leaderBoardList[index];
                         return Container(
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             border: Border(
                               bottom: BorderSide(color: Colors.white24),
                             ),
@@ -97,7 +97,7 @@ class LeaderboardPage extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8.0),
                             child: Table(
-                              columnWidths: {
+                              columnWidths: const {
                                 0: FlexColumnWidth(1),
                                 1: FlexColumnWidth(3),
                                 2: FlexColumnWidth(1),
@@ -108,26 +108,26 @@ class LeaderboardPage extends StatelessWidget {
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: CircleAvatar(
-                                        child: Text(
-                                          '${index + 1}',
-                                          style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold),
-                                        ),
                                         backgroundColor:
                                         CustomColors.purpleButtonColor,
+                                        child: Text(
+                                          '${index + 1}',
+                                          style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.bold),
+                                        ),
                                       ),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text(
                                         entry['userId'],
-                                        style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold),
+                                        style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.bold),
                                       ),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text(
                                         entry['score'].toString(),
-                                        style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold),
+                                        style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.bold),
                                       ),
                                     ),
                                   ],
@@ -139,7 +139,7 @@ class LeaderboardPage extends StatelessWidget {
                       },
                     ),
                   ),
-                  SizedBox(width: 40),
+                  const SizedBox(width: 40),
                   Align(  // Align the close button at the bottom right
                     alignment: Alignment.bottomRight,
                     child: Container(
@@ -151,7 +151,7 @@ class LeaderboardPage extends StatelessWidget {
                             8.0), // Adjust the border radius for a square shape
                       ),
                       child: IconButton(
-                        icon: Icon(Icons.close),
+                        icon: const Icon(Icons.close),
                         onPressed: () => buttonClick(), // Ensure the buttonClick function works
                         color: Colors.white, // Foreground color of the X icon
                       ),

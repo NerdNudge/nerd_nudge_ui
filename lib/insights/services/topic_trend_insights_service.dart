@@ -1,4 +1,6 @@
 
+import '../../utilities/logger.dart';
+
 class TopicTrendInsightsService {
   TopicTrendInsightsService._privateConstructor();
   static final TopicTrendInsightsService _instance =
@@ -11,7 +13,7 @@ class TopicTrendInsightsService {
   Map<String, dynamic> getTopicTrendInsights(
       String topic, String type, Map<String, dynamic> userTrendsObject) {
     Map<String, dynamic> trendData = {};
-    print('input: $userTrendsObject');
+    NerdLogger.logger.d('input: $userTrendsObject');
 
     if (!userTrendsObject.containsKey('userTrends')) {
       return trendData;
@@ -41,7 +43,7 @@ class TopicTrendInsightsService {
       });
     }
 
-    print('returning: $trendData');
+    NerdLogger.logger.d('returning: $trendData');
     return trendData;
   }
 }

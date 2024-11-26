@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../utilities/styles.dart'; // Assuming you are using the same styles as the LoginPage
+import '../../utilities/styles.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   @override
@@ -19,7 +19,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         children: [
           Positioned.fill(
             child: Container(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: Colors.black,
                 borderRadius: BorderRadius.circular(0),
@@ -28,7 +28,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     color: Colors.black.withOpacity(0.2),
                     spreadRadius: 5,
                     blurRadius: 7,
-                    offset: Offset(0, 3),
+                    offset: const Offset(0, 3),
                   ),
                 ],
               ),
@@ -62,7 +62,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       height: 20,
                     ),
                     isLoading
-                        ? CircularProgressIndicator()
+                        ? const CircularProgressIndicator()
                         : _getResetPasswordButton(),
                     const SizedBox(
                       height: 30,
@@ -92,7 +92,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       onTap: () {
                         Navigator.pop(context); // Navigate back to login
                       },
-                      child: Text(
+                      child: const Text(
                         'Back to Login',
                         style: TextStyle(
                           color: Colors.blue,

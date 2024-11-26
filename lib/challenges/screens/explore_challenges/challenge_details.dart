@@ -42,7 +42,7 @@ class ChallengeDetailPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 20.0),
+            Styles.getSizedHeightBoxByScreen(context, 20),
             Text(
               challenge['description'],
               style: TextStyle(
@@ -51,52 +51,52 @@ class ChallengeDetailPage extends StatelessWidget {
                 color: CustomColors.purpleButtonColor,
               ),
             ),
-            SizedBox(height: 20.0),
+            Styles.getSizedHeightBoxByScreen(context, 20),
             Row(
               children: [
-                Icon(Icons.folder, color: Colors.white70),
-                SizedBox(width: 10.0),
+                const Icon(Icons.folder, color: Colors.white70),
+                Styles.getSizedWidthBoxByScreen(context, 10),
                 Text(
                   'Type: ${challenge['type']}',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 14,
                     color: Colors.white70,
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 10.0),
+            Styles.getSizedHeightBoxByScreen(context, 10),
             Row(
               children: [
-                Icon(Icons.calendar_today, color: Colors.white70),
-                SizedBox(width: 10.0),
+                const Icon(Icons.calendar_today, color: Colors.white70),
+                Styles.getSizedWidthBoxByScreen(context, 10),
                 Text(
                   'Start Date: ${challenge['startDate']}',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 14,
                     color: Colors.white70,
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 10.0),
+            Styles.getSizedHeightBoxByScreen(context, 10),
             Row(
               children: [
-                Icon(Icons.calendar_today, color: Colors.white70),
-                SizedBox(width: 10.0),
+                const Icon(Icons.calendar_today, color: Colors.white70),
+                Styles.getSizedWidthBoxByScreen(context, 10),
                 Text(
                   'End Date: ${challenge['endDate']}',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 14,
                     color: Colors.white70,
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 10.0),
+            Styles.getSizedHeightBoxByScreen(context, 10),
             Row(
               children: [
-                Icon(Icons.group, color: Colors.white70),
+                const Icon(Icons.group, color: Colors.white70),
                 SizedBox(width: 10.0),
                 Text(
                   '${challenge['members']} members joined',

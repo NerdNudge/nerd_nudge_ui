@@ -6,6 +6,7 @@ import 'package:nerd_nudge/utilities/styles.dart';
 
 import '../../../user/rankings.dart';
 import '../../../user/scores.dart';
+import '../../../utilities/logger.dart';
 import '../../quiz_answers/screens/realworld_challenge_answer_complete_screen.dart';
 
 class RealworldChallengeTimer extends StatelessWidget {
@@ -19,7 +20,7 @@ class RealworldChallengeTimer extends StatelessWidget {
       duration: Duration(seconds: completeQuiz['time_limit_secs']),
 
       onTimerEnd: () {
-        print('Timer Ended !!!');
+        NerdLogger.logger.d('Timer Ended !!!');
 
         bool isAnswerCorrect = QuestionUtils.isAnswerCorrect(completeQuiz, true);
 
@@ -34,7 +35,7 @@ class RealworldChallengeTimer extends StatelessWidget {
           ),
         );
       },
-      color: Color(0xFF252d3c),
+      color: const Color(0xFF252d3c),
     );
   }
 }

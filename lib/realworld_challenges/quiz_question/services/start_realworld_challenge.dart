@@ -11,6 +11,7 @@ import '../../../cache_and_lock_manager/cache_locks_keys.dart';
 import '../../../menus/screens/menu_options.dart';
 import '../../../topics/screens/subtopic_selection.dart';
 import '../../../user_home_page/dto/user_home_stats.dart';
+import '../../../utilities/logger.dart';
 import '../screens/realworld_challenge_complete_screen.dart';
 
 class RealworldChallengeServiceMainPage extends StatefulWidget {
@@ -45,15 +46,13 @@ class _RealworldChallengeServiceMainPageState
 
   @override
   Widget build(BuildContext context) {
-    int l = _currentQuizzes.length;
-    print('length of current quizzes under RWC: $l');
     var nextQuiz = _getNextQuiz();
     if(nextQuiz == Constants.COMPLETED) {
-      print('Completed the existing daily RWC quizzes.');
+      NerdLogger.logger.d('Completed the existing daily RWC quizzes.');
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => RealworldChallengeCompletionScreen(),
+          builder: (context) => const RealworldChallengeCompletionScreen(),
         ),
       );
     }
@@ -61,7 +60,7 @@ class _RealworldChallengeServiceMainPageState
       return Scaffold(
         appBar: Styles.getAppBar('Real-World Challenge'),
         drawer: MenuOptions.getMenuDrawer(context),
-        body: Center(
+        body: const Center(
           child: Text(
             'Please upgrade to continue.',
             style: TextStyle(fontSize: 20, color: Colors.white),
@@ -83,11 +82,10 @@ class _RealworldChallengeServiceMainPageState
   }
 
   startQuiz() {
-    print('pushing for quiz service');
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => RealworldChallengeServiceMainPage(),
+        builder: (context) => const RealworldChallengeServiceMainPage(),
       ),
     );
   }
@@ -134,10 +132,7 @@ class _RealworldChallengeServiceMainPageState
       });
     } else {
       setState(() {
-        print('adding new list of RWC');
         _currentQuizzes.addAll(nextQuizList);
-        int len = _currentQuizzes.length;
-        print('current rwc quizzes length: $len');
 
         if (RealworldChallengeServiceMainPage.currentIndex >= _currentQuizzes.length) {
           RealworldChallengeServiceMainPage.currentIndex = _currentQuizzes.length - 1;
@@ -148,13 +143,12 @@ class _RealworldChallengeServiceMainPageState
 
   Future<List<dynamic>> _getNextQuizzes() async {
     if (UserHomeStats().hasUserExhaustedNerdQuiz()) {
-      print('User has exhausted the quiz counts.');
+      NerdLogger.logger.d('User has exhausted the quiz counts.');
       return [];
     } else {
-      print('Fetching the next rwc set.');
+      NerdLogger.logger.d('Fetching the next rwc set.');
       var nextChallenges = await NerdQuizflexService()
           .getRealWorldChallenges(ExploreTopicSelection.selectedTopic, 'Random', RealworldChallengeServiceMainPage.totalDailyQuiz);
-      print('Fetched RWC: $nextChallenges');
       return nextChallenges['data'] ?? [];
     }
   }

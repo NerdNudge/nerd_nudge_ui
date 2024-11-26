@@ -36,7 +36,7 @@ class PeerComparisonInsights extends StatelessWidget {
                 Styles.getSizedHeightBox(8),
                 Text(
                   'Topic: $topic',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 13,
                     color: Colors.black87,
@@ -58,7 +58,7 @@ class PeerComparisonInsights extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: IconButton(
-                  icon: Icon(Icons.close),
+                  icon: const Icon(Icons.close),
                   onPressed: () => closeButton(),
                   color: Colors.white,
                 ),
@@ -81,7 +81,7 @@ class PeerComparisonInsights extends StatelessWidget {
             color: Colors.black.withOpacity(0.1),
             spreadRadius: 3,
             blurRadius: 10,
-            offset: Offset(0, 3),
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -93,7 +93,7 @@ class PeerComparisonInsights extends StatelessWidget {
             maxY: 100,
             barGroups: _getBarGroups(),
             titlesData: FlTitlesData(
-              leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
               bottomTitles: AxisTitles(
                 sideTitles: SideTitles(
                   showTitles: true,
@@ -127,7 +127,7 @@ class PeerComparisonInsights extends StatelessWidget {
                           ),
                         );
                       default:
-                        return Text('');
+                        return const Text('');
                     }
                   },
                 ),
@@ -135,7 +135,7 @@ class PeerComparisonInsights extends StatelessWidget {
             ),
             borderData: FlBorderData(show: false),
             barTouchData: BarTouchData(enabled: true),
-            gridData: FlGridData(show: false),
+            gridData: const FlGridData(show: false),
           ),
         ),
       ),
@@ -213,7 +213,7 @@ class PeerComparisonInsights extends StatelessWidget {
               //SizedBox(height: 5),
               Text(
                 label,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,

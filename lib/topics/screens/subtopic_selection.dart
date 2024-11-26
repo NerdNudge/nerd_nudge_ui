@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:nerd_nudge/topics/screens/explore_topic_selection_home_page.dart';
-import 'package:nerd_nudge/topics/screens/topic_selection_home_page.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../../../utilities/styles.dart';
 import '../../../bottom_menus/screens/bottom_menu_options.dart';
 import '../../../menus/screens/menu_options.dart';
 import '../../subscriptions/screens/paywall_panel_screen.dart';
+import '../../utilities/logger.dart';
 import '../services/topics_service.dart';
 
 class SubtopicSelectionPage extends StatefulWidget {
@@ -45,7 +45,7 @@ class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
         isError = false; // Reset error state on success
       });
     } catch (e) {
-      print('Error loading topics: $e'); // Logs error
+      NerdLogger.logger.e('Error loading topics: $e'); // Logs error
       setState(() {
         isLoading = false;
         isError = true; // Set error state to true
@@ -62,7 +62,7 @@ class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
   @override
   Widget build(BuildContext context) {
     String topicsel = ExploreTopicSelection.selectedTopic;
-    print('Subtopics called for topic: $topicsel');
+    NerdLogger.logger.d('Subtopics called for topic: $topicsel');
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_panelController.isAttached) {
@@ -210,7 +210,7 @@ class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
                                         setState(() {
                                           ExploreTopicSelection.selectedSubtopic = key;
                                           String ts = ExploreTopicSelection.selectedTopic;
-                                          print('Selected subtopic: $key for topic: $ts');
+                                          NerdLogger.logger.i('Selected subtopic: $key for topic: $ts');
                                         });
                                         widget.showShotsOrQuiz();
                                       },

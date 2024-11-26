@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nerd_nudge/menus/screens/favorites/favoriteCommons/favorites_details_swiped.dart';
 import 'package:nerd_nudge/utilities/styles.dart';
-import '../screens/favorites/recents/recent_favorites_details.dart';
 import 'menu_utilities.dart';
 
 class FavoriteUtils {
@@ -13,7 +12,7 @@ class FavoriteUtils {
           SingleChildScrollView(
             child: Column(
               children: [
-                Text(
+                const Text(
                   '<< Tap to see more details >>',
                   style: TextStyle(
                     color: Colors.white,

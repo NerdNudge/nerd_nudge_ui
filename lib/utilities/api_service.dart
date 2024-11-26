@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:nerd_nudge/utilities/api_end_points.dart';
 
+import 'logger.dart';
+
 class ApiService {
   Future<dynamic> getRequest(String baseURL, String endpoint) async {
     final response = await http.get(Uri.parse('$baseURL$endpoint'));
@@ -29,16 +31,16 @@ class ApiService {
 
   Future<dynamic> putRequest(String endpoint, Map<String, dynamic> data) async {
     try {
-      print('PUT Request Endpoint: $endpoint');
-      print('PUT Request Data: $data');
+      NerdLogger.logger.d('PUT Request Endpoint: $endpoint');
+      NerdLogger.logger.d('PUT Request Data: $data');
 
       final response = await http.put(
         Uri.parse(endpoint),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(data),
       );
-      print('Response Status Code: ${response.statusCode}');
-      print('Response Body: ${response.body}');
+      NerdLogger.logger.d('Response Status Code: ${response.statusCode}');
+      NerdLogger.logger.d('Response Body: ${response.body}');
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return json.decode(response.body);
@@ -46,7 +48,7 @@ class ApiService {
         throw Exception('Failed to post data');
       }
     } catch (e) {
-      print('Error during PUT request: $e');
+      NerdLogger.logger.e('Error during PUT request: $e');
       throw Exception('Failed to post data');
     }
   }

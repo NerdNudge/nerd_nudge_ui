@@ -16,6 +16,7 @@ import '../../menus/screens/menu_options.dart';
 import '../../nerd_shots/screens/shots_home.dart';
 import '../../quiz/home/screens/quiz_home_page.dart';
 import '../../subscriptions/screens/paywall_panel_screen.dart';
+import '../../utilities/logger.dart';
 import '../dto/user_home_stats.dart';
 
 class HomePage extends StatefulWidget {
@@ -36,13 +37,11 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    print('uname: ${widget.userFullName}, email: ${widget.userEmail}');
     UserProfileEntity userProfileEntity = UserProfileEntity();
     userProfileEntity.setUserFullName(widget.userFullName);
     userProfileEntity.setUserEmail(widget.userEmail.toLowerCase());
 
-    print(
-        'Home page: User fullName: ${userProfileEntity.getUserFullName()}, User Email: ${userProfileEntity.getUserEmail()}');
+    NerdLogger.logger.d('Home page: User fullName: ${userProfileEntity.getUserFullName()}, User Email: ${userProfileEntity.getUserEmail()}');
     _checkEmailAndNavigate();
     _futureUserHomeStats = _fetchUserHomeStats();
   }
@@ -57,15 +56,14 @@ class _HomePageState extends State<HomePage> {
 
   Future<UserHomeStats> _fetchUserHomeStats() async {
     UserHomePageCacheManager cacheManager = UserHomePageCacheManager();
-    print('Current local key: $_currentLockKey');
-    print('cache key: ${CacheLockKeys().getCurrentKey()}');
-    Future<UserHomeStats> homeStats =
-        cacheManager.fetchUserHomePageStats(_currentLockKey);
+    NerdLogger.logger.d('Current local key: $_currentLockKey');
+    NerdLogger.logger.d('cache key: ${CacheLockKeys().getCurrentKey()}');
+    Future<UserHomeStats> homeStats = cacheManager.fetchUserHomePageStats(_currentLockKey);
     setState(() {
       _currentLockKey = CacheLockKeys().getCurrentKey();
     });
 
-    print('under insighst: $_currentLockKey');
+    NerdLogger.logger.d('under insighst: $_currentLockKey');
     return homeStats;
   }
 
@@ -96,8 +94,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _getHomePageBody(BuildContext context, UserHomeStats userHomeStats) {
-    String message = WelcomeMessages.messages
-        .elementAt(Random().nextInt(WelcomeMessages.messages.length));
+    String message = WelcomeMessages.messages.elementAt(Random().nextInt(WelcomeMessages.messages.length));
 
     String quoteOfTheDay = userHomeStats.quoteOfTheDay;
     String quoteAuthor = userHomeStats.quoteAuthor;
@@ -237,7 +234,7 @@ class _HomePageState extends State<HomePage> {
                           color: Colors.white,
                         ),
                         onPressed: () {
-                          print('Marked as favorite');
+                          NerdLogger.logger.d('Marked as favorite');
                           setState(() {
                             homeFavoriteQuoteDefault = Icons.favorite_outlined;
                           });
@@ -477,28 +474,6 @@ class _HomePageState extends State<HomePage> {
           children: [
             _getStatsValue(value1),
             _getStatsValue(value2),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSingleStatRow(String title, String value) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _getStatsTitle(title),
-            const SizedBox(width: 16), // Balance alignment
-          ],
-        ),
-        const SizedBox(height: 6.0),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _getStatsValue(value),
-            const SizedBox(width: 16), // Balance alignment
           ],
         ),
       ],
