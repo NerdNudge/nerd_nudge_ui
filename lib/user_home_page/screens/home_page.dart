@@ -1,6 +1,9 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:nerd_nudge/explore_menu/screens/explore_home_page.dart';
 import 'package:nerd_nudge/subscriptions/services/purchase_api.dart';
+import 'package:nerd_nudge/topics/screens/explore_topic_selection_home_page.dart';
 import 'package:nerd_nudge/user_profile/dto/user_profile_entity.dart';
 import 'package:nerd_nudge/utilities/constants.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -17,6 +20,7 @@ import '../../nerd_shots/screens/shots_home.dart';
 import '../../quiz/home/screens/quiz_home_page.dart';
 import '../../subscriptions/screens/paywall_panel_screen.dart';
 import '../../utilities/logger.dart';
+import '../../utilities/utils.dart';
 import '../dto/user_home_stats.dart';
 
 class HomePage extends StatefulWidget {
@@ -172,6 +176,11 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 20),
                     _buildSectionTitle('Nerd Statistics'),
                     _buildNerdStatsCard(userHomeStats),
+                    _getPurpleDivider(),
+                    const SizedBox(height: 20),
+
+                    _buildSectionTitle('Nerd Week Progress'),
+                    _buildNerdWeekProgress(userHomeStats),
                     _getPurpleDivider(),
                     const SizedBox(height: 20),
 
@@ -344,6 +353,104 @@ class _HomePageState extends State<HomePage> {
         fontWeight: FontWeight.bold,
         color: Colors.white,
         fontSize: 20,
+      ),
+    );
+  }
+
+  Widget _buildNerdWeekProgress(UserHomeStats userHomeStats) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+      child: Column(
+        children: [
+          Card(
+            color: CustomColors.purpleButtonColor,
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildLastSevenDaysChallenges(context, userHomeStats.last7DaysActivity),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 20.0),
+          Styles.buildNextActionButton(context, 'EXPLORE TOPICS', 1, const ExplorePage()),
+        ],
+      ),
+    );
+  }
+
+  static Widget _buildLastSevenDaysChallenges(
+      BuildContext context, Map<String, dynamic> weekProgress) {
+    final today = DateTime.now();
+    final lastSevenDays = List.generate(7, (index) => today.subtract(Duration(days: 6 - index)));
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 1.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Styles.getSizedHeightBoxByScreen(context, 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: lastSevenDays.map((date) {
+              final dayOfWeek = DateFormat('E').format(date);
+              final daystamp = Utils.formatDateAsDaystamp(date);
+              bool challengeTaken = weekProgress.containsKey(daystamp);
+
+              final percentage = weekProgress[daystamp] ?? 0;
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    dayOfWeek,
+                    style: const TextStyle(
+                      color: Colors.black54,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Styles.getSizedHeightBoxByScreen(context, 10),
+                  ShaderMask(
+                    shaderCallback: (Rect bounds) {
+                      return LinearGradient(
+                        colors: challengeTaken
+                            ? [
+                          Colors.red,
+                          Colors.deepOrange,
+                          Colors.yellow,
+                          Colors.green
+                        ]
+                            : [Colors.grey, Colors.black],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ).createShader(bounds);
+                    },
+                    child: Icon(
+                      challengeTaken
+                          ? Icons.whatshot
+                          : Icons.whatshot_outlined, // Fire icons
+                      size: 24,
+                      color: Colors.white, // Apply the gradient to the icon
+                    ),
+                  ),
+                  Styles.getSizedHeightBoxByScreen(context, 8),
+                  Text(
+                    '$percentage%', // Display the calculated percentage
+                    style: const TextStyle(
+                      color: Colors.black54,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 10,
+                    ),
+                  ),
+                ],
+              );
+            }).toList(),
+          ),
+        ],
       ),
     );
   }

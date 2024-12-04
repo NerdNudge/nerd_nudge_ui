@@ -21,6 +21,13 @@ class UserHomeStats {
   late int _adsFrequencyQuizFlex = 7;
   late int _adsFrequencyShots = 9;
   late int _quizflexQuota = 12;
+  late Map<String, dynamic> _last7DaysActivity = {};
+
+  Map<String, dynamic> get last7DaysActivity => _last7DaysActivity;
+
+  set last7DaysActivity(Map<String, dynamic> value) {
+    _last7DaysActivity = value;
+  }
 
   int get quizflexQuota => _quizflexQuota;
 
@@ -64,6 +71,7 @@ class UserHomeStats {
     // Adjust quiz and shots quota based on account type
     instance._quizflexQuota = (instance._accountType == Constants.FREEMIUM) ? jsonData['quizflexQuota'] ?? 12 : 10000;
     instance._shotsQuota = (instance._accountType == Constants.FREEMIUM) ? jsonData['shotsQuota'] ?? 15 : 10000;
+    instance._last7DaysActivity = jsonData['last7DaysActivity'] ?? {};
 
     return instance;
   }

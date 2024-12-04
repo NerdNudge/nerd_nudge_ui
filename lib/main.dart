@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:logger/logger.dart';
 import 'package:nerd_nudge/login/screens/login_or_register.dart';
 import 'package:nerd_nudge/login/services/auth_page.dart';
 import 'package:nerd_nudge/menus/screens/favorites/favorites_main_page.dart';
@@ -12,16 +11,13 @@ import 'package:nerd_nudge/menus/screens/sign_out/sign_out.dart';
 import 'package:nerd_nudge/menus/screens/user_feedback/user_feedback.dart';
 import 'package:nerd_nudge/menus/screens/user_profile/user_profile.dart';
 import 'package:nerd_nudge/subscriptions/services/purchase_api.dart';
-import 'package:nerd_nudge/utilities/logger.dart';
 import 'package:nerd_nudge/utilities/styles.dart';
 
 import 'firebase_options.dart';
 
 
 main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
-
   initializeAppAsync();
   await PurchaseAPI.init();
   SystemChrome.setPreferredOrientations([

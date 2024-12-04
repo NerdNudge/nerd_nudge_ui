@@ -107,7 +107,7 @@ class _NerdShotsSwipedState extends State<NerdShotsSwiped> {
       NerdLogger.logger.d('User has exhausted the shots counts.');
       return [];
     } else {
-      var nextQuestions = await NerdShotsService().getNextQuizflexes(ExploreTopicSelection.selectedTopic, ExploreTopicSelection.selectedSubtopic, 10);
+      var nextQuestions = await NerdShotsService().getNextShots(ExploreTopicSelection.selectedTopic, ExploreTopicSelection.selectedSubtopic, 10);
       NerdLogger.logger.d('$nextQuestions');
       return nextQuestions['data'];
     }

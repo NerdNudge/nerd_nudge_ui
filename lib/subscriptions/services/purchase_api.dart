@@ -20,7 +20,7 @@ class PurchaseAPI {
     NerdLogger.logger.d('initializing purchase api');
     await configurePurchases();
     await updateCurrentOffer();
-    updateNerdNudgeOfferings();
+    await updateNerdNudgeOfferings();
   }
 
   static Future<void> configurePurchases() async {

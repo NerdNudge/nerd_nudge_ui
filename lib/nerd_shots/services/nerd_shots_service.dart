@@ -14,12 +14,12 @@ class NerdShotsService {
     return _instance;
   }
 
-  Future<dynamic> getNextQuizflexes(String topic, String subtopic, int limit) async {
+  Future<dynamic> getNextShots(String topic, String subtopic, int limit) async {
     final ApiService apiService = ApiService();
     dynamic result;
     try {
-      NerdLogger.logger.d("${APIEndpoints.CONTENT_MANAGER_BASE_URL}${APIEndpoints.QUIZFLEXES}?topic=$topic&subtopic=$subtopic&limit=$limit");
-      result = await apiService.getRequest(APIEndpoints.CONTENT_MANAGER_BASE_URL, "${APIEndpoints.QUIZFLEXES}?topic=$topic&subtopic=$subtopic&limit=$limit");
+      NerdLogger.logger.d("${APIEndpoints.CONTENT_MANAGER_BASE_URL}${APIEndpoints.NERDSHOTS}?topic=$topic&subtopic=$subtopic&limit=$limit");
+      result = await apiService.getRequest(APIEndpoints.CONTENT_MANAGER_BASE_URL, "${APIEndpoints.NERDSHOTS}?topic=$topic&subtopic=$subtopic&limit=$limit");
       NerdLogger.logger.d('API Result: $result');
 
       if (result is Map<String, dynamic>) {

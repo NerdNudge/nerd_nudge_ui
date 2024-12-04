@@ -21,9 +21,9 @@ class Topics {
     switch (type) {
       case 'Data Structures and Algorithms':
       case 'DSA':
-        return Icons.graphic_eq;
+        return Icons.account_tree_rounded;
       case 'System Design':
-        return Icons.architecture;
+        return Icons.settings;
       case 'Python':
         return FontAwesomeIcons.python;
       case 'Java':
@@ -31,9 +31,11 @@ class Topics {
       case 'AWS':
         return FontAwesomeIcons.aws;
       case 'Kubernetes':
-        return FontAwesomeIcons.kickstarter;
+        return Icons.directions_boat;
       case 'Kafka':
-        return FontAwesomeIcons.kaggle;
+        return Icons.stream;
+      case 'Machine Learning':
+        return FontAwesomeIcons.brain;
       default:
         return Icons.help;
     }
