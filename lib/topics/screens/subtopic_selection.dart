@@ -28,7 +28,7 @@ class SubtopicSelectionPage extends StatefulWidget {
 }
 
 class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
-  late List<Map<String, String>> subtopics = [];
+  Map<String, String> subtopics = {};
   bool isLoading = true;
   bool isError = false; // Flag to check if there's an error
   final PanelController _panelController = PanelController();
@@ -40,7 +40,7 @@ class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
         throw Exception('No subtopics found'); // Handling the case where the result is empty
       }
       setState(() {
-        subtopics = result;
+        subtopics = Map<String, String>.from(result);
         isLoading = false;
         isError = false; // Reset error state on success
       });
@@ -114,7 +114,7 @@ class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
       return const Center(child: Text('No subtopics available.'));
     }
 
-    List<String> keys = subtopics.map((e) => e['name'] ?? 'Unnamed').toList();
+    //List<String> keys = subtopics.map((e) => e['name'] ?? 'Unnamed').toList();
     return Stack(
       children: [
         Positioned.fill(
@@ -146,7 +146,7 @@ class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
                     ),
                     onPressed: () {
                       setState(() {
-                        if (keys.isNotEmpty) {
+                        if (subtopics.isNotEmpty) {
                           ExploreTopicSelection.selectedSubtopic = 'Random';
                         }
                       });
@@ -166,8 +166,8 @@ class _SubtopicSelectionPageState extends State<SubtopicSelectionPage> {
                     child: ListView.builder(
                       itemCount: subtopics.length,
                       itemBuilder: (context, index) {
-                        String? key = subtopics[index]['subtopicName'];
-                        String value = subtopics[index]['description'] ?? 'No description available';
+                        String? key = subtopics.keys.elementAt(index);
+                        String value = subtopics[key] ?? 'No description available';
 
                         return Card(
                           margin: const EdgeInsets.symmetric(vertical: 10.0),

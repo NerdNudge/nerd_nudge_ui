@@ -22,7 +22,6 @@ class QuestionHeader extends StatelessWidget {
 
     return Column(
       children: <Widget>[
-        // Adjusted SizedBox using percentage
         Styles.getSizedHeightBoxByScreen(context, 15),
         Column(
           children: <Widget>[
@@ -47,7 +46,9 @@ class QuestionHeader extends StatelessWidget {
         Styles.getSizedHeightBoxByScreen(context, 15), // 1.5% of screen height
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
+            Styles.getSizedWidthBoxByScreen(context, 10),
             Expanded(
               flex: 2,
               child: Styles.getTitleDescriptionWidget(
@@ -59,7 +60,7 @@ class QuestionHeader extends StatelessWidget {
                 16,
               ),
             ),
-            Expanded(
+            /*Expanded(
               flex: 2,
               child: Styles.getTitleDescriptionWidget(
                 'Rank: ',
@@ -69,18 +70,19 @@ class QuestionHeader extends StatelessWidget {
                 15,
                 16,
               ),
-            ),
+            ),*/
             Expanded(
               flex: 1,
               child: Styles.getTitleDescriptionWidget(
+                'Difficulty: ',
                 difficultyLevel,
-                '',
                 Colors.black,
                 Colors.black,
                 15,
                 15,
               ),
             ),
+            //Styles.getSizedWidthBoxByScreen(context, 10),
           ],
         ),
         Styles.getSizedHeightBoxByScreen(context, 12), // 1.2% of screen height

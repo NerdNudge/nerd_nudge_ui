@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:nerd_nudge/user/scores.dart';
+
 import '../../user_profile/dto/user_profile_entity.dart';
 import '../../utilities/api_end_points.dart';
 import '../../utilities/api_service.dart';
@@ -128,7 +130,6 @@ class TopicsService {
   Future<dynamic> getSubtopics(String topic) async {
     if (_subtopicsCache.containsKey(topic) &&
         isSubtopicWithinRetentionTime(topic)) {
-      // Return cached subtopics if valid
       NerdLogger.logger.d('Returning cached subtopics for topic: $topic');
       return _subtopicsCache[topic];
     }
@@ -136,14 +137,21 @@ class TopicsService {
     try {
       dynamic result = await _apiService.getRequest(
           APIEndpoints.CONTENT_MANAGER_BASE_URL,
-          "${APIEndpoints.SUB_TOPICS}/$topic");
+          "${APIEndpoints.SUB_TOPICS}/$topic/${UserProfileEntity().getUserEmail()}");
       NerdLogger.logger.d('API Result: $result');
 
       if (result is Map<String, dynamic> && result.containsKey('data')) {
-        List<dynamic> subtopicsList = result['data'];
-        _subtopicsCache[topic] = List<Map<String, String>>.from(
-            subtopicsList.map((item) => Map<String, String>.from(item)));
-        _subtopicsFetchedTime[topic] = DateTime.now(); // Update cache time
+        var subtopicsEntity = result['data'];
+
+        Map<String, String> subtopicData = Map<String, String>.from(subtopicsEntity['subtopicData']);
+        double userTopicScore = subtopicsEntity['userTopicScore'] ?? 0.0;
+
+        _subtopicsCache[topic] = subtopicData;
+        UserScores.currentScore = userTopicScore;
+        NerdLogger.logger.d('Updated user score: ${UserScores.getUserScore()}');
+        NerdLogger.logger.d('User score from api call: $userTopicScore');
+        _subtopicsFetchedTime[topic] = DateTime.now();
+
         return _subtopicsCache[topic];
       } else {
         throw const FormatException("Unexpected response format");

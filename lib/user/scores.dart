@@ -1,6 +1,10 @@
 class UserScores {
   static late double _currentScore = 40.0;
 
+  static set currentScore(double value) {
+    _currentScore = value;
+  }
+
   static void updateUserScore(String difficultyLevel, bool isCorrect) {
     if(isCorrect) {
       _currentScore += getPointsToAdd(difficultyLevel);

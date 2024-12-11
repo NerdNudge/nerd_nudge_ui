@@ -24,7 +24,7 @@ main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]).then((_) {
-    runApp(const NerdNudgeApp());
+    runApp(NerdNudgeApp());
   });
 }
 
@@ -46,8 +46,8 @@ class NerdNudgeApp extends StatelessWidget {
       scaffoldMessengerKey: Styles.scaffoldMessengerKey,
       title: 'Nerd Nudge',
       theme: Styles.getThemeData(),
-      home: const Scaffold(
-        body: Authpage(),
+      home: Scaffold(
+        body: const Authpage(),
       ),
       routes: {
         '/feedback': (context) => FeedbackPage(),

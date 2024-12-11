@@ -110,7 +110,7 @@ class _ProfilePageState extends State<ProfilePage> {
         Styles.getDivider(),
         const SizedBox(height: 10),
         const Text(
-          'version: 1.0.0+63'
+          'version: 1.0.1+66'
         ),
         const SizedBox(height: 10),
         _buildAccountTypeSection(context),
